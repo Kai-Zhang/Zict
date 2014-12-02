@@ -1,0 +1,14 @@
+database dictionary
+users user password
+      varchar(20) varchar(20)
+zan 
+word baidu youdao bing
+
+
+create table explains(
+	word varchar(45),
+	baidu TEXT,
+	youdao TEXT,
+	bing TEXT,
+	primary key (word)
+);
