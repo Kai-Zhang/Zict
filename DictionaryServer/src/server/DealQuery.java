@@ -61,9 +61,9 @@ public class DealQuery implements Runnable{
 						content="No such words!";
 					}
 					else{
-						content="answer:\r\n";
+						content="answer: ";
 					for (Answer i:answers){
-						content=content+i.which+":"+i.explain+"\r\n";
+						content=content+i.which+":"+i.explain+" ";
 					}
 					}
 				} catch (Exception e) {
