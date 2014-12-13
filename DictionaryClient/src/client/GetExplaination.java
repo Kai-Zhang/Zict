@@ -6,12 +6,11 @@ public class GetExplaination {
 	static String explanation = null;
 	
 	public GetExplaination() { }
-	public static String[] get(String word) {
-		// TODO: Alien `st' variable here in server
-		String message = "query" + " " + word;
+	public static String[] get(String word, int searchOption) {
+		// The query format: query word 111 <-- option: baidu | youdao | bing
+		String message = "query" + " " + word + " " + searchOption;
 		new Thread(new SendMessage(SendMessage.SERVER_IP, message)).start();
 		while (explanation == null);
-		// TODO: Split the Explanation
 		String[] temp = explanation.split(" ");
 		explanation = null;
 		return temp;

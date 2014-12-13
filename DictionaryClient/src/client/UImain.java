@@ -1,3 +1,11 @@
+/*
+ * TODO list:
+ * + make website and explanation  -->  class GetExplanation
+ * + Click like counter or another visible sign  -->  UI design or another variable
+ * + Logout --> UI design and another handler
+ * + Register check  -->  use regex in register
+ */
+
 package client;
 import javax.swing.*;
 
@@ -20,6 +28,7 @@ import network.SendMessage;
 @SuppressWarnings("serial")
 public class UImain extends JFrame{
 	private static final ActionListener ActionListener = null;
+	private String currentWord = null;
 	private String[] ListWord =new String[100];  //联想表
 	private JList jlist = new JList(ListWord);
 	private JTextArea txOut1 = new JTextArea("My Dictionary",5,20);
@@ -47,7 +56,7 @@ public class UImain extends JFrame{
     private JCheckBox youdao =new JCheckBox("有道",false);
     private JCheckBox baidu =new JCheckBox("百度",false);
 
-	public UImain()throws Exception{
+	public UImain() throws Exception {
 		//txOut.setEditable(false);   //只读
 		//txOut.setLineWrap(true);  //自动换行
 		//txOut.setFont(new Font("微软雅黑",Font.BOLD,20));//字体
@@ -190,18 +199,21 @@ public class UImain extends JFrame{
 		like1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				ClickLike.like(currentWord, "baidu");
 			}
 		});
 		
 		like2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				ClickLike.like(currentWord, "youdao");
 			}
 		});
 		
 		like3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				ClickLike.like(currentWord, "youdao");
 			}
 		});
 		
@@ -257,7 +269,18 @@ public class UImain extends JFrame{
 		btSearch.addActionListener(new ActionListener(){   //点击search按钮
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String[] explanation = GetExplaination.get(txInput.getText());
+				currentWord = txInput.getText();
+				int option = 0;
+				if (baidu.isSelected()) {
+					option += 100;
+				}
+				if (youdao.isSelected()) {
+					option += 10;
+				}
+				if (bing.isSelected()) {
+					option += 1;
+				}
+				String[] explanation = GetExplaination.get(currentWord, option);
 				txOut1.setText(explanation[0]);
 				txOut2.setText(explanation[1]);
 				txOut3.setText(explanation[2]);

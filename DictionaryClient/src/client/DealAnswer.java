@@ -1,5 +1,7 @@
 package client;
 
+import javax.swing.JOptionPane;
+
 public class DealAnswer implements Runnable {
 	String messageReceive = null;
 	
@@ -12,20 +14,21 @@ public class DealAnswer implements Runnable {
 	public void run() {
 		if (messageReceive.contains("Register")){
 			if (messageReceive.equals("Register Success!")){
-				//Msg Box
+				JOptionPane.showConfirmDialog(null, "Register Success!");
 			}
 			else{
-				//Msg Box
+				JOptionPane.showConfirmDialog(null, "Register Failed!");
 			}
 		}
 		else if (messageReceive.contains("Login")){
 			if (messageReceive.equals("Login Success!")){
-				//Msg Box
+				JOptionPane.showConfirmDialog(null, "Login Success!");
 			}
 			else{
-				//Msg Box
+				JOptionPane.showConfirmDialog(null, "Login Failed!");
 			}
 		}
+		// Maybe Like doesn't need to echo --> will be deleted eventually
 		else if (messageReceive.contains("Zan")){
 			if (messageReceive.equals("Zan Success!")){
 				//Msg Box
@@ -46,7 +49,7 @@ public class DealAnswer implements Runnable {
 			GetExplaination.explanation = messageReceive.substring(6);
 		}
 		else if (messageReceive.equals("No such words!")){
-			
+			JOptionPane.showConfirmDialog(null, "No such words!");
 		}
 		else{
 			//Set Explaination
