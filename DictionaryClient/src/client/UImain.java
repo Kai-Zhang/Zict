@@ -29,7 +29,7 @@ import network.SendMessage;
 public class UImain extends JFrame{
 	private static final ActionListener ActionListener = null;
 	private String currentWord = null;
-	private String[] ListWord =new String[100];  //ÁªÏë±í
+	private String[] ListWord =new String[100];  //ï¿½ï¿½ï¿½ï¿½ï¿½
 	private JList jlist = new JList(ListWord);
 	private JTextArea txOut1 = new JTextArea("My Dictionary",5,20);
 	private JTextArea txOut2 = new JTextArea("My Dictionary",5,20);
@@ -38,13 +38,13 @@ public class UImain extends JFrame{
 	private JTextField idInput=new JTextField(16);
 	private JTextField keyInput=new JTextField(16);
 	private JTextField regIdInput=new JTextField(16);
-	private JTextField regKeyInput1=new JTextField("ÇëÊäÈëÃÜÂë",16);
-	private JTextField regKeyInput2=new JTextField("ÇëÔÙ´ÎÊäÈëÃÜÂë",16);
+	private JTextField regKeyInput1=new JTextField("è¯·è¾“å…¥å¯†ç ",16);
+	private JTextField regKeyInput2=new JTextField("è¯·å†æ¬¡è¾“å…¥å¯†ç ",16);
     private JButton btSearch = new JButton("search");
-    private JButton login=new JButton("µÇÂ½");
-    private JButton register=new JButton("×¢²á");
-    private JButton registerOk=new JButton("×¢²á");
-    private JButton loginOk=new JButton("µÇÂ½");
+    private JButton login=new JButton("ç™»é™†");
+    private JButton register=new JButton("æ³¨å†Œ");
+    private JButton registerOk=new JButton("æ³¨å†Œ");
+    private JButton loginOk=new JButton("ç™»é™†");
     private JButton share1=new JButton("share");
     private JButton share2=new JButton("share");
     private JButton share3=new JButton("share");
@@ -52,14 +52,12 @@ public class UImain extends JFrame{
     private JButton like2=new JButton("like");
     private JButton like3=new JButton("like");
     public JButton sendTo=new JButton("send");
-    private JCheckBox bing =new JCheckBox("±ØÓ¦",false);
-    private JCheckBox youdao =new JCheckBox("ÓĞµÀ",false);
-    private JCheckBox baidu =new JCheckBox("°Ù¶È",false);
+    private JCheckBox bing =new JCheckBox("å¿…åº”",false);
+    private JCheckBox youdao =new JCheckBox("æœ‰é“",false);
+    private JCheckBox baidu =new JCheckBox("ç™¾åº¦",false);
 
 	public UImain() throws Exception {
-		//txOut.setEditable(false);   //Ö»¶Á
-		//txOut.setLineWrap(true);  //×Ô¶¯»»ĞĞ
-		//txOut.setFont(new Font("Î¢ÈíÑÅºÚ",Font.BOLD,20));//×ÖÌå
+
 		txInput.setFocusable(true);
 		jlist.setFixedCellWidth(200);
 		
@@ -131,7 +129,7 @@ public class UImain extends JFrame{
 
 		add(result,BorderLayout.CENTER);
 		
-		login.addActionListener(new ActionListener() {					//µÇÂ½
+		login.addActionListener(new ActionListener() {					
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				 final JFrame frame=new JFrame("Login");
@@ -167,7 +165,7 @@ public class UImain extends JFrame{
 			public void actionPerformed(ActionEvent arg0) {
 				 final JFrame frame=new JFrame("Register");
 	             frame.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
-	             frame.add(new JLabel("ID½öÓÉÊı×Ö¡¢×ÖÄ¸×é³É£¬16¸ö×Ö·ûÒÔÄÚ"));
+	             frame.add(new JLabel("IDä»…ç”±æ•°å­—ã€å­—æ¯ç»„æˆï¼Œ16ä¸ªå­—ç¬¦ä»¥å†…"));
 	             frame.add(new JLabel("Id   "));
 	             frame.add(regIdInput);
 	             frame.add(new JLabel("Key"));
@@ -213,7 +211,7 @@ public class UImain extends JFrame{
 		like3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ClickLike.like(currentWord, "youdao");
+				ClickLike.like(currentWord, "bing");
 			}
 		});
 		
@@ -231,7 +229,7 @@ public class UImain extends JFrame{
 		});
 		
 		// TODO: Maybe need to be deleted.
-		txInput.getDocument().addDocumentListener(new DocumentListener(){  //ÊäÈë¿ò
+		txInput.getDocument().addDocumentListener(new DocumentListener(){  //ï¿½ï¿½ï¿½ï¿½ï¿½
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 			}
@@ -266,7 +264,7 @@ public class UImain extends JFrame{
 		}
 		);
 		
-		btSearch.addActionListener(new ActionListener(){   //µã»÷search°´Å¥
+		btSearch.addActionListener(new ActionListener(){   //ï¿½ï¿½ï¿½searchï¿½ï¿½Å¥
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				currentWord = txInput.getText();

@@ -8,7 +8,8 @@ public class GetExplaination {
 	public GetExplaination() { }
 	public static String[] get(String word, int searchOption) {
 		// The query format: query word 111 <-- option: baidu | youdao | bing
-		String message = "query" + " " + word + " " + searchOption;
+		String searchString=String.format("%03d", searchOption);
+		String message = "query" + " " + word + " " + searchString;
 		new Thread(new SendMessage(SendMessage.SERVER_IP, message)).start();
 		while (explanation == null);
 		String[] temp = explanation.split(" ");

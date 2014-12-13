@@ -22,9 +22,12 @@ public class DealAnswer implements Runnable {
 		}
 		else if (messageReceive.contains("Login")){
 			if (messageReceive.equals("Login Success!")){
+				UserManage.setLogined(true);
+				UserInfo.setName(UserManage.name);
 				JOptionPane.showConfirmDialog(null, "Login Success!");
 			}
 			else{
+				UserManage.setLogined(false);
 				JOptionPane.showConfirmDialog(null, "Login Failed!");
 			}
 		}
