@@ -1,13 +1,16 @@
 package client;
 
 import javax.swing.*;
+
 import java.awt.event.*;
 import java.awt.*;
+
 import javax.swing.JFrame;
 
-public class checklist extends JFrame {
+@SuppressWarnings("serial")
+public class CheckOnlineList extends JFrame {
 	private JButton sendTo=new JButton();
-    public checklist() {
+    public CheckOnlineList() {
         super("Send");
         JFrame jFrame=new JFrame();
         //String[] listData = {"Apple", "Orange", "Cherry", "Blue Berry",
@@ -23,7 +26,6 @@ public class checklist extends JFrame {
         final JList listDescription = new JList(listData);
         listDescription.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listDescription.addMouseListener(new MouseAdapter() {
-
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() != 2) {
                     return;
@@ -42,7 +44,6 @@ public class checklist extends JFrame {
         listCheckBox.setCellRenderer(new CheckBoxRenderer());
         listCheckBox.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listCheckBox.addMouseListener(new MouseAdapter() {
-
             public void mouseClicked(MouseEvent me) {
                 int selectedIndex = listCheckBox.locationToIndex(me.getPoint());
                 if (selectedIndex < 0) {
@@ -97,7 +98,8 @@ public class checklist extends JFrame {
     }
 
     /* Inner class that renders JCheckBox to JList*/
-    class CheckBoxRenderer extends JCheckBox implements ListCellRenderer {
+    @SuppressWarnings("rawtypes")
+	class CheckBoxRenderer extends JCheckBox implements ListCellRenderer {
 
         public CheckBoxRenderer() {
             setBackground(UIManager.getColor("List.textBackground"));

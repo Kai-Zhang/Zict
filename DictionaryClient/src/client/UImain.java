@@ -1,7 +1,12 @@
 package client;
 import javax.swing.*;
+
 import java.awt.event.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+
 import javax.swing.event.*;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -9,6 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import network.ReceiveFromServer;
+import network.SendMessage;
+
+@SuppressWarnings("serial")
 public class UImain extends JFrame{
 	private static final ActionListener ActionListener = null;
 	private String[] ListWord =new String[100];  //联想表
@@ -39,7 +48,6 @@ public class UImain extends JFrame{
     private JCheckBox baidu =new JCheckBox("百度",false);
 
 	public UImain()throws Exception{
-		
 		//txOut.setEditable(false);   //只读
 		//txOut.setLineWrap(true);  //自动换行
 		//txOut.setFont(new Font("微软雅黑",Font.BOLD,20));//字体
@@ -115,10 +123,8 @@ public class UImain extends JFrame{
 		add(result,BorderLayout.CENTER);
 		
 		login.addActionListener(new ActionListener() {					//登陆
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				 final JFrame frame=new JFrame("Login");
 	             frame.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
 	             
@@ -132,23 +138,24 @@ public class UImain extends JFrame{
 	             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 	             frame.setVisible(true);
 			}
-
 		});
 		
 		loginOk.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
+				String userID = idInput.getText();
+				String password = keyInput.getText();
+				if (userID == null || password == null) {
+					return;
+				}
+				UserManage.login(userID, password);
+				// TODO: Result Echo
 			}
 		});
 		
 		register.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				 final JFrame frame=new JFrame("Register");
 	             frame.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
 	             frame.add(new JLabel("ID仅由数字、字母组成，16个字符以内"));
@@ -167,69 +174,58 @@ public class UImain extends JFrame{
 		});
 		
 		registerOk.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
+				String userID = regIdInput.getText();
+				String password = regKeyInput1.getText();
+				String passwordConfirm = regKeyInput2.getText();
+				// TODO: More Careful Password Check
+				if (userID == null || password == null || passwordConfirm.equals(password)) {
+					return;
+				}
+				UserManage.register(userID, password);
 			}
 		});
 		
 		like1.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		
 		like2.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		
 		like3.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		
 		share1.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				 
-	             checklist checkList = new checklist();
+	             CheckOnlineList checkList = new CheckOnlineList();
 	             checkList.addWindowListener(new WindowAdapter() {
-
 	                 public void windowClosing(WindowEvent we) {
 	                    // System.exit(0);
 	                 }
 	             });
-	            
 			}
 		});
 		
+		// TODO: Maybe need to be deleted.
 		txInput.getDocument().addDocumentListener(new DocumentListener(){  //输入框
-
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				String in = txInput.getText();
 				
 				
@@ -238,62 +234,58 @@ public class UImain extends JFrame{
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				
-				
 			}
 			});
 		
 		
 		txInput.addKeyListener(new KeyListener(){
-
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		
 		}
 		);
 		
 		btSearch.addActionListener(new ActionListener(){   //点击search按钮
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
+				String[] explanation = GetExplaination.get(txInput.getText());
+				txOut1.setText(explanation[0]);
+				txOut2.setText(explanation[1]);
+				txOut3.setText(explanation[2]);
 			}
-			
 		});
-
 
 		setTitle("My Dictionary");
 		setLocation(MAXIMIZED_HORIZ, MAXIMIZED_VERT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(683, 500);
 		setVisible(true);
-		
 	}
 	
 
 	public static void main(String []args)throws Exception{
-
-		UImain frame=new UImain() ;
-
-	
+		File configFile = new File("config.txt");
+		if (!configFile.exists()) {
+			System.out.println("Configuration File Missing!");
+			return;
+		}
+		System.out.print("Connecting Remote Server ... ");
+		Scanner configScanner = new Scanner(configFile);
+		String serverIP = configScanner.nextLine();
+		SendMessage.SERVER_IP = serverIP;
+		new Thread(new ReceiveFromServer(serverIP)).start();
+		configScanner.close();
+		System.out.println("Done");
+		new UImain();
 	}
-
 }
 
