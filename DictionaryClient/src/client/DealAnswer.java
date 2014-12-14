@@ -12,16 +12,17 @@ public class DealAnswer implements Runnable {
 	// TODO: fill the message handler
 	@Override
 	public void run() {
-		if (messageReceive.contains("Register")){
-			if (messageReceive.equals("Register Success!")){
+		String[] context=messageReceive.split(" ");
+		if (context[0].equals("Register")){
+			if (context[1].equals("Success!")){
 				JOptionPane.showConfirmDialog(null, "Register Success!");
 			}
 			else{
 				JOptionPane.showConfirmDialog(null, "Register Failed!");
 			}
 		}
-		else if (messageReceive.contains("Login")){
-			if (messageReceive.equals("Login Success!")){
+		else if (context[0].equals("Login")){
+			if (context[1].equals("Success!")){
 				UserManage.setLogined(true);
 				UserInfo.setName(UserManage.name);
 				JOptionPane.showConfirmDialog(null, "Login Success!");
@@ -32,26 +33,28 @@ public class DealAnswer implements Runnable {
 			}
 		}
 		// Maybe Like doesn't need to echo --> will be deleted eventually
-		else if (messageReceive.contains("Zan")){
-			if (messageReceive.equals("Zan Success!")){
-				//Msg Box
+		else if (context[0].equals("Zan")){
+			if (context[1].equals("Success!")){
+				JOptionPane.showConfirmDialog(null, "Zan Success!");
 			}
 			else{
-				//Msg Box
+				JOptionPane.showConfirmDialog(null, "Zan Failed!");
 			}
 		}
-		else if (messageReceive.contains("Cancel")){
-			if (messageReceive.equals("Cancel Success!")){
-				//Msg Box
+		else if (context[0].equals("Cancel")){
+			if (context[1].equals("Success!")){
+				JOptionPane.showConfirmDialog(null, "Cancel Success!");
 			}
 			else{
-				//Msg Box
 			}
 		}
-		else if (messageReceive.contains("Query")) {
-			GetExplaination.explanation = messageReceive.substring(6);
+		else if (context[0].equals("Answer")) {
+			GetExplaination.explanation = messageReceive.substring(7);
 		}
-		else if (messageReceive.equals("No such words!")){
+		else if (context[0].equals("share")) {
+			//Show Share 
+		}
+		else if (context.equals("No such words!")){
 			JOptionPane.showConfirmDialog(null, "No such words!");
 		}
 		else{

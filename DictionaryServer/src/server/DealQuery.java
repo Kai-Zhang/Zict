@@ -3,6 +3,8 @@ package server;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import sql.SQLManager;
+
 public class DealQuery implements Runnable{
 	String nowString;
 	String IP;
@@ -61,7 +63,7 @@ public class DealQuery implements Runnable{
 						content="No such words!";
 					}
 					else{
-						content="answer: ";
+						content="Answer ";
 					for (Answer i:answers){
 						content=content+i.which+":"+i.explain+" ";
 					}
@@ -105,8 +107,20 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 			}
-			Thread thread=new Thread(new SendToClient(content, IP));
-			thread.start();
+			if (temp[0].contains("share")){
+				String touser=temp[1];
+				try {
+					String userIP=SQLManager.QueryIP(touser);
+					new Thread(new SendToClient(nowString,userIP)).start();
+					return ;
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			new Thread(new SendToClient(content,IP)).start();
 	}
 	
 }

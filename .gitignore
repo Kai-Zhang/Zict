@@ -1,2 +1,4 @@
 /DictionaryClient/bin/*
 /DictionaryServer/bin/*
+/DictionaryAndroid/bin/*
+/DictionaryAndroid/libs/*

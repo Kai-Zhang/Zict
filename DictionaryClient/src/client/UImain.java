@@ -197,7 +197,8 @@ public class UImain extends JFrame{
 		like1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ClickLike.like(currentWord, "baidu");
+				String text=txOut1.getText().split(":")[0];
+				ClickLike.like(currentWord, text);
 			}
 		});
 		
@@ -279,9 +280,9 @@ public class UImain extends JFrame{
 					option += 1;
 				}
 				String[] explanation = GetExplaination.get(currentWord, option);
-				txOut1.setText(explanation[0]);
-				txOut2.setText(explanation[1]);
-				txOut3.setText(explanation[2]);
+				if (explanation.length>=1) txOut1.setText(explanation[0]);
+				if (explanation.length>=2) txOut2.setText(explanation[1]);
+				if (explanation.length>=3) txOut3.setText(explanation[2]);
 			}
 		});
 
