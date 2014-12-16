@@ -17,7 +17,8 @@ public class SQLManagerTest {
 	@Test
 	public void test() throws Exception {
 		SQLManager.init();
-		SQLManager.LocalAnswer("test");
+		ArrayList<Answer> ans=SQLManager.LocalAnswer("test");
+		System.out.println(ans.get(0).explain);
 	}
 
 }

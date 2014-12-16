@@ -52,18 +52,17 @@ public class DealQuery implements Runnable{
 			}
 			if (temp[0].equals("query")){
 				String word=temp[1];
-				String st=temp[2];
 				try {
 					Query query=new Query();
-					ArrayList<Answer> answers=query.getExplaination(word, st);
-					System.out.println(answers);
+					ArrayList<Answer> answers=query.getExplaination(word);
 					if (answers==null){
 						content="No such words!";
 					}
 					else{
 						content="Answer ";
+						
 					for (Answer i:answers){
-						content=content+i.which+":"+i.explain+" ";
+						content=content+i.which+":"+i.explain+";likenumber:"+i.zan+"###";
 					}
 					}
 				} catch (Exception e) {

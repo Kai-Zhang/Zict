@@ -17,8 +17,7 @@ public class SQLManager {
 			String insert="insert into zanlist values('"+user+"','"+word+"','"+which+"');";
 			System.out.println(insert);
 			statement.executeUpdate(insert);
-			String update="update zan set "+which+"="+which+"+1"+" where ID='"+user
-					+"' and word='"+word+"';";
+			String update="update zan set "+which+"="+which+"+1"+" where word='"+word+"';";
 			statement.executeUpdate(update);
 			return true;
 		}
@@ -42,12 +41,16 @@ public class SQLManager {
 			ArrayList<Answer> ans=new ArrayList<>();
 			Answer baidu=new Answer(),bing=new Answer(),youdao=new Answer();
 			String query="select * from explains where word='"+word+"';";
-			//System.out.println(query);
+			System.out.println(query);
 			
 			ResultSet resultSet=statement.executeQuery(query);
 			if (!resultSet.next()){
+				System.out.println("A");
 				return null;
 			}		
+			baidu.explain=resultSet.getString("baidu");
+			bing.explain=resultSet.getString("bing");
+			youdao.explain=resultSet.getString("youdao");
 			query="select * from zan where word='"+word+"';";
 			resultSet=statement.executeQuery(query);
 			if (!resultSet.next()){
@@ -77,6 +80,7 @@ public class SQLManager {
 					+temp[2]+"');";
 			statement.executeUpdate(insert);
 			insert="insert into zan values('"+word+"',"+0+","+0+","+0+");";
+			System.out.println(insert);
 			statement.executeUpdate(insert);
 		}
 	}
