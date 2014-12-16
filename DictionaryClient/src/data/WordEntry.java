@@ -28,4 +28,18 @@ public class WordEntry {
 		}
 		return explanations[rating];
 	}
+	
+	public static void sortExplanation() {
+		for (int i = 0; i < 3; i ++) {
+			int popular = i;
+			for (int j = i + 1; j < 3; j ++) {
+				if (explanations[j].getLikeNumber() > explanations[popular].getLikeNumber()) {
+					popular = j;
+				}
+			}
+			Explanation temp = explanations[i];
+			explanations[i] = explanations[popular];
+			explanations[popular] = temp;
+		}
+	}
 }

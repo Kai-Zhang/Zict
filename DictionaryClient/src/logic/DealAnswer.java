@@ -53,6 +53,7 @@ public class DealAnswer implements Runnable {
 		else if (context[0].equals("Answer")) {
 			if (context[1].equals("NoSuchWord")) {
 				JOptionPane.showConfirmDialog(null, "No such word!");
+				ServiceProvider.explanation = "Null";
 			}
 			else {
 				ServiceProvider.explanation = messageReceive.substring(7);

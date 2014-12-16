@@ -41,6 +41,12 @@ public class ServiceProvider {
 		while (explanation == null){
 			System.out.print("");
 		}
+		if (explanation.equals("Null")) {
+			WordEntry.setExplanation(0, null);
+			WordEntry.setExplanation(1, null);
+			WordEntry.setExplanation(2, null);
+			return;
+		}
 		String[] result = explanation.split("###");
 		for (int i = 0; i < 3; i ++) {
 			if (result[i].startsWith("baidu")) {
@@ -56,6 +62,7 @@ public class ServiceProvider {
 				WordEntry.setExplanation(i, new Explanation("youdao", exp[0], Integer.parseInt(exp[1])));
 			}
 		}
+		WordEntry.sortExplanation();
 		return;
 	}
 }

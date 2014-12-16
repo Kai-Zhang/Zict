@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.event.*;
@@ -29,7 +30,6 @@ import network.Network;
 @SuppressWarnings("serial")
 public class UImain extends JFrame{
 	private static final ActionListener ActionListener = null;
-	private String currentWord = null;
 	private String[] ListWord =new String[100];  //�����
 	private JList jlist = new JList(ListWord);
 	private JTextArea txOut1 = new JTextArea("My Dictionary",5,20);
@@ -200,21 +200,21 @@ public class UImain extends JFrame{
 		like1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ServiceProvider.clickLike(currentWord, WordEntry.getExplanation(0).getSource());
+				ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(0).getSource());
 			}
 		});
 		
 		like2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ServiceProvider.clickLike(currentWord, WordEntry.getExplanation(1).getSource());
+				ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(1).getSource());
 			}
 		});
 		
 		like3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ServiceProvider.clickLike(currentWord, WordEntry.getExplanation(2).getSource());
+				ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(2).getSource());
 			}
 		});
 		
@@ -269,20 +269,42 @@ public class UImain extends JFrame{
 		btSearch.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				currentWord = txInput.getText();
+				String currentWord = txInput.getText();
 				ServiceProvider.getExplanation(currentWord);
-				Explanation explanation = WordEntry.getExplanation(0);
-				if (explanation.getExplanation().length() >= 1) {
-					txOut1.setText(explanation.getExplanation());
-				} else txOut1.setText("");
-				explanation = WordEntry.getExplanation(1);
-				if (explanation.getExplanation().length() >= 1) {
-					txOut2.setText(explanation.getExplanation());
-				} else txOut2.setText("");
-				explanation = WordEntry.getExplanation(2);
-				if (explanation.getExplanation().length() >= 1) {
-					txOut3.setText(explanation.getExplanation());
-				} else txOut3.setText("");
+				if (WordEntry.getExplanation(0) == null) {
+					txOut1.setText("");
+					txOut2.setText("");
+					txOut3.setText("");
+					return;
+				}
+				ArrayList<Explanation> outputList = new ArrayList<Explanation>();
+				for (int i = 0; i < 3; i ++) {
+					String source = WordEntry.getExplanation(i).getSource();
+					if (source.equals("baidu")) {
+						if (baidu.isSelected()) {
+							outputList.add(WordEntry.getExplanation(i));
+						}
+					}
+					else if (source.equals("bing")) {
+						if (bing.isSelected()) {
+							outputList.add(WordEntry.getExplanation(i));
+						}
+					}
+					else {
+						if (youdao.isSelected()) {
+							outputList.add(WordEntry.getExplanation(i));
+						}
+					}
+				}
+				if (outputList.size() >= 1) {
+					txOut1.setText(outputList.get(0).getExplanation());
+				}
+				if (outputList.size() >= 2) {
+					txOut1.setText(outputList.get(1).getExplanation());
+				}
+				if (outputList.size() == 3) {
+					txOut1.setText(outputList.get(2).getExplanation());
+				}
 			}
 		});
 		addWindowListener(new WindowListener() {
