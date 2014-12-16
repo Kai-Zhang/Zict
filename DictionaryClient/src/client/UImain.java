@@ -5,6 +5,7 @@
  */
 
 package client;
+
 import javax.swing.*;
 
 import java.awt.event.*;
@@ -22,10 +23,8 @@ import javax.swing.JTextField;
 import data.Explanation;
 import data.UserInfo;
 import data.WordEntry;
-import logic.ClickLike;
-import logic.GetExplaination;
+import logic.ServiceProvider;
 import network.Network;
-
 
 @SuppressWarnings("serial")
 public class UImain extends JFrame{
@@ -192,36 +191,36 @@ public class UImain extends JFrame{
 				if (userID == null || password == null || !passwordConfirm.equals(password)) {
 					return;
 				}
-				UserInfo.register(userID, password);
+				if (userID.matches("\\w{1,16}") && password.matches("\\w{6,}")) {
+					UserInfo.register(userID, password);
+				}
 			}
 		});
 		
 		like1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String text=txOut1.getText().split(":")[0];
-				ClickLike.like(currentWord, text);
+				ServiceProvider.clickLike(currentWord, WordEntry.getExplanation(0).getSource());
 			}
 		});
 		
 		like2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ClickLike.like(currentWord, "youdao");
+				ServiceProvider.clickLike(currentWord, WordEntry.getExplanation(1).getSource());
 			}
 		});
 		
 		like3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ClickLike.like(currentWord, "bing");
+				ServiceProvider.clickLike(currentWord, WordEntry.getExplanation(2).getSource());
 			}
 		});
 		
 		share1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 	             CheckOnlineList checkList = new CheckOnlineList();
 	             checkList.addWindowListener(new WindowAdapter() {
 	                 public void windowClosing(WindowEvent we) {
@@ -267,11 +266,11 @@ public class UImain extends JFrame{
 		}
 		);
 		
-		btSearch.addActionListener(new ActionListener(){   //���search��ť
+		btSearch.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				currentWord = txInput.getText();
-				GetExplaination.get(currentWord);
+				ServiceProvider.getExplanation(currentWord);
 				Explanation explanation = WordEntry.getExplanation(0);
 				if (explanation.getExplanation().length() >= 1) {
 					txOut1.setText(explanation.getExplanation());

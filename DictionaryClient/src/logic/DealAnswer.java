@@ -11,7 +11,6 @@ public class DealAnswer implements Runnable {
 		messageReceive = message;
 	}
 	
-	// TODO: fill the message handler
 	@Override
 	public void run() {
 		String[] context = messageReceive.split(" ");
@@ -33,15 +32,9 @@ public class DealAnswer implements Runnable {
 			}
 		}
 		else if (context[0].equals("Logout")) {
-			if (context[1].equals("Success!")) {
-				UserInfo.setLoginStatus(false);
-				JOptionPane.showConfirmDialog(null, "Logout Success!");
-			}
-			else {
-				JOptionPane.showConfirmDialog(null, "Logout Failed!");
-			}
+			UserInfo.setLoginStatus(false);
+			JOptionPane.showConfirmDialog(null, "Logout Success!");
 		}
-		// Maybe Like doesn't need to echo --> will be deleted eventually
 		else if (context[0].equals("Like")){
 			if (context[1].equals("Success!")){
 				JOptionPane.showConfirmDialog(null, "Like Success!");
@@ -58,13 +51,18 @@ public class DealAnswer implements Runnable {
 			}
 		}
 		else if (context[0].equals("Answer")) {
-			GetExplaination.setExplanation(new String(messageReceive.substring(7)));
+			if (context[1].equals("NoSuchWord")) {
+				JOptionPane.showConfirmDialog(null, "No such word!");
+			}
+			else {
+				ServiceProvider.explanation = messageReceive.substring(7);
+			}
 		}
-		else if (context[0].equals("share")) {
-			//Show Share 
-		}
-		else if (context.equals("No such words!")){
-			JOptionPane.showConfirmDialog(null, "No such words!");
+		else if (context[0].equals("Share")) {
+			String[] cardParts = messageReceive.split("###");
+			// cardParts[1] --> Word
+			// cardParts[2] --> Explanation
+			// Draw Word Card
 		}
 		else{
 			//Set Explaination

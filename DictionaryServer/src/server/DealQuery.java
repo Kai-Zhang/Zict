@@ -20,7 +20,7 @@ public class DealQuery implements Runnable{
 	@Override
 	public void run() {
 			String []temp=nowString.split(" ");
-			if (temp[0].equals("register")){
+			if (temp[0].equals("Register")){
 				String user=temp[1];
 				String passwd=temp[2];
 				try {
@@ -34,7 +34,7 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 			}
-			if (temp[0].equals("login")){
+			if (temp[0].equals("Login")){
 				String user=temp[1];
 				String passwd=temp[2];
 				try {
@@ -50,13 +50,13 @@ public class DealQuery implements Runnable{
 				//Broadcast
 				
 			}
-			if (temp[0].equals("query")){
+			if (temp[0].equals("Query")){
 				String word=temp[1];
 				try {
 					Query query=new Query();
 					ArrayList<Answer> answers=query.getExplaination(word);
 					if (answers==null){
-						content="No such words!";
+						content="Answer NoSuchWord";
 					}
 					else{
 						content="Answer ";
@@ -70,7 +70,7 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 			}
-			if (temp[0].equals("like")){
+			if (temp[0].equals("Like")){
 				String user=temp[1];
 				String word=temp[2];
 				String which=temp[3];
@@ -87,7 +87,7 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 			}
-			if (temp[0].equals("cancel")){
+			if (temp[0].equals("Cancel")){
 				String user=temp[1];
 				String word=temp[2];
 				String which=temp[3];
@@ -104,7 +104,7 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 			}
-			if (temp[0].equals("share")){
+			if (temp[0].equals("Share")){
 				String touser=temp[1];
 				try {
 					String userIP=SQLManager.QueryIP(touser);
@@ -117,14 +117,14 @@ public class DealQuery implements Runnable{
 				}
 				
 			}
-			if (temp[0].equals("logout")){
+			if (temp[0].equals("Logout")){
 				try {
 					SQLManager.Logout(temp[1]);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				content="Log Out!";
+				content="Logout";
 			}
 			new Thread(new SendToClient(content,IP)).start();
 	}

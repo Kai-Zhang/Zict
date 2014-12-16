@@ -23,7 +23,7 @@ public class UserInfo {
 	public static void login(String name, String password) {
 		isLogged = false;
 		UserInfo.name = name;
-		String message = "login" + " " + name + " " + password + '\n';
+		String message = "Login" + " " + name + " " + password + '\n';
 		Network.sendToServer(message);
 	}
 	
@@ -31,12 +31,12 @@ public class UserInfo {
 		if (!isLogged) {
 			return;
 		}
-		String message = "logout" + " " + name;
+		String message = "Logout" + " " + name;
 		Network.sendToServer(message);
 	}
 	
 	public static void register(String name, String password) {
-		String message = "register" + " " + name + " " + password;
+		String message = "Register" + " " + name + " " + password;
 		Network.sendToServer(message);
 	}
 }
