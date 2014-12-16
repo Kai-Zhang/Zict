@@ -10,25 +10,7 @@ public class Query {
 	Answer baiduAnswer=new Answer();
 	Answer bingAnswer=new Answer();
 	Answer youdaoAnswer=new Answer();
-	public ArrayList<Answer> Sort(ArrayList<Answer> unsorted,String st){
-		if (st.charAt(0)=='0')
-			for (int i=0;i<unsorted.size();i++){
-				if (unsorted.get(i).which=="baidu"){
-					unsorted.remove(i);
-				}
-			}
-		if (st.charAt(1)=='0')
-			for (int i=0;i<unsorted.size();i++){
-				if (unsorted.get(i).which=="bing"){
-					unsorted.remove(i);
-				}
-			}
-		if (st.charAt(2)=='0')
-			for (int i=0;i<unsorted.size();i++){
-				if (unsorted.get(i).which=="youdao"){
-					unsorted.remove(i);
-				}
-			}
+	public ArrayList<Answer> Sort(ArrayList<Answer> unsorted){
 		for (int i=0;i<unsorted.size();i++)
 			for (int j=i+1;j<unsorted.size();j++)
 			{
@@ -62,14 +44,13 @@ public class Query {
 		//Caching in Local Result
 		return now;
 	} 
-	public  ArrayList<Answer> getExplaination(String word,String st) throws Exception{
+	public  ArrayList<Answer> getExplaination(String word) throws Exception{
 		ArrayList<Answer> ans1=getLocalResult(word);
-		System.out.println(ans1!=null);
-		if (ans1!=null) return Sort(ans1,st);
+		if (ans1!=null) return Sort(ans1);
 		else {
 			ArrayList<Answer> result = getNetResult(word);
 			if (result == null) return null;
-			return Sort(result,st);
+			return Sort(result);
 		}
 	}
 }
