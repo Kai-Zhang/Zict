@@ -1,7 +1,16 @@
 package com.example.dictionaryandroid;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
+import logic.ServiceProvider;
+import data.Explanation;
+import data.UserInfo;
+import data.WordEntry;
+import network.Network;
 import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
@@ -26,8 +35,10 @@ public class MainActivity extends Activity {
 	ImageButton homeButton1,homeButton2,homeButton3;
 	CheckBox checkBoxBaidu,checkBoxYoudao,checkBoxBing;
 	static EditText editText1,editText2,editText3;
+	Button loginButton,registerButton;
+	EditText inputid,inputpasswd;
 	EditText inputText;
-	final String IP="";
+	static String IP="";
 	Button searchButton;
 	private View home,user,zan;
 	boolean zanfirst,userfirst;
@@ -85,6 +96,9 @@ public class MainActivity extends Activity {
 			editText1=(EditText) findViewById(R.id.editText1);
 			editText2=(EditText) findViewById(R.id.editText2);
 			editText3=(EditText) findViewById(R.id.editText3);
+			editText1.setFocusable(false);
+			editText2.setFocusable(false);
+			editText3.setFocusable(false);
 		}
 	}
 	void findUser(){
@@ -95,10 +109,48 @@ public class MainActivity extends Activity {
 			homeButton2=(ImageButton)findViewById(R.id.home2);
 			zanButton2.setOnClickListener(new ZanClick());
 			homeButton2.setOnClickListener(new HomeClick());
-			
+			inputid=(EditText) findViewById(R.id.inputid);
+			inputpasswd=(EditText) findViewById(R.id.inputpasswd);
+			loginButton=(Button) findViewById(R.id.loginbutton);
+			loginButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					String userID=inputid.getText().toString();
+					String password=inputpasswd.getText().toString();
+					if (userID==null||password==null) return ;
+					UserInfo.login(userID, password);
+				}
+			});
+			registerButton=(Button) findViewById(R.id.registerbutton);
+			registerButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					String userID=inputid.getText().toString();
+					String password=inputpasswd.getText().toString();
+					if (userID==null||password==null) return ;
+					if (userID.matches("\\w{1,16}") && password.matches("\\w{6,}")) {
+						UserInfo.register(userID, password);
+					}
+				}
+			});
 		}
 	}
 	void init(){
+		/*File configFile = new File("config.txt");
+		Scanner configScanner = new Scanner(configFile);
+		String serverIP = configScanner.nextLine();*/
+		String serverIP="127.0.0.1";
+		System.out.println(serverIP);
+		Network.receiveFromServer();
+		try{
+			Network.connectToServer(serverIP);
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
 		LayoutInflater inflater=LayoutInflater.from(this);
 		home=inflater.inflate(R.layout.home, null);
 		user=inflater.inflate(R.layout.user, null);
@@ -112,6 +164,7 @@ public class MainActivity extends Activity {
 		checkBoxYoudao=(CheckBox) findViewById(R.id.checkBoxyoudao);
 		checkBoxBing=(CheckBox) findViewById(R.id.checkBoxbing);
 		inputText=(EditText) findViewById(R.id.inputText);
+		
 		homeButton1.setClickable(false);
 		zanButton1.setOnClickListener(new ZanClick());
 		userButton1.setOnClickListener(new UserClick());
@@ -120,22 +173,47 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				int option=0;
-				if (checkBoxBaidu.isSelected()) option+=100;
-				if (checkBoxBing.isSelected()) option+=10;
-				if (checkBoxBing.isSelected()) option+=1;
-				String st=String.format("%03d", option);
-				String word=inputText.getText().toString();
-				String message = "query" + " " + word + " " + st;
-				new Thread(new SendMessage(IP, message)).start();
+				String currentWord =inputText.getText().toString();
+				ServiceProvider.getExplanation(currentWord);
+				if (WordEntry.getExplanation(0) == null) {
+					editText1.setText("");
+					editText2.setText("");
+					editText3.setText("");
+					return;
+				}
+				ArrayList<Explanation> outputList = new ArrayList<Explanation>();
+				for (int i = 0; i < 3; i ++) {
+					String source = WordEntry.getExplanation(i).getSource();
+					if (source.equals("baidu")) {
+						if (checkBoxBaidu.isSelected()) {
+							outputList.add(WordEntry.getExplanation(i));
+						}
+					}
+					else if (source.equals("bing")) {
+						if (checkBoxBing.isSelected()) {
+							outputList.add(WordEntry.getExplanation(i));
+						}
+					}
+					else {
+						if (checkBoxYoudao.isSelected()) {
+							outputList.add(WordEntry.getExplanation(i));
+						}
+					}
+				}
+				if (outputList.size() >= 1) {
+					editText1.setText(outputList.get(0).getExplanation());
+				}
+				else editText1.setText("");
+				if (outputList.size() >= 2) {
+					editText2.setText(outputList.get(1).getExplanation());
+				}
+				else editText2.setText("");
+				if (outputList.size() == 3) {
+					editText3.setText(outputList.get(2).getExplanation());
+				}
+				else editText3.setText("");
 			}
 		});
-		try {
-			new Thread(new ReceiveFromServer(IP));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

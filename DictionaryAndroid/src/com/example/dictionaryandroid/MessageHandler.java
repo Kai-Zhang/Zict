@@ -1,5 +1,7 @@
 package com.example.dictionaryandroid;
 
+import logic.ServiceProvider;
+import data.UserInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,55 +14,74 @@ public class MessageHandler extends Handler {
 	public void handleMessage(Message msg){
 		super.handleMessage(msg);
 		Bundle bundle=msg.getData();
-		String data=bundle.getString("data");
-		if (data.contains("Register")){
-			if (data.equals("Register Success!")){
-				Toast.makeText(MainActivity.getContext(), "Register Success!",Toast.LENGTH_LONG).show();
+		String messageReceive=bundle.getString("data");
+		String[] context = messageReceive.split(" ");
+		if (context[0].equals("Register")){
+			if (context[1].equals("Success!")){
+				Toast.makeText(MainActivity.getContext(), "Register Success!",
+						Toast.LENGTH_LONG).show();
 			}
 			else{
-				Toast.makeText(MainActivity.getContext(), "Register Failed!",Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.getContext(), "Register Failed!",
+						Toast.LENGTH_LONG).show();
 			}
 		}
-		else if (data.contains("Login")){
-			if (data.equals("Login Success!")){
-				//UserManage.setLogined(true);
-				//UserInfo.setName(UserManage.name);
-				Toast.makeText(MainActivity.getContext(), "Login Success!!",Toast.LENGTH_LONG).show();
+		else if (context[0].equals("Login")){
+			if (context[1].equals("Success!")){
+				UserInfo.setLoginStatus(true);
+				Toast.makeText(MainActivity.getContext(), "Login Success!",
+						Toast.LENGTH_LONG).show();
 			}
 			else{
-				//UserManage.setLogined(false);
-				Toast.makeText(MainActivity.getContext(), "Login Failed!!",Toast.LENGTH_LONG).show();
+				UserInfo.setLoginStatus(false);
+				Toast.makeText(MainActivity.getContext(), "Login Failed!",
+						Toast.LENGTH_LONG).show();
 			}
 		}
-		// Maybe Like doesn't need to echo --> will be deleted eventually
-		else if (data.contains("Zan")){
-			if (data.equals("Zan Success!")){
-				Toast.makeText(MainActivity.getContext(), "Zan Success!",Toast.LENGTH_LONG).show();
+		else if (context[0].equals("Logout")) {
+			UserInfo.setLoginStatus(false);
+			Toast.makeText(MainActivity.getContext(), "Logout Success!",
+					Toast.LENGTH_LONG).show();
+		}
+		else if (context[0].equals("Like")){
+			if (context[1].equals("Success!")){
+				Toast.makeText(MainActivity.getContext(), "Like Success!",
+						Toast.LENGTH_LONG).show();
+			}
+			else{
+				Toast.makeText(MainActivity.getContext(), "Like Failed!",
+						Toast.LENGTH_LONG).show();
 			}
 		}
-		else if (data.contains("Cancel")){
-			if (data.equals("Cancel Success!")){
-				Toast.makeText(MainActivity.getContext(), "Cancel Success!",Toast.LENGTH_LONG).show();
+		else if (context[0].equals("Cancel")){
+			if (context[1].equals("Success!")){
+				Toast.makeText(MainActivity.getContext(), "Cancel Success!",
+						Toast.LENGTH_LONG).show();
+			}
+			else{
 			}
 		}
-		else if (data.contains("Query")) {
-			String [] explain=data.split(" ");
-			String option=explain[4];
-			if (option.charAt(0)=='1'){
-				MainActivity.getEditText1().setText(explain[1]);
+		else if (context[0].equals("Answer")) {
+			if (context[1].equals("NoSuchWord")) {
+				Toast.makeText(MainActivity.getContext(), "No such words!",
+						Toast.LENGTH_LONG).show();
+				MainActivity.getEditText1().setText("");
+				MainActivity.getEditText2().setText("");
+				MainActivity.getEditText3().setText("");
 			}
-			if (option.charAt(1)=='1'){
-				MainActivity.getEditText2().setText(explain[2]);
-			}
-			if (option.charAt(2)=='1'){
-				MainActivity.getEditText3().setText(explain[3]);
+			else {
+				ServiceProvider.setExplanation(messageReceive.substring(7));
 			}
 		}
-		else if (data.equals("No such words!")){
-			Toast.makeText(MainActivity.getContext(), "No such words!",Toast.LENGTH_LONG).show();
+		else if (context[0].equals("Share")) {
+			String[] cardParts = messageReceive.split("###");
+			// cardParts[1] --> Word
+			// cardParts[2] --> Explanation
+			// Draw Word Card
 		}
-		else{
-			//Set Explaination
+		else if (context[0].equals("Please")){
+			Toast.makeText(MainActivity.getContext(), "Please Login First!",
+					Toast.LENGTH_LONG).show();
 		}
 	}
 }

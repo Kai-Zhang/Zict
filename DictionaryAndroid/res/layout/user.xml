@@ -15,22 +15,46 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" >
 
-		<ListView
-		    android:id="@+id/listView1"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content" >
-		</ListView>
-
        <TableRow
             android:id="@+id/tableRow3"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
+
+           <CheckedTextView
+               android:id="@+id/checkedTextView1"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="用户名" />
+
+           <EditText
+               android:id="@+id/inputid"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:ems="10" />
+
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow4"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
+
+            <CheckedTextView
+                android:id="@+id/CheckedTextView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="密码" />
+
+            <EditText
+                android:id="@+id/inputpasswd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPassword" >
+
+                <requestFocus />
+            </EditText>
+
         </TableRow>
     </TableLayout>
     <LinearLayout
@@ -65,8 +89,24 @@
             android:src="@drawable/bottom_03" />
     </LinearLayout>
 
-    
+    <Button
+        android:id="@+id/loginbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignLeft="@+id/linearLayout2"
+        android:layout_marginBottom="38dp"
+        android:layout_marginLeft="62dp"
+        android:text="登陆" />
 
-    
+    <Button
+        android:id="@+id/registerbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/loginbutton"
+        android:layout_alignBottom="@+id/loginbutton"
+        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@+id/loginbutton"
+        android:text="注册" />
 
 </RelativeLayout>
