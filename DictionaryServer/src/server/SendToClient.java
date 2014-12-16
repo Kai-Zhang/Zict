@@ -18,12 +18,13 @@ public class SendToClient implements Runnable{
 	@Override
 	public void run() {
 		try {
-			Socket socket=new Socket(IP, 5451);
+			Socket socket=IPMap.getSocket(IP);
+			System.out.println(IP);
 			PrintWriter printWriter=new PrintWriter(socket.getOutputStream());
-			printWriter.write(content);
+			System.out.println(content);
+			printWriter.write(content+"\n");
 			printWriter.flush();
-			printWriter.close();
-			socket.close();
+			//printWriter.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

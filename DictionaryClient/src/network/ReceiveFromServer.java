@@ -10,14 +10,19 @@ import client.DealAnswer;
 
 public class ReceiveFromServer implements Runnable{
 	Socket socket;
-	public ReceiveFromServer(String IP) throws UnknownHostException, IOException {
-		socket = new Socket(IP, 60000);
+	BufferedReader reader;
+	public ReceiveFromServer() throws IOException {
+		socket = SendMessage.getSocket();
+		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 	@Override
 	public void run() {
 		while (true){
 			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				if (socket.isClosed()) {
+					socket=new Socket(SendMessage.SERVER_IP, 60000);
+					reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				}
 				String line = reader.readLine();
 				if (line != null){
 					new Thread(new DealAnswer(line)).start();

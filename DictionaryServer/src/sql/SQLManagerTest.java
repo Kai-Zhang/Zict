@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.naming.InitialContext;
+
 import org.junit.Test;
 
 import server.Answer;
@@ -14,10 +16,8 @@ public class SQLManagerTest {
 
 	@Test
 	public void test() throws Exception {
-		
 		SQLManager.init();
-		Query query=new Query();
-		SQLManager.close();
+		SQLManager.LocalAnswer("test");
 	}
 
 }

@@ -10,21 +10,23 @@ public class SQLManager {
 	static Statement statement;
 	public static boolean Addzan (String user,String word,String which) throws SQLException{
 		synchronized (statement) {
-			String query="selct * from zanlist where ID='"+user+"' and word='"+word+"';";
+			String query="select * from zanlist where ID='"+user+"' and word='"+word+"' and which='"+which+"';";
+			System.out.println(query);
 			ResultSet resultSet=statement.executeQuery(query);
 			if (resultSet.next()) return false;
-			String insert="insert into zanlist values('"+user+"','"+word+"');";
+			String insert="insert into zanlist values('"+user+"','"+word+"','"+which+"');";
+			System.out.println(insert);
 			statement.executeUpdate(insert);
 			String update="update zan set "+which+"="+which+"+1"+" where ID='"+user
 					+"' and word='"+word+"';";
-			statement.execute(update);
+			statement.executeUpdate(update);
 			return true;
 		}
 		
 	}
 	public static boolean Deletezan (String user,String word,String which) throws SQLException{
 		synchronized (statement){
-		String query="selct * from zanlist where ID='"+user+"' and word='"+word+"';";
+		String query="select * from zanlist where ID='"+user+"' and word='"+word+"';";
 		ResultSet resultSet=statement.executeQuery(query);
 		if (!resultSet.next()) return false;
 		String delete="delete from zanlist where ID='"+user+"' and word='"+word+"';";
@@ -40,13 +42,12 @@ public class SQLManager {
 			ArrayList<Answer> ans=new ArrayList<>();
 			Answer baidu=new Answer(),bing=new Answer(),youdao=new Answer();
 			String query="select * from explains where word='"+word+"';";
+			//System.out.println(query);
+			
 			ResultSet resultSet=statement.executeQuery(query);
 			if (!resultSet.next()){
 				return null;
-			}
-			baidu.explain=resultSet.getString("baidu");
-			bing.explain=resultSet.getString("bing");
-			youdao.explain=resultSet.getString("youdao");
+			}		
 			query="select * from zan where word='"+word+"';";
 			resultSet=statement.executeQuery(query);
 			if (!resultSet.next()){
@@ -71,19 +72,19 @@ public class SQLManager {
 			for (int i=0;i<3;i++){
 				Answer temps=ans.get(i);
 				temp[i]=temps.explain;
-				System.out.println(i+" "+temp[i]);
 			}
 			String insert="insert into explains values('"+word+"','"+temp[0]+"','"+temp[1]+"','"
 					+temp[2]+"');";
-			statement.execute(insert);
+			statement.executeUpdate(insert);
 			insert="insert into zan values('"+word+"',"+0+","+0+","+0+");";
-			statement.execute(insert);
+			statement.executeUpdate(insert);
 		}
 	}
 	public static boolean AddUser(String user,String passwd,String IP) throws SQLException{
 		synchronized (statement) {
+			System.out.println(user+" "+passwd+" "+IP+"  ");
 			String insert="insert into users values('"+user+"','"+passwd+"','"+IP+"');";
-			return statement.execute(insert);
+			return statement.executeUpdate(insert)==1;
 		}
 	}
 	public static boolean Login(String user,String passwd,String IP) throws SQLException{
@@ -98,6 +99,12 @@ public class SQLManager {
 			}			
 		}
 
+	}
+	public static void Logout(String user) throws SQLException{
+		synchronized (statement) {
+			String update="update users set IP=null where user='"+user+"';";
+			statement.executeUpdate(update);
+		}
 	}
 	public static String QueryIP(String touser) throws SQLException {
 		synchronized (statement) {

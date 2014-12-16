@@ -20,10 +20,9 @@ public class DealQuery implements Runnable{
 	@Override
 	public void run() {
 			String []temp=nowString.split(" ");
-			if (temp[0].contains("register")){
+			if (temp[0].equals("register")){
 				String user=temp[1];
 				String passwd=temp[2];
-				String IP=temp[3];
 				try {
 					boolean state=User.Adduser(user, passwd,IP);
 					if (state){
@@ -35,10 +34,9 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 			}
-			if (temp[0].contains("login")){
+			if (temp[0].equals("login")){
 				String user=temp[1];
 				String passwd=temp[2];
-				String IP=temp[3];
 				try {
 					boolean state=User.Login(user, passwd,IP);
 					if (state){
@@ -52,13 +50,13 @@ public class DealQuery implements Runnable{
 				//Broadcast
 				
 			}
-			if (temp[0].contains("query")){
+			if (temp[0].equals("query")){
 				String word=temp[1];
 				String st=temp[2];
 				try {
 					Query query=new Query();
 					ArrayList<Answer> answers=query.getExplaination(word, st);
-					
+					System.out.println(answers);
 					if (answers==null){
 						content="No such words!";
 					}
@@ -73,24 +71,24 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 			}
-			if (temp[0].contains("zan")){
+			if (temp[0].equals("like")){
 				String user=temp[1];
 				String word=temp[2];
 				String which=temp[3];
 				try {
 					boolean state=DealZan.ReceiveZan(user,word, which);
 					if (state){
-						content="Zan Success!";
+						content="Like Success!";
 					}
 					else{
-						content="Zan Failed";
+						content="Like Failed";
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			if (temp[0].contains("cancel")){
+			if (temp[0].equals("cancel")){
 				String user=temp[1];
 				String word=temp[2];
 				String which=temp[3];
@@ -107,7 +105,7 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 			}
-			if (temp[0].contains("share")){
+			if (temp[0].equals("share")){
 				String touser=temp[1];
 				try {
 					String userIP=SQLManager.QueryIP(touser);
@@ -119,6 +117,15 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 				
+			}
+			if (temp[0].equals("logout")){
+				try {
+					SQLManager.Logout(temp[1]);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				content="Log Out!";
 			}
 			new Thread(new SendToClient(content,IP)).start();
 	}

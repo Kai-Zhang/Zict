@@ -33,12 +33,12 @@ public class DealAnswer implements Runnable {
 			}
 		}
 		// Maybe Like doesn't need to echo --> will be deleted eventually
-		else if (context[0].equals("Zan")){
+		else if (context[0].equals("Like")){
 			if (context[1].equals("Success!")){
-				JOptionPane.showConfirmDialog(null, "Zan Success!");
+				JOptionPane.showConfirmDialog(null, "Like Success!");
 			}
 			else{
-				JOptionPane.showConfirmDialog(null, "Zan Failed!");
+				JOptionPane.showConfirmDialog(null, "Like Failed!");
 			}
 		}
 		else if (context[0].equals("Cancel")){
@@ -49,7 +49,9 @@ public class DealAnswer implements Runnable {
 			}
 		}
 		else if (context[0].equals("Answer")) {
-			GetExplaination.explanation = messageReceive.substring(7);
+			GetExplaination.setExplanation(new String(messageReceive.substring(7)));
+			System.out.println(GetExplaination.explanation);
+			System.out.println("Answered");
 		}
 		else if (context[0].equals("share")) {
 			//Show Share 

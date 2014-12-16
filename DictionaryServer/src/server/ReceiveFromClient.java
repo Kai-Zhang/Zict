@@ -12,22 +12,20 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.net.SocketFactory;
-public class ReceiveFromClient implements Runnable{
-	
-	@Override
-	public void run(){
-		// TODO Auto-generated method stub
+
+import sql.SQLManager;
+public class ReceiveFromClient {
+	public static void main(String[] args) throws ClassNotFoundException{
+		SQLManager.init();
 			try {
-				ServerSocket serverSocket=new ServerSocket(5000);
+				ServerSocket serverSocket=new ServerSocket(60000);
 				while (true){
 					Socket socket=serverSocket.accept();
 					System.out.println("New connection accepted");
 					String IP=socket.getInetAddress().toString();
-					BufferedReader reader=new BufferedReader(new InputStreamReader(socket.getInputStream()));
-					String nowString=reader.readLine();
-					DealQuery dealQuery=new DealQuery(nowString,IP);
-					Thread thread=new Thread(dealQuery);
-					thread.start();
+					IPMap.insert(IP, socket);
+					new Thread(new SocketHandler(socket,IP)).start();
+					
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

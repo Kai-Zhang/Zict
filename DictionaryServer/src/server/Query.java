@@ -11,9 +11,24 @@ public class Query {
 	Answer bingAnswer=new Answer();
 	Answer youdaoAnswer=new Answer();
 	public ArrayList<Answer> Sort(ArrayList<Answer> unsorted,String st){
-		for (int i=0;i<3;i++){
-			if (st.charAt(i)=='0') unsorted.remove(i);
-		}
+		if (st.charAt(0)=='0')
+			for (int i=0;i<unsorted.size();i++){
+				if (unsorted.get(i).which=="baidu"){
+					unsorted.remove(i);
+				}
+			}
+		if (st.charAt(1)=='0')
+			for (int i=0;i<unsorted.size();i++){
+				if (unsorted.get(i).which=="bing"){
+					unsorted.remove(i);
+				}
+			}
+		if (st.charAt(2)=='0')
+			for (int i=0;i<unsorted.size();i++){
+				if (unsorted.get(i).which=="youdao"){
+					unsorted.remove(i);
+				}
+			}
 		for (int i=0;i<unsorted.size();i++)
 			for (int j=i+1;j<unsorted.size();j++)
 			{
@@ -49,7 +64,12 @@ public class Query {
 	} 
 	public  ArrayList<Answer> getExplaination(String word,String st) throws Exception{
 		ArrayList<Answer> ans1=getLocalResult(word);
+		System.out.println(ans1!=null);
 		if (ans1!=null) return Sort(ans1,st);
-		else return Sort(getNetResult(word),st);
+		else {
+			ArrayList<Answer> result = getNetResult(word);
+			if (result == null) return null;
+			return Sort(result,st);
+		}
 	}
 }

@@ -12,7 +12,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
 
 import javax.swing.event.*;
@@ -52,9 +51,9 @@ public class UImain extends JFrame{
     private JButton like2=new JButton("like");
     private JButton like3=new JButton("like");
     public JButton sendTo=new JButton("send");
-    private JCheckBox bing =new JCheckBox("必应",false);
-    private JCheckBox youdao =new JCheckBox("有道",false);
-    private JCheckBox baidu =new JCheckBox("百度",false);
+    private JCheckBox bing =new JCheckBox("必应",true);
+    private JCheckBox youdao =new JCheckBox("有道",true);
+    private JCheckBox baidu =new JCheckBox("百度",true);
 
 	public UImain() throws Exception {
 
@@ -187,7 +186,7 @@ public class UImain extends JFrame{
 				String password = regKeyInput1.getText();
 				String passwordConfirm = regKeyInput2.getText();
 				// TODO: More Careful Password Check
-				if (userID == null || password == null || passwordConfirm.equals(password)) {
+				if (userID == null || password == null || !passwordConfirm.equals(password)) {
 					return;
 				}
 				UserManage.register(userID, password);
@@ -281,16 +280,62 @@ public class UImain extends JFrame{
 				}
 				String[] explanation = GetExplaination.get(currentWord, option);
 				if (explanation.length>=1) txOut1.setText(explanation[0]);
+				else txOut1.setText("");
 				if (explanation.length>=2) txOut2.setText(explanation[1]);
+				else txOut1.setText("");
 				if (explanation.length>=3) txOut3.setText(explanation[2]);
+				else txOut1.setText("");
 			}
 		});
-
+		this.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				new Thread(new SendMessage("Bye!")).start();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		setTitle("My Dictionary");
 		setLocation(MAXIMIZED_HORIZ, MAXIMIZED_VERT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(683, 500);
 		setVisible(true);
+		
 	}
 	
 
@@ -303,8 +348,8 @@ public class UImain extends JFrame{
 		System.out.print("Connecting Remote Server ... ");
 		Scanner configScanner = new Scanner(configFile);
 		String serverIP = configScanner.nextLine();
-		SendMessage.SERVER_IP = serverIP;
-		new Thread(new ReceiveFromServer(serverIP)).start();
+		SendMessage.connect(serverIP);
+		new Thread(new ReceiveFromServer()).start();
 		configScanner.close();
 		System.out.println("Done");
 		new UImain();
