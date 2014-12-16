@@ -1,8 +1,6 @@
 /*
  * TODO list:
- * + make website and explanation  -->  class GetExplanation
  * + Click like counter or another visible sign  -->  UI design or another variable
- * + Logout --> UI design and another handler
  * + Register check  -->  use regex in register
  */
 
@@ -21,8 +19,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import network.ReceiveFromServer;
-import network.SendMessage;
+import data.Explanation;
+import data.UserInfo;
+import data.WordEntry;
+import logic.ClickLike;
+import logic.GetExplaination;
+import network.Network;
+
 
 @SuppressWarnings("serial")
 public class UImain extends JFrame{
@@ -154,7 +157,7 @@ public class UImain extends JFrame{
 				if (userID == null || password == null) {
 					return;
 				}
-				UserManage.login(userID, password);
+				UserInfo.login(userID, password);
 				// TODO: Result Echo
 			}
 		});
@@ -189,7 +192,7 @@ public class UImain extends JFrame{
 				if (userID == null || password == null || !passwordConfirm.equals(password)) {
 					return;
 				}
-				UserManage.register(userID, password);
+				UserInfo.register(userID, password);
 			}
 		});
 		
@@ -268,67 +271,45 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				currentWord = txInput.getText();
-				int option = 0;
-				if (baidu.isSelected()) {
-					option += 100;
-				}
-				if (youdao.isSelected()) {
-					option += 10;
-				}
-				if (bing.isSelected()) {
-					option += 1;
-				}
-				String[] explanation = GetExplaination.get(currentWord, option);
-				if (explanation.length>=1) txOut1.setText(explanation[0]);
-				else txOut1.setText("");
-				if (explanation.length>=2) txOut2.setText(explanation[1]);
-				else txOut1.setText("");
-				if (explanation.length>=3) txOut3.setText(explanation[2]);
-				else txOut1.setText("");
+				GetExplaination.get(currentWord);
+				Explanation explanation = WordEntry.getExplanation(0);
+				if (explanation.getExplanation().length() >= 1) {
+					txOut1.setText(explanation.getExplanation());
+				} else txOut1.setText("");
+				explanation = WordEntry.getExplanation(1);
+				if (explanation.getExplanation().length() >= 1) {
+					txOut2.setText(explanation.getExplanation());
+				} else txOut2.setText("");
+				explanation = WordEntry.getExplanation(2);
+				if (explanation.getExplanation().length() >= 1) {
+					txOut3.setText(explanation.getExplanation());
+				} else txOut3.setText("");
 			}
 		});
-		this.addWindowListener(new WindowListener() {
+		addWindowListener(new WindowListener() {
 			
 			@Override
-			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowOpened(WindowEvent e) { }
 			
 			@Override
-			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowIconified(WindowEvent e) { }
 			
 			@Override
-			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowDeiconified(WindowEvent e) { }
 			
 			@Override
-			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowDeactivated(WindowEvent e) { }
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				new Thread(new SendMessage("Bye!")).start();
+				Network.sendToServer("Bye!");
 			}
 			
 			@Override
-			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowClosed(WindowEvent e) { }
 			
 			@Override
-			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowActivated(WindowEvent e) { }
 		});
 		setTitle("My Dictionary");
 		setLocation(MAXIMIZED_HORIZ, MAXIMIZED_VERT);
@@ -345,12 +326,17 @@ public class UImain extends JFrame{
 			System.out.println("Configuration File Missing!");
 			return;
 		}
-		System.out.print("Connecting Remote Server ... ");
 		Scanner configScanner = new Scanner(configFile);
 		String serverIP = configScanner.nextLine();
-		SendMessage.connect(serverIP);
-		new Thread(new ReceiveFromServer()).start();
 		configScanner.close();
+		System.out.print("Connecting Remote Server ... ");
+		try {
+			Network.connectToServer(serverIP);
+		} catch (Exception e) {
+			System.err.println("Undone");
+			System.err.println("Can't connect to the remote server.");
+		}
+		Network.receiveFromServer();
 		System.out.println("Done");
 		new UImain();
 	}

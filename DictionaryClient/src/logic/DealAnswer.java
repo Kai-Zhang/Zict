@@ -1,6 +1,8 @@
-package client;
+package logic;
 
 import javax.swing.JOptionPane;
+
+import data.UserInfo;
 
 public class DealAnswer implements Runnable {
 	String messageReceive = null;
@@ -12,7 +14,7 @@ public class DealAnswer implements Runnable {
 	// TODO: fill the message handler
 	@Override
 	public void run() {
-		String[] context=messageReceive.split(" ");
+		String[] context = messageReceive.split(" ");
 		if (context[0].equals("Register")){
 			if (context[1].equals("Success!")){
 				JOptionPane.showConfirmDialog(null, "Register Success!");
@@ -23,13 +25,20 @@ public class DealAnswer implements Runnable {
 		}
 		else if (context[0].equals("Login")){
 			if (context[1].equals("Success!")){
-				UserManage.setLogined(true);
-				UserInfo.setName(UserManage.name);
+				UserInfo.setLoginStatus(true);
 				JOptionPane.showConfirmDialog(null, "Login Success!");
 			}
 			else{
-				UserManage.setLogined(false);
 				JOptionPane.showConfirmDialog(null, "Login Failed!");
+			}
+		}
+		else if (context[0].equals("Logout")) {
+			if (context[1].equals("Success!")) {
+				UserInfo.setLoginStatus(false);
+				JOptionPane.showConfirmDialog(null, "Logout Success!");
+			}
+			else {
+				JOptionPane.showConfirmDialog(null, "Logout Failed!");
 			}
 		}
 		// Maybe Like doesn't need to echo --> will be deleted eventually
@@ -50,8 +59,6 @@ public class DealAnswer implements Runnable {
 		}
 		else if (context[0].equals("Answer")) {
 			GetExplaination.setExplanation(new String(messageReceive.substring(7)));
-			System.out.println(GetExplaination.explanation);
-			System.out.println("Answered");
 		}
 		else if (context[0].equals("share")) {
 			//Show Share 
