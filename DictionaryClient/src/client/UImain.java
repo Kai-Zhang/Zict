@@ -86,6 +86,8 @@ public class UImain extends JFrame{
     private JButton share2=new JButton(shareIcon);
     private JButton share3=new JButton(shareIcon);
     
+    private CheckOnlineList shareList=null;
+    
     private JButton like1=new JButton(likelogoIcon);
     private JButton like2=new JButton(likelogoIcon);
     private JButton like3=new JButton(likelogoIcon);
@@ -200,21 +202,24 @@ public class UImain extends JFrame{
 		share1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-	             new CheckOnlineList(0);
+				shareList = new CheckOnlineList(0);
+				ServiceProvider.getUserList();
 			}
 		});
 
 		share2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new CheckOnlineList(1);
+				shareList = new CheckOnlineList(1);
+				ServiceProvider.getUserList();
 			}
 		});
 
 		share3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new CheckOnlineList(2);
+				shareList = new CheckOnlineList(2);
+				ServiceProvider.getUserList();
 			}
 		});
 
@@ -290,6 +295,7 @@ public class UImain extends JFrame{
 		friend.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				Network.sendToServer("User");
 				userPage2();
 			}
 		});
@@ -670,6 +676,10 @@ public class UImain extends JFrame{
 			add(welcome);
 			add(welcomeUser);
 		}
+	}
+	
+	public void flushUserList() {
+		shareList.refreshList();
 	}
 
 	public static void main(String []args)throws Exception{

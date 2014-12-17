@@ -28,8 +28,13 @@ public class ServiceProvider {
 		Network.sendToServer(message);
 	}
 	
+	public static void getUserList() {
+		Network.sendToServer("User");
+	}
+	
 	public static void shareWordCard(String toUser,int rating){
 		String message = "Share" + " " + toUser + " ###" + WordEntry.getWord() + "###" + WordEntry.getExplanation(rating).getExplanation();
+		System.out.println(message);
 		Network.sendToServer(message);;
 	}
 	
