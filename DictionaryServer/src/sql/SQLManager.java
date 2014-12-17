@@ -1,4 +1,5 @@
 package sql;
+import java.nio.channels.SelectableChannel;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -87,8 +88,27 @@ public class SQLManager {
 	public static boolean AddUser(String user,String passwd,String IP) throws SQLException{
 		synchronized (statement) {
 			System.out.println(user+" "+passwd+" "+IP+"  ");
+			String query="select * from users where ID='"+user+"';";
+			ResultSet resultSet=statement.executeQuery(query);
+			if (resultSet.next()) return false;
 			String insert="insert into users values('"+user+"','"+passwd+"','"+IP+"');";
 			return statement.executeUpdate(insert)==1;
+		}
+	}
+	public static String QueryUser() throws SQLException{
+		synchronized (statement) {
+		String query="select * from users where IP is not null";
+		ResultSet resultSet=statement.executeQuery(query);
+		String ans="";
+		while (resultSet.next()){
+			ans=ans+resultSet.getString("ID")+" ";
+		}
+		query="select * from users where IP is null";
+		resultSet=statement.executeQuery(query);
+		while (resultSet.next()){
+			ans=ans+"###"+resultSet.getString("ID");
+		}
+		return ans;
 		}
 	}
 	public static boolean Login(String user,String passwd,String IP) throws SQLException{
@@ -106,13 +126,13 @@ public class SQLManager {
 	}
 	public static void Logout(String user) throws SQLException{
 		synchronized (statement) {
-			String update="update users set IP=null where user='"+user+"';";
+			String update="update users set IP=null where ID='"+user+"';";
 			statement.executeUpdate(update);
 		}
 	}
 	public static String QueryIP(String touser) throws SQLException {
 		synchronized (statement) {
-			String query="select * from users where ID='"+touser+";";
+			String query="select * from users where ID='"+touser+"';";
 			ResultSet rs=statement.executeQuery(query);
 			if (!rs.next()) return null;
 			String IP=rs.getString("IP");

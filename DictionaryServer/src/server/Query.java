@@ -39,7 +39,12 @@ public class Query {
 		now.add(baiduAnswer);
 		now.add(bingAnswer);
 		now.add(youdaoAnswer);
+		try{
 		SQLManager.InsertWord(word, now);
+		}
+		catch (SQLException e){
+			
+		}
 		//Do Network Query 
 		//Caching in Local Result
 		return now;
