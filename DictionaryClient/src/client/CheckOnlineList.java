@@ -9,8 +9,8 @@ import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
 public class CheckOnlineList extends JFrame {
-	private JButton sendTo=new JButton();
-    public CheckOnlineList() {
+	//private JButton sendTo=new JButton();
+    public CheckOnlineList(Component sendTo) {
         super("Send");
         JFrame jFrame=new JFrame();
         //String[] listData = {"Apple", "Orange", "Cherry", "Blue Berry",
@@ -67,7 +67,10 @@ public class CheckOnlineList extends JFrame {
         listCheckBox.setFixedCellWidth(20);
         
         getContentPane().add(scrollPane); //, BorderLayout.CENTER);
+        add(sendTo, BorderLayout.SOUTH);
         setSize(350, 200);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
     }
 
