@@ -38,9 +38,11 @@ public class UImain extends JFrame{
 
 	private String username=new String("hahahhhah");
 	private JTextArea usernameArea=new JTextArea();
-	private boolean loginOrNot=true;//未登录
-    private String[] ListWord =new String[100];  //联想表
-	private JList jlist = new JList(ListWord);
+	private boolean loginOrNot=true;//false未登录
+    private String[] onlinefri =new String[100];  //在线好友
+    private String[] offlinefri=new String[100];//不在线好友
+	private JList online = new JList(onlinefri);
+	private JList offline= new JList(offlinefri);
 	private JTextArea txOut1 = new JTextArea(5,50);
 	private JTextArea txOut2 = new JTextArea(5,50);
 	private JTextArea txOut3 = new JTextArea(5,50);
@@ -761,11 +763,13 @@ public class UImain extends JFrame{
            }
        	else{
        		
-       		welcome.setBounds(570,15,250,32);
-       		welcomeUser.setBounds(681, 19, 100, 32);
+       		welcome.setBounds(500,15,250,32);
+       		welcomeUser.setBounds(611, 20, 100, 32);
        		welcomeUser.setOpaque(false);
        		welcomeUser.setFont(new Font("微软雅黑",Font.BOLD , 16));
        		welcomeUser.setText(username);
+    		welcomeUser.setForeground(Color.white);
+    		welcomeUser.setEditable(false);
        		add(welcome);
        		add(welcomeUser);
    		}
