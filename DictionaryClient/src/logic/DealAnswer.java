@@ -2,6 +2,7 @@ package logic;
 
 import javax.swing.JOptionPane;
 
+import client.UImain;
 import data.UserInfo;
 
 public class DealAnswer implements Runnable {
@@ -17,6 +18,8 @@ public class DealAnswer implements Runnable {
 		if (context[0].equals("Register")){
 			if (context[1].equals("Success!")){
 				JOptionPane.showConfirmDialog(null, "Register Success!");
+				UserInfo.setLoginStatus(true);
+				UImain.mainFrame.flushUserState();
 			}
 			else{
 				JOptionPane.showConfirmDialog(null, "Register Failed!");
@@ -24,16 +27,18 @@ public class DealAnswer implements Runnable {
 		}
 		else if (context[0].equals("Login")){
 			if (context[1].equals("Success!")){
-				UserInfo.setLoginStatus(true);
 				JOptionPane.showConfirmDialog(null, "Login Success!");
+				UserInfo.setLoginStatus(true);
+				UImain.mainFrame.flushUserState();
 			}
 			else{
 				JOptionPane.showConfirmDialog(null, "Login Failed!");
+				UImain.mainFrame.flushUserState();
 			}
 		}
 		else if (context[0].equals("Logout")) {
-			UserInfo.setLoginStatus(false);
 			JOptionPane.showConfirmDialog(null, "Logout Success!");
+			UserInfo.setLoginStatus(false);
 		}
 		else if (context[0].equals("Like")){
 			if (context[1].equals("Success!")){

@@ -36,6 +36,8 @@ public class UserInfo {
 	}
 	
 	public static void register(String name, String password) {
+		isLogged = false;
+		UserInfo.name = name;
 		String message = "Register" + " " + name + " " + password;
 		Network.sendToServer(message);
 	}
