@@ -7,13 +7,17 @@
 package client;
 
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -23,6 +27,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -34,21 +39,23 @@ import network.Network;
 
 @SuppressWarnings("serial")
 public class UImain extends JFrame{
-	private static final ActionListener ActionListener = null;
-
-	private String username=new String("hahahhhah");
+	public static UImain mainFrame = null;
+	
 	private JTextArea usernameArea=new JTextArea();
-	private boolean loginOrNot=true;//false未登录
-    private String[] onlinefri =new String[100];  //在线好友
-    private String[] offlinefri=new String[100];//不在线好友
-	private JList online = new JList(onlinefri);
-	private JList offline= new JList(offlinefri);
-	private JTextArea txOut1 = new JTextArea(5,50);
-	private JTextArea txOut2 = new JTextArea(5,50);
-	private JTextArea txOut3 = new JTextArea(5,50);
-
+	//private boolean loginOrNot=true;//false未登录  user.iflog
+    private String[] online =new String[100];  //在线用户
+	private JList onlineJList = new JList(online);
+	private String[] offline =new String[100]; //不在线用户
+	private JList offlineJList=new JList(offline);
+	
+	private JTextArea[] txOut = {new JTextArea(5,50), new JTextArea(5,50), new JTextArea(5,50)};
 	private JTextField txInput = new JTextField("请输入英文", 42);
 	private JTextField idInput=new JTextField(16);
+	
+	private JTextArea zanNum1=new JTextArea();
+	private JTextArea zanNum2=new JTextArea();
+	private JTextArea zanNum3=new JTextArea();
+	
 	private JPasswordField keyInput=new JPasswordField(16);
 	private JTextField regIdInput=new JTextField(16);
 	private JPasswordField regKeyInput1=new JPasswordField(16);
@@ -73,14 +80,18 @@ public class UImain extends JFrame{
 	private ImageIcon likelogoIcon=new ImageIcon("images/likelogo.png");
 	private ImageIcon shareIcon=new ImageIcon("images/share.png");
 	private ImageIcon likeagreeIcon=new ImageIcon("images/likeagree.png");
+	private ImageIcon unlogIcon=new ImageIcon("images/unlog.png");
+	
+    private ImageIcon wordCardIKnowIcon=new ImageIcon("images/iknow.png");
+	private JButton wordCardIKnow=new JButton(wordCardIKnowIcon);
+	private ImageIcon saveIcon=new ImageIcon("images/save.png");
+	private JButton saveButton=new JButton(saveIcon);
+	
 	private JLabel homeMarkJLabel=new JLabel(homeIconM);
 	private JLabel userMarkJLabel=new JLabel(userIconM);
 	private JLabel likeMarkJLabel=new JLabel(likeIconM);
-	
 
 	private JButton friend= new JButton(friendIcon);
-
-	
 	private JButton search = new JButton(searchIcon);
     private JButton login=new JButton(loginIcon);
     private JButton register=new JButton(registerIcon);
@@ -91,6 +102,7 @@ public class UImain extends JFrame{
     private JButton homeButton=new JButton(homeIcon);
     private JButton userButton=new JButton(userIcon);
     private JButton likeButton=new JButton(likeIcon);
+    private JButton unlogButton=new JButton(unlogIcon);
     
     private JButton share1=new JButton(shareIcon);
     private JButton share2=new JButton(shareIcon);
@@ -99,16 +111,19 @@ public class UImain extends JFrame{
     private JButton like1=new JButton(likelogoIcon);
     private JButton like2=new JButton(likelogoIcon);
     private JButton like3=new JButton(likelogoIcon);
-    private JLabel likeMark=new JLabel(likeagreeIcon);
-    public JButton sendTo=new JButton("send");
+    private JButton unlike1=new JButton(likeagreeIcon);
+    private JButton unlike2=new JButton(likeagreeIcon);
+    private JButton unlike3=new JButton(likeagreeIcon);
+	 
     private JCheckBox youdao =new JCheckBox("有道",true);
     private JCheckBox baidu =new JCheckBox("百度",true);
     private JCheckBox bing =new JCheckBox("必应",true);
     
     final JFrame regFrame=new JFrame("Register");
     final JFrame loginFrame=new JFrame("Login");
-
-	public UImain() throws Exception {
+    final JFrame wordCardfFrame=new JFrame("wordCard");
+    
+ 	public UImain() throws Exception {
 		mainPage();
     	login.setBorder(new EmptyBorder(0,0,0,0));
     	register.setBorder(new EmptyBorder(0,0,0,0));
@@ -120,198 +135,219 @@ public class UImain extends JFrame{
     	homeButton.setBorder(new EmptyBorder(0,0,0,0));
     	userButton.setBorder(new EmptyBorder(0,0,0,0));
     	likeButton.setBorder(new EmptyBorder(0,0,0,0));
-		
+    	unlogButton.setBorder(new EmptyBorder(0,0,0,0));
+
+     	share1.setBorder(new EmptyBorder(0,0,0,0));
+    	share2.setBorder(new EmptyBorder(0,0,0,0));
+    	share3.setBorder(new EmptyBorder(0,0,0,0));
+    	
 		login.addActionListener(new ActionListener() {					
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				loginPage();
 			}
 		});
-		
+
 		loginPageLoginOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				 if (idInput.getText().equals("")) {
-	                    JOptionPane.showMessageDialog(null, "用户名不能为空!");
-	                } else if (keyInput.getText().equals("")) {
-	                    JOptionPane.showMessageDialog(null, "密码不能为空!");
-	                } else {
-	    				String userID = idInput.getText();
-	    				String password = keyInput.getText();
-	    				if (userID == null || password == null) {
-						return;
-					}
+				String userID = idInput.getText();
+				String password = new String(keyInput.getPassword());
+				if (userID.equals("")) {
+					JOptionPane.showMessageDialog(null, "用户名不能为空!");
+				} else if (password.equals("")) {
+					JOptionPane.showMessageDialog(null, "密码不能为空!");
+				} else if (!userID.matches("\\w{1,16}")) {
+					JOptionPane.showMessageDialog(null, "用户名应为16位以下数字或字母");
+				} else if (!password.matches("\\w{6,}")) {
+					JOptionPane.showMessageDialog(null, "请输入6位以上的密码");
+				} else {
 					UserInfo.login(userID, password);
+					loginFrame.dispose();
 	            }
-				
-				// TODO: Result Echo
 			}
 		});
-		
+
+		unlogButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				UserInfo.logout();
+				JOptionPane.showMessageDialog(null,"注销成功");
+			}
+		});
 		register.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-			regPage();	 
+				regPage();	 
 			}
 		});
-		
+
 		regExit.addActionListener(new ActionListener() {
-	            public void actionPerformed(ActionEvent e) {
-	            	regFrame.dispose();
-	            	
-	            }
-	        });
-	        
-	     loginExit.addActionListener(new ActionListener() {
-	            public void actionPerformed(ActionEvent e) {
-	            	loginFrame.dispose();
-	            	
-	            }
-	        });
-		
-	     regPageRegOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				regFrame.dispose();
+			}
+		});
+
+		loginExit.addActionListener(new ActionListener() {
+	    	 public void actionPerformed(ActionEvent e) {
+	    		 loginFrame.dispose();
+	    	 }
+	     });
+
+		regPageRegOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+            	String userID = regIdInput.getText();
+				String password = new String(regKeyInput1.getPassword());
+				String passwordConfirm = new String(regKeyInput2.getPassword());
 
-	               if (regIdInput.getText().equals("")) {
-	                    JOptionPane.showMessageDialog(null, "用户名不能为空!");
-	                } else if (regKeyInput1.getText().equals("")) {
-	                    JOptionPane.showMessageDialog(null, "密码不能为空!");
-	                } else if (regKeyInput2.getText().equals("")) {
-	                    JOptionPane.showMessageDialog(null, "请再次输入密码");
-	                } else if (regKeyInput1.getText().equals(regKeyInput2.getText())) {
-	                    JOptionPane.showMessageDialog(null, "两次密码不一致！");
-	                } else {
-	                	String userID = regIdInput.getText();
-	    				String password = regKeyInput1.getText();
-	    				String passwordConfirm = regKeyInput2.getText();
-	    				// TODO: More Careful Password Check
-	    				if (userID == null || password == null || !passwordConfirm.equals(password)) {
-	    					return;
-	    				}
-	    				if (userID.matches("\\w{1,16}") && password.matches("\\w{6,}")) {
-	    					UserInfo.register(userID, password);
-	    				}
-	                	//检查用户名是否已经被注册
-	                	//数据库录入并且把loginOrNot变成true
-	                }				
-				
-				
-				
+				if (userID.equals("")) {
+					JOptionPane.showMessageDialog(null, "用户名不能为空!");
+				} else if (password.equals("")) {
+					JOptionPane.showMessageDialog(null, "密码不能为空!");
+				} else if (passwordConfirm.equals("")) {
+					JOptionPane.showMessageDialog(null, "请再次输入密码");
+				} else if (!password.equals(passwordConfirm)) {
+					JOptionPane.showMessageDialog(null, "两次密码不一致！");
+				} else if (!userID.matches("\\w{1,16}")) {
+					JOptionPane.showMessageDialog(null, "用户名应为16位以下数字或字母");
+				} else if (!password.matches("\\w{6,}")) {
+					JOptionPane.showMessageDialog(null, "请输入6位以上的密码");
+				} else {
+					UserInfo.register(userID, password);
+					regFrame.dispose();
+				}
 			}
 		});
-		
+
 		like1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				if (UserInfo.isLogged()) {
 				ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(0).getSource());
+				like1();
+				repaint();
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "请先登录");
+				}
 			}
 		});
-		
+
 		like2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				if (UserInfo.isLogged()) {
 				ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(1).getSource());
+				like2();
+				repaint();
+				}else {
+					JOptionPane.showMessageDialog(null, "请先登录");
+					}
 			}
 		});
-		
+
 		like3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				if (UserInfo.isLogged()) {
 				ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(2).getSource());
+				like3();
+				repaint();
+				}else {
+					JOptionPane.showMessageDialog(null, "请先登录");
+					}
 			}
 		});
 		
+		unlike1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (UserInfo.isLogged()) {
+				ServiceProvider.cancelLike(WordEntry.getWord(), WordEntry.getExplanation(0).getSource());
+				unlike1();
+				repaint();
+				}
+			}
+		});
+		
+		unlike2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (UserInfo.isLogged()) {
+				ServiceProvider.cancelLike(WordEntry.getWord(), WordEntry.getExplanation(1).getSource());
+				unlike2();
+				repaint();
+				}
+			}
+		});
+		
+		unlike3.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (UserInfo.isLogged()) {
+				ServiceProvider.cancelLike(WordEntry.getWord(), WordEntry.getExplanation(2).getSource());
+				unlike3();
+				repaint();
+				}
+			}
+		});
+
 		share1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-	             CheckOnlineList checkList = new CheckOnlineList(sendTo);
-	             checkList.addWindowListener(new WindowAdapter() {
-	                 public void windowClosing(WindowEvent we) {
-	                    // System.exit(0);
-	                 }
-	             });
+				if (UserInfo.isLogged()) {
+					 new CheckOnlineList(0);
+					}else {
+						JOptionPane.showMessageDialog(null, "请先登录");
+						}
 			}
 		});
-		 share2.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					 
-					CheckOnlineList checkList = new CheckOnlineList(sendTo);
-		             checkList.addWindowListener(new WindowAdapter() {
 
-		                 public void windowClosing(WindowEvent we) {
-		                    // System.exit(0);
-		                 }
-		             });
-		            
-				}
-			});
-	        share3.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					 
-					CheckOnlineList checkList = new CheckOnlineList(sendTo);
-		             checkList.addWindowListener(new WindowAdapter() {
+		share2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (UserInfo.isLogged()) {
+					 new CheckOnlineList(1);
+					}else {
+						JOptionPane.showMessageDialog(null, "请先登录");
+						}
+			}
+		});
 
-		                 public void windowClosing(WindowEvent we) {
-		                    // System.exit(0);
-		                 }
-		             });
-		            
-				}
-			});
-		// TODO: Maybe need to be deleted.
-		txInput.getDocument().addDocumentListener(new DocumentListener(){  //�����
+		share3.addActionListener(new ActionListener() {
 			@Override
-			public void insertUpdate(DocumentEvent e) {
+			public void actionPerformed(ActionEvent e) {
+				if (UserInfo.isLogged()) {
+					 new CheckOnlineList(2);
+					}else {
+						JOptionPane.showMessageDialog(null, "请先登录");
+						}
 			}
+		});
 
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				String in = txInput.getText();
-				
-				
-				txInput.requestFocusInWindow();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
-			});
-		
-		
-		txInput.addKeyListener(new KeyListener(){
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-			}
-		
-		}
-		);
-		
 		search.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				homePage();
+				txOut[0].setText("正在服务器上查找...");
+				txOut[1].setText("正在服务器上查找...");
+				txOut[2].setText("正在服务器上查找...");
 				String currentWord = txInput.getText();
 				ServiceProvider.getExplanation(currentWord);
 				if (WordEntry.getExplanation(0) == null) {
-					txOut1.setText("");
-					txOut2.setText("");
-					txOut3.setText("");
+					txOut[0].setText("");
+					txOut[1].setText("");
+					txOut[2].setText("");
 					return;
 				}
 				ArrayList<Explanation> outputList = new ArrayList<Explanation>();
@@ -333,69 +369,56 @@ public class UImain extends JFrame{
 						}
 					}
 				}
-				if (outputList.size() >= 1) {
-					txOut1.setText(outputList.get(0).getExplanation());
-				}
-				if (outputList.size() >= 2) {
-					txOut1.setText(outputList.get(1).getExplanation());
-				}
-				if (outputList.size() == 3) {
-					txOut1.setText(outputList.get(2).getExplanation());
+				for (int i = 0; i < outputList.size(); i ++) {
+					txOut[i].setText(outputList.get(i).getExplanation());
+					if (i==0) {
+						part1();
+					}else if (i==1) {
+						part2();
+					}else if (i==2) {
+						part3();
+					}else ;
 				}
 			}
 		});
-		sendTo.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-        
+
         homeButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				homePage();
 			}
 		});
+
         userButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if(loginOrNot)
+				if(UserInfo.isLogged())
 					userPage1();
 				else {
 					loginPageNew();
 				}
 			}
 		});
+
 		likeButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if(loginOrNot)
+				if(UserInfo.isLogged())
 					likePage();
 				else {
 					loginPageNew();
 				}
 			}
 		});
+
 		friend.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				userPage2();
 			}
 		});
-        
+
 		addWindowListener(new WindowListener() {
-			
 			@Override
 			public void windowOpened(WindowEvent e) { }
 			
@@ -410,6 +433,7 @@ public class UImain extends JFrame{
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
+				UserInfo.logout();
 				Network.sendToServer("Bye!");
 			}
 			
@@ -420,9 +444,107 @@ public class UImain extends JFrame{
 			public void windowActivated(WindowEvent e) { }
 		});
 		
+		wordCardIKnow.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				wordCardfFrame.dispose();
+			}
+		});
+		saveButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				BufferedImage  bi = new BufferedImage(wordCardfFrame.getWidth(), wordCardfFrame.getHeight()-30, BufferedImage.TYPE_INT_ARGB);
+				Graphics2D  g2d = bi.createGraphics();
+				wordCardfFrame.paint(g2d);
+				
+
+				//Date dt=new Date();
+			    //SimpleDateFormat matter1=new SimpleDateFormat("yyyyMMddHHmmss");
+			    //System.out.println(matter1.format(dt));
+			    //String str=new String(dt.toString());
+			    String str =new String(Integer.toString((int)(Math.random()*100)));
+				File pic=new File(str+".png");
+				
+				if (!pic.exists()) {
+				
+				try {
+					ImageIO.write(bi, "PNG", new File(str+(int)(Math.random()*10)+".png"));
+					JOptionPane.showMessageDialog(null, "保存成功！");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				}else {
+					try {
+						ImageIO.write(bi, "PNG", new File(str+".png"));
+						JOptionPane.showMessageDialog(null, "保存成功！");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+	}
+	public void wordCard(String [] str) {
+		wordCardfFrame.setContentPane(new wordCardpanel());
+		wordCardfFrame.setResizable(false);
+		Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frm = this.getSize();
+		wordCardfFrame.setLocation( (scr.width - frm.width) / 2,
+		            (scr.height - frm.height) / 2 - 18);
+		JLabel word=new JLabel(str[1]);
+		JTextArea exp=new JTextArea(str[2]);
+		exp.setOpaque(false);
+		exp.setFont(new Font("微软雅黑", Font.CENTER_BASELINE, 14));
+		word.setFont(new Font("微软雅黑", Font.CENTER_BASELINE, 14));
+		exp.setLineWrap(true);
+		wordCardIKnow.setBorder(new EmptyBorder(0,0,0,0));
+		saveButton.setBorder(new EmptyBorder(0,0,0,0));
+		wordCardfFrame.setLayout(null);
+		wordCardfFrame.add(wordCardIKnow).setBounds(0, 267, 125, 33);
+		wordCardfFrame.add(saveButton).setBounds(125,267,125,33);
+		wordCardfFrame.add(word).setBounds(30, 85, 180, 20);
+		wordCardfFrame.add(exp).setBounds(30, 120, 180, 100);
+		
+		wordCardfFrame.setSize(250,325);
+		wordCardfFrame.setLocationRelativeTo(null);
+		wordCardfFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		wordCardfFrame.setVisible(true);
+		wordCardfFrame.repaint();
+		}
+	private class wordCardpanel extends JPanel{
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D)g;
+			super.paintComponent(g);
+			Image img = Toolkit.getDefaultToolkit().getImage("images/iknowbg.png");
+			g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+		}
 	}
 	
-       private class mainPanel extends JPanel {
+	private class loginPanel extends JPanel {
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D)g;
+			super.paintComponent(g);
+			Image img = Toolkit.getDefaultToolkit().getImage("images/loginbg.jpg");
+			g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+		}
+	}
+
+	private class regPanel extends JPanel {
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D)g;
+			super.paintComponent(g);
+			Image img = Toolkit.getDefaultToolkit().getImage("images/registebg.jpg");
+			g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+		}
+	}
+
+    private class mainPanel extends JPanel {
         public void paintComponent(Graphics g) {
        	 Graphics2D g2 = (Graphics2D)g;
        	 super.paintComponent(g);
@@ -430,352 +552,412 @@ public class UImain extends JFrame{
        	 g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
         }
        }
-       
-       private class loginPanel extends JPanel {
-           public void paintComponent(Graphics g) {
-          	 Graphics2D g2 = (Graphics2D)g;
-          	 super.paintComponent(g);
-          	 Image img = Toolkit.getDefaultToolkit().getImage("images/loginbg.jpg");
-          	 g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
-           }
-          }
-
-       private class regPanel extends JPanel {
-           public void paintComponent(Graphics g) {
-          	 Graphics2D g2 = (Graphics2D)g;
-          	 super.paintComponent(g);
-          	 Image img = Toolkit.getDefaultToolkit().getImage("images/registebg.jpg");
-          	 g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
-           }
-          }
-
-       private class homePanel extends JPanel {
-           public void paintComponent(Graphics g) {
-          	 Graphics2D g2 = (Graphics2D)g;
-          	 super.paintComponent(g);
-          	 Image img = Toolkit.getDefaultToolkit().getImage("images/homebg.png");
-          	 g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
-           }
-          }    
-       private class userPanel1 extends JPanel {
-           public void paintComponent(Graphics g) {
-          	 Graphics2D g2 = (Graphics2D)g;
-          	 super.paintComponent(g);
-          	 Image img = Toolkit.getDefaultToolkit().getImage("images/userbg1.png");
-          	 g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
-           }
-          }   
-       private class userPanel2 extends JPanel {
-           public void paintComponent(Graphics g) {
-          	 Graphics2D g2 = (Graphics2D)g;
-          	 super.paintComponent(g);
-          	 Image img = Toolkit.getDefaultToolkit().getImage("images/userbg2.png");
-          	 g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
-           }
-          }  
-       private class likePanel extends JPanel {
-           public void paintComponent(Graphics g) {
-          	 Graphics2D g2 = (Graphics2D)g;
-          	 super.paintComponent(g);
-          	 Image img = Toolkit.getDefaultToolkit().getImage("images/likebg.png");
-          	 g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
-           }
-          }  
-       
-       
-       private void loginPage(){
-       	
-       	loginFrame.setContentPane(new loginPanel());
-           loginFrame.setResizable(false);
-           Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
-           Dimension frm = this.getSize();
-           loginFrame.setLocation( (scr.width - frm.width) / 2,
-                       (scr.height - frm.height) / 2 - 18);
-           
-           //loginFrame.setLayout(null);
-   	    //loginFrame.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
-           loginFrame.setLayout(null);
-           loginFrame.add(idInput).setBounds(58, 74, 155, 28);
-           idInput.setBorder(new EmptyBorder(0,0,0,0));
-           loginFrame.add(keyInput).setBounds(58, 111, 155, 28);
-           keyInput.setBorder(new EmptyBorder(0,0,0,0));
-           loginFrame.add(loginPageLoginOk).setBounds(28, 149, 85, 32);
-           loginFrame.add(loginExit).setBounds(129, 149, 85, 32);
-           
-           loginFrame.setSize(250,220);
-           loginFrame.setLocationRelativeTo(null);
-           loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-           loginFrame.setVisible(true);
-           
-       }
-       
-       private void loginPageNew(){
-       	
-       	loginFrame.setContentPane(new loginPanel());
-           loginFrame.setResizable(false);
-           Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
-           Dimension frm = this.getSize();
-           loginFrame.setLocation( (scr.width - frm.width) / 2,
-                       (scr.height - frm.height) / 2 - 18);
-           
-           //loginFrame.setLayout(null);
-   	    //loginFrame.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
-           loginFrame.setLayout(null);
-           loginFrame.add(idInput).setBounds(58, 74, 155, 28);
-           idInput.setBorder(new EmptyBorder(0,0,0,0));
-           loginFrame.add(keyInput).setBounds(58, 111, 155, 28);
-           keyInput.setBorder(new EmptyBorder(0,0,0,0));
-           loginFrame.add(loginPageLoginOk).setBounds(28, 149, 85, 32);
-           loginFrame.add(register).setBounds(129, 149, 85, 32);
-           
-           loginFrame.setSize(250,220);
-           loginFrame.setLocationRelativeTo(null);
-           loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-           loginFrame.setVisible(true);
-           
-       }
-
-       private void regPage(){
-       	
-       	regFrame.setContentPane(new regPanel());
-       	regFrame.setResizable(false);
-           Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
-           Dimension frm = this.getSize();
-           regFrame.setLocation( (scr.width - frm.width) / 2,
-                       (scr.height - frm.height) / 2 - 18);
-           
-           //loginFrame.setLayout(null);
-   	    //loginFrame.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
-           regFrame.setLayout(null);
-           regFrame.add(regIdInput).setBounds(58, 110, 155, 28);
-           regIdInput.setBorder(new EmptyBorder(0,0,0,0));
-           regFrame.add(regKeyInput1).setBounds(58, 150, 155, 28);
-           regKeyInput1.setBorder(new EmptyBorder(0,0,0,0));
-           regFrame.add(regKeyInput2).setBounds(58, 186, 155, 28);
-           regKeyInput2.setBorder(new EmptyBorder(0,0,0,0));
-           regFrame.add(regPageRegOk).setBounds(27, 223, 85, 32);
-           regFrame.add(regExit).setBounds(127, 223, 85, 32);
-           
-           regFrame.setSize(250,300);
-           regFrame.setLocationRelativeTo(null);
-           regFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-           regFrame.setVisible(true);
-           
-       }
-       
-       private void mainPage(){
-       	this.setContentPane(new mainPanel());
-           setTitle("字字字字典zzZict");
-           setLayout(null);
-           setSize(800, 600);
-           setResizable(false);
-           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-           Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
-           Dimension frm = this.getSize();
-           setLocation( (scr.width - frm.width) / 2,
-                       (scr.height - frm.height) / 2 - 18);
-
-
-           txInput.setBounds(272, 350, 210, 35);
-           txInput.setBorder(new EmptyBorder(0,0,0,0));
-           txInput.setFont(new Font("微软雅黑",Font.BOLD,16));
-           search.setBounds(498,345,86,45);
-           youdao.setBounds(232, 408, 15,15);
-           baidu.setBounds(360,408,15,15);
-           bing.setBounds(490,408,15,15);
-
-           add(txInput);
-           add(search);
-           add(youdao);
-           add(baidu);
-           add(bing);
-           flushUserState();
-           setVisible(true);
-           
-       }
-
-       private void homePage(){
-       	this.setContentPane(new homePanel());
-           setTitle("字字字字典zzZict");
-           setLayout(null);
-           setSize(800, 600);
-           setResizable(false);
-           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-           Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
-           Dimension frm = this.getSize();
-           setLocation( (scr.width - frm.width) / 2,
-                       (scr.height - frm.height) / 2 - 18);
-           txInput.setBounds(320, 154, 195, 35);
-           txInput.setBorder(new EmptyBorder(0,0,0,0));
-           txInput.setFont(new Font("微软雅黑",Font.BOLD,16));
-           search.setBounds(530,154,80,37);
-           youdao.setBounds(279, 208, 15,15);
-           baidu.setBounds(398,208,15,15);
-           bing.setBounds(517,208,15,15);
-           likeButton.setBounds(0, 0, 80, 200);
-           //homeButton.setBounds(0,200,80,200);
-           userButton.setBounds(0,400,80,200);
-           homeMarkJLabel.setBounds(0, 200, 80, 200);
-           
-           //第一条第二条第三条，可以根据需要选择是否显示
-           part1();
-           part2();
-           part3();
-           
-           add(likeButton);
-           //add(homeButton);
-           add(userButton);
-           add(homeMarkJLabel);
-           add(txInput);
-           add(search);
-           add(youdao);
-           add(baidu);
-           add(bing);
-           flushUserState();
-           setVisible(true);
-       }
-       private void part1(){
-           txOut1.setBounds(140,241,540,100);
-           like1.setBounds(706, 262, 61, 28);
-           share1.setBounds(706,299,61,28);
-           add(txOut1);
-           add(like1);
-           add(share1);
-       }
-       private void part2(){
-           txOut2.setBounds(140,350,540,100);
-           like2.setBounds(706, 371, 61,28);
-           share2.setBounds(706,409,61,28);
-           add(txOut2);
-           add(like2);
-           add(share2);
-       }
-       private void part3(){
-           txOut3.setBounds(140,460,540,100);
-           like3.setBounds(706, 480,61,28);
-           share3.setBounds(706,518,61,28);
-           add(txOut3);
-           add(like3);
-           add(share3);
-       }
-       
-       private void userPage1(){
-       	this.setContentPane(new userPanel1());
-           setTitle("字字字字典zzZict");
-           setLayout(null);
-           setSize(800, 600);
-           setResizable(false);
-           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-           Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
-           Dimension frm = this.getSize();
-           setLocation( (scr.width - frm.width) / 2,
-                       (scr.height - frm.height) / 2 - 18);
-          
-           usernameArea.setBounds(378, 130, 200, 20);
-           usernameArea.setFont(new Font("微软雅黑",Font.BOLD , 16));
-           usernameArea.setOpaque(false);
-           usernameArea.setText(username);
-           add(usernameArea);
-           
-           friend.setBounds(323,303,203,71);
-           friend.setBorder(new EmptyBorder(0,0,0,0));
-           add(friend);
-           likeButton.setBounds(0, 0, 80, 200);
-           homeButton.setBounds(0,200,80,200);
-           //userButton.setBounds(0,400,80,200);
-           //homeMarkJLabel.setBounds(0, 200, 80, 200);
-           userMarkJLabel.setBounds(0,400,80,200);
-           add(likeButton);
-           add(homeButton);
-           //add(userButton);
-           add(userMarkJLabel);
-           setVisible(true);
-       }
-       
-       private void userPage2(){
-       	this.setContentPane(new userPanel2());
-           setTitle("字字字字典zzZict");
-           setLayout(null);
-           setSize(800, 600);
-           setResizable(false);
-           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-           Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
-           Dimension frm = this.getSize();
-           setLocation( (scr.width - frm.width) / 2,
-                       (scr.height - frm.height) / 2 - 18);
     
-           usernameArea.setBounds(378, 130, 200, 20);
-           usernameArea.setFont(new Font("微软雅黑",Font.BOLD , 16));
-           usernameArea.setOpaque(false);
-           usernameArea.setText(username);
-           add(usernameArea);
-           
-           likeButton.setBounds(0, 0, 80, 200);
-           homeButton.setBounds(0,200,80,200);
-           //userButton.setBounds(0,400,80,200);
-           //homeMarkJLabel.setBounds(0, 200, 80, 200);
-           userMarkJLabel.setBounds(0,400,80,200);
-           add(likeButton);
-           add(homeButton);
-           //add(userButton);
-           add(userMarkJLabel);
-           setVisible(true);
-       }
+	private class homePanel extends JPanel {
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D)g;
+			super.paintComponent(g);
+			Image img = Toolkit.getDefaultToolkit().getImage("images/homebg.png");
+			g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+	    }
+	}
 
-       private void likePage(){
-       	this.setContentPane(new likePanel());
-           setTitle("字字字字典zzZict");
-           setLayout(null);
-           setSize(800, 600);
-           setResizable(false);
-           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-           Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
-           Dimension frm = this.getSize();
-           setLocation( (scr.width - frm.width) / 2,
-                       (scr.height - frm.height) / 2 - 18);
-           
-           usernameArea.setBounds(250, 57, 200, 20);
-           usernameArea.setFont(new Font("微软雅黑",Font.BOLD , 16));
-           usernameArea.setOpaque(false);
-           usernameArea.setText(username);
-           add(usernameArea);
-           
-           
-           //likeButton.setBounds(0, 0, 80, 200);
-           homeButton.setBounds(0,200,80,200);
-           userButton.setBounds(0,400,80,200);
-           //homeMarkJLabel.setBounds(0, 200, 80, 200);
-           likeMarkJLabel.setBounds(0, 0, 80, 200);
-           //add(likeButton);
-           add(homeButton);
-           add(userButton);
-           add(likeMarkJLabel);
-           setVisible(true);
-       }
-       
-       private void flushUserState(){
-       	if(!loginOrNot){
-       	login.setBounds(618, 15, 64, 32);
-           register.setBounds(706,15,64,32);        
-           add(login);
-           add(register);
-           }
-       	else{
-       		
-       		welcome.setBounds(500,15,250,32);
-       		welcomeUser.setBounds(611, 20, 100, 32);
-       		welcomeUser.setOpaque(false);
-       		welcomeUser.setFont(new Font("微软雅黑",Font.BOLD , 16));
-       		welcomeUser.setText(username);
+	private class userPanel1 extends JPanel {
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D)g;
+			super.paintComponent(g);
+			Image img = Toolkit.getDefaultToolkit().getImage("images/userbg1.png");
+			g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+		}
+	}
+
+	private class userPanel2 extends JPanel {
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D)g;
+			super.paintComponent(g);
+			Image img = Toolkit.getDefaultToolkit().getImage("images/userbg2.png");
+			g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+		}
+	}
+
+	private class likePanel extends JPanel {
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D)g;
+			super.paintComponent(g);
+			Image img = Toolkit.getDefaultToolkit().getImage("images/likebg.png");
+			g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+		}
+	}
+
+	private void loginPage() {
+		loginFrame.setContentPane(new loginPanel());
+		loginFrame.setResizable(false);
+		Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frm = this.getSize();
+		loginFrame.setLocation( (scr.width - frm.width) / 2,
+		            (scr.height - frm.height) / 2 - 18);
+
+		//loginFrame.setLayout(null);
+		//loginFrame.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
+		loginFrame.setLayout(null);
+		loginFrame.add(idInput).setBounds(58, 74, 155, 28);
+		idInput.setBorder(new EmptyBorder(0,0,0,0));
+		loginFrame.add(keyInput).setBounds(58, 111, 155, 28);
+		keyInput.setBorder(new EmptyBorder(0,0,0,0));
+		loginFrame.add(loginPageLoginOk).setBounds(28, 149, 85, 32);
+		loginFrame.add(loginExit).setBounds(129, 149, 85, 32);
+
+		loginExit.setMnemonic(KeyEvent.VK_ESCAPE);
+		loginPageLoginOk.setMnemonic(KeyEvent.VK_ENTER);
+		
+		loginFrame.setSize(250,220);
+		loginFrame.setLocationRelativeTo(null);
+		loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		loginFrame.setVisible(true);
+	}
+
+	private void loginPageNew() {
+		loginFrame.setContentPane(new loginPanel());
+		loginFrame.setResizable(false);
+		Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frm = this.getSize();
+		loginFrame.setLocation( (scr.width - frm.width) / 2,
+		            (scr.height - frm.height) / 2 - 18);
+
+		//loginFrame.setLayout(null);
+		//loginFrame.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
+		loginFrame.setLayout(null);
+		loginFrame.add(idInput).setBounds(58, 74, 155, 28);
+		idInput.setBorder(new EmptyBorder(0,0,0,0));
+		loginFrame.add(keyInput).setBounds(58, 111, 155, 28);
+		keyInput.setBorder(new EmptyBorder(0,0,0,0));
+		loginFrame.add(loginPageLoginOk).setBounds(28, 149, 85, 32);
+		loginFrame.add(register).setBounds(129, 149, 85, 32);
+
+
+		loginExit.setMnemonic(KeyEvent.VK_ESCAPE);
+		loginPageLoginOk.setMnemonic(KeyEvent.VK_ENTER);
+		
+		loginFrame.setSize(250,220);
+		loginFrame.setLocationRelativeTo(null);
+		loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		loginFrame.setVisible(true);
+	}
+
+	private void regPage() {
+		regFrame.setContentPane(new regPanel());
+		regFrame.setResizable(false);
+		Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frm = this.getSize();
+		regFrame.setLocation( (scr.width - frm.width) / 2,
+		            (scr.height - frm.height) / 2 - 18);
+
+		//loginFrame.setLayout(null);
+		//loginFrame.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
+		regFrame.setLayout(null);
+		regFrame.add(regIdInput).setBounds(58, 110, 155, 28);
+		regIdInput.setBorder(new EmptyBorder(0,0,0,0));
+		regFrame.add(regKeyInput1).setBounds(58, 150, 155, 28);
+		regKeyInput1.setBorder(new EmptyBorder(0,0,0,0));
+		regFrame.add(regKeyInput2).setBounds(58, 186, 155, 28);
+		regKeyInput2.setBorder(new EmptyBorder(0,0,0,0));
+		regFrame.add(regPageRegOk).setBounds(27, 223, 85, 32);
+		regFrame.add(regExit).setBounds(127, 223, 85, 32);
+
+		register.setMnemonic(KeyEvent.VK_ENTER);
+		regExit.setMnemonic(KeyEvent.VK_ESCAPE);
+		
+		regFrame.setSize(250,300);
+		regFrame.setLocationRelativeTo(null);
+		regFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		regFrame.setVisible(true);
+	}
+
+	private void mainPage() {
+		setContentPane(new mainPanel());
+		setTitle("字字字字典Zict");
+		setLayout(null);
+		setSize(800, 600);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frm = this.getSize();
+		setLocation( (scr.width - frm.width) / 2,
+		            (scr.height - frm.height) / 2 - 18);
+
+		txInput.setBounds(272, 350, 210, 35);
+		txInput.setBorder(new EmptyBorder(0,0,0,0));
+		txInput.setFont(new Font("微软雅黑",Font.BOLD,16));
+		search.setBounds(498,345,86,45);
+		youdao.setBounds(232, 408, 15,15);
+		baidu.setBounds(360,408,15,15);
+		bing.setBounds(490,408,15,15);
+
+		search.setMnemonic(KeyEvent.VK_ENTER);
+		
+		add(txInput);
+		add(search);
+		add(youdao);
+		add(baidu);
+		add(bing);
+		flushUserState();
+		setVisible(true);
+	}
+
+	private void homePage() {
+		setContentPane(new homePanel());
+		setTitle("字字字字典zzZict");
+		setLayout(null);
+		setSize(800, 600);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		setLocale(getLocale());
+		txInput.setBounds(320, 154, 195, 35);
+		txInput.setBorder(new EmptyBorder(0,0,0,0));
+		txInput.setFont(new Font("微软雅黑",Font.BOLD,16));
+		search.setBounds(530,154,80,37);
+		youdao.setBounds(279, 208, 15,15);
+		baidu.setBounds(398,208,15,15);
+		bing.setBounds(517,208,15,15);
+		likeButton.setBounds(0, 0, 80, 200);
+		//homeButton.setBounds(0,200,80,200);
+		userButton.setBounds(0,400,80,200);
+		homeMarkJLabel.setBounds(0, 200, 80, 200);
+
+		//第一条第二条第三条，可以根据需要选择是否显示
+		// TODO Need Get Explanation is Done.
+
+		search.setMnemonic(KeyEvent.VK_ENTER);
+		
+		add(likeButton);
+		//add(homeButton);
+		add(userButton);
+		add(homeMarkJLabel);
+		add(txInput);
+		add(search);
+		add(youdao);
+		add(baidu);
+		add(bing);
+		flushUserState();
+		setVisible(true);
+	}
+
+	private void part1() {
+		txOut[0].setBounds(140,241,540,100);
+		txOut[0].setLineWrap(true);
+		txOut[0].setWrapStyleWord(true);
+        like1.setBounds(706, 262, 31, 28);
+        share1.setBounds(706,299,61,28);
+        
+        zanNum1.setBounds(738, 263, 28, 26);
+        zanNum1.setFont(new Font("微软雅黑",Font.PLAIN , 16));
+        zanNum1.setText(" "+WordEntry.getExplanation(0).getLikeNumber());
+        zanNum1.setForeground(Color.black);
+        zanNum1.setEditable(false);
+		
+        add(txOut[0]);
+		add(like1);
+		add(share1);
+		add(zanNum1);
+	}
+
+	private void part2() {
+		txOut[1].setBounds(140,350,540,100);
+		txOut[1].setLineWrap(true);
+		txOut[1].setWrapStyleWord(true);
+        like2.setBounds(706, 371, 31, 28);
+        share2.setBounds(706,409,61,28);
+		
+        zanNum2.setBounds(738, 372, 28, 26);
+        //zanNum2.setOpaque(false);
+        zanNum2.setFont(new Font("微软雅黑",Font.PLAIN , 16));
+        zanNum2.setText(" "+WordEntry.getExplanation(1).getLikeNumber());
+        zanNum2.setForeground(Color.black );
+        zanNum2.setEditable(false);
+        
+		add(txOut[1]);
+		add(like2);
+        add(share2);
+        add(zanNum2);
+	}
+
+	private void part3() {
+		txOut[2].setBounds(140,460,540,100);
+		txOut[2].setLineWrap(true);
+		txOut[2].setWrapStyleWord(true);
+		like3.setBounds(706, 480,31,28);
+		share3.setBounds(706,518,61,28);
+		
+        zanNum3.setBounds(738, 481, 28, 26);
+        //zanNum3.setOpaque(false);
+        zanNum3.setFont(new Font("微软雅黑",Font.PLAIN , 16));
+        zanNum3.setText(" "+WordEntry.getExplanation(2).getLikeNumber());
+        zanNum3.setForeground(Color.black);
+        zanNum3.setEditable(false);
+		
+		add(txOut[2]);
+		add(like3);
+		add(share3);
+		add(zanNum3);
+	}
+
+	private void like1(){
+		 remove(like1);
+	    	unlike1.setBounds(706, 262, 31, 28);
+	    	add(unlike1);
+	        
+	    }
+	private void unlike1(){
+		 remove(unlike1);
+	    	like1.setBounds(706, 262, 31, 28);
+	    	add(like1);
+	        
+	    }
+	private void like2(){
+		 remove(like2);
+	    	unlike2.setBounds(706, 371, 31, 28);
+	    	add(unlike2);
+	        
+	    }
+	private void unlike2(){
+		 remove(unlike2);
+	    	like2.setBounds(706, 371, 31, 28);
+	    	add(like2);
+	        
+	    }
+	private void like3(){
+		 remove(like3);
+	    	unlike3.setBounds(706, 480, 31, 28);
+	    	add(unlike3);
+	        
+	    }
+	private void unlike3(){
+		 remove(unlike3);
+	    	like3.setBounds(706, 480, 31, 28);
+	    	add(like3);
+	        
+	    }
+	
+	private void userPage1() {
+		setContentPane(new userPanel1());
+		setTitle("字字字字典Zict");
+		setLayout(null);
+		setSize(800, 600);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocale(getLocale());
+		usernameArea.setBounds(378, 130, 200, 20);
+		usernameArea.setFont(new Font("微软雅黑",Font.BOLD , 16));
+		usernameArea.setOpaque(false);
+		usernameArea.setText(UserInfo.getName());
+		add(usernameArea);
+
+		friend.setBounds(323,303,203,71);
+		friend.setBorder(new EmptyBorder(0,0,0,0));
+		add(friend);
+		likeButton.setBounds(0, 0, 80, 200);
+		homeButton.setBounds(0,200,80,200);
+		//userButton.setBounds(0,400,80,200);
+		//homeMarkJLabel.setBounds(0, 200, 80, 200);
+		userMarkJLabel.setBounds(0,400,80,200);
+		add(likeButton);
+		add(homeButton);
+		//add(userButton);
+		add(userMarkJLabel);
+		setVisible(true);
+	}
+
+	private void userPage2() {
+		this.setContentPane(new userPanel2());
+		setTitle("字字字字典Zict");
+		setLayout(null);
+		setSize(800, 600);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocale(getLocale());
+		usernameArea.setBounds(378, 130, 200, 20);
+		usernameArea.setFont(new Font("微软雅黑",Font.BOLD , 16));
+		usernameArea.setOpaque(false);
+		usernameArea.setText(UserInfo.getName());
+		add(usernameArea);
+
+		likeButton.setBounds(0, 0, 80, 200);
+		homeButton.setBounds(0,200,80,200);
+		//userButton.setBounds(0,400,80,200);
+		//homeMarkJLabel.setBounds(0, 200, 80, 200);
+		userMarkJLabel.setBounds(0,400,80,200);
+		JScrollPane onl=new JScrollPane(onlineJList);
+		JScrollPane offl=new JScrollPane(offlineJList);
+		onl.setBounds(176,303,200,220);
+		offl.setBounds(476,303,200,220);
+		add(onl);
+		add(offl);
+		add(likeButton);
+		add(homeButton);
+		//add(userButton);
+		add(userMarkJLabel);
+		setVisible(true);
+	}
+
+	private void likePage() {
+		this.setContentPane(new likePanel());
+		setTitle("字字字字典Zict");
+		setLayout(null);
+		setSize(800, 600);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocale(getLocale());
+		usernameArea.setBounds(250, 57, 200, 20);
+		usernameArea.setFont(new Font("微软雅黑",Font.BOLD , 16));
+		usernameArea.setOpaque(false);
+		usernameArea.setText(UserInfo.getName());
+		add(usernameArea);
+
+		//likeButton.setBounds(0, 0, 80, 200);
+		homeButton.setBounds(0,200,80,200);
+		userButton.setBounds(0,400,80,200);
+		//homeMarkJLabel.setBounds(0, 200, 80, 200);
+		likeMarkJLabel.setBounds(0, 0, 80, 200);
+		//add(likeButton);
+		add(homeButton);
+		add(userButton);
+		add(likeMarkJLabel);
+		setVisible(true);
+	}
+
+	public void flushUserState() {
+		if (!UserInfo.isLogged()){
+			login.setBounds(618, 15, 64, 32);
+			register.setBounds(706,15,64,32);        
+			add(login);
+			add(register);
+			remove(welcome);
+			remove(welcomeUser);
+			remove(unlogButton);
+		}
+		else {
+    		unlogButton.setBounds(730,15,50,32);
+    		unlogButton.setOpaque(false);
+    		welcome.setBounds(500,15,250,32);
+    		welcomeUser.setBounds(611, 20, 100, 32);
+    		welcomeUser.setOpaque(false);
+    		welcomeUser.setFont(new Font("微软雅黑",Font.BOLD , 16));
+    		welcomeUser.setText(UserInfo.getName());
     		welcomeUser.setForeground(Color.white);
     		welcomeUser.setEditable(false);
-       		add(welcome);
-       		add(welcomeUser);
-   		}
-       }
-	
-       public static void main(String []args)throws Exception{
+    		add(welcome);
+    		add(welcomeUser);
+    		add(unlogButton);
+    		remove(login);
+    		remove(register);
+		}
+		repaint();
+	}
+
+	public static void main(String []args)throws Exception{
+
 		File configFile = new File("config.txt");
 		if (!configFile.exists()) {
 			System.out.println("Configuration File Missing!");
@@ -790,10 +972,10 @@ public class UImain extends JFrame{
 		} catch (Exception e) {
 			System.err.println("Undone");
 			System.err.println("Can't connect to the remote server.");
+			return;
 		}
 		Network.receiveFromServer();
 		System.out.println("Done");
-		new UImain();
+		mainFrame = new UImain();
 	}
 }
-

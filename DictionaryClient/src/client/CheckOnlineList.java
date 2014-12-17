@@ -7,23 +7,24 @@ import java.awt.*;
 
 import javax.swing.JFrame;
 
+import logic.ServiceProvider;
+
 @SuppressWarnings("serial")
 public class CheckOnlineList extends JFrame {
-	//private JButton sendTo=new JButton();
-    public CheckOnlineList(Component sendTo) {
+	private JButton sendTo = new JButton("send");
+    String[] listData=new String[100];
+    CheckBoxItem[] checkBoxItems;
+    public CheckOnlineList(int rating) {
         super("Send");
         JFrame jFrame=new JFrame();
-        //String[] listData = {"Apple", "Orange", "Cherry", "Blue Berry",
-        	//	"Banana", "Red Plum", "Watermelon","Red Plum", 
-        		//"Watermelon","Red Plum", "Watermelon"};
-        String[] listData=new String[100];
+        checkBoxItems = buildCheckBoxItems(listData.length);
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             System.out.println("Unable to find System Look and Feel");
         }
-        final JList listCheckBox = new JList(buildCheckBoxItems(listData.length));
-        final JList listDescription = new JList(listData);
+        final JList<CheckBoxItem> listCheckBox = new JList<CheckBoxItem>(checkBoxItems);
+        final JList<String> listDescription = new JList<String>(listData);
         listDescription.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listDescription.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
@@ -65,7 +66,19 @@ public class CheckOnlineList extends JFrame {
         listDescription.setFixedCellHeight(20);
         listCheckBox.setFixedCellHeight(listDescription.getFixedCellHeight());
         listCheckBox.setFixedCellWidth(20);
-        
+
+		sendTo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Get User List
+				for (int i = 0; i < listData.length; i ++) {
+					if (checkBoxItems[i].isChecked()) {
+						ServiceProvider.shareWordCard(listData[i], rating);
+					}
+				}
+			}
+		});
+
         getContentPane().add(scrollPane); //, BorderLayout.CENTER);
         add(sendTo, BorderLayout.SOUTH);
         setSize(350, 200);
@@ -83,7 +96,7 @@ public class CheckOnlineList extends JFrame {
     }
 
 
-    class CheckBoxItem {
+    private class CheckBoxItem {
 
         private boolean isChecked;
 
