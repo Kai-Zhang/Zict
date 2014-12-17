@@ -25,6 +25,7 @@ public class DealQuery implements Runnable{
 				String passwd=temp[2];
 				try {
 					boolean state=User.Adduser(user, passwd,IP);
+					System.out.println(state);
 					if (state){
 						content="Register Success!";
 					}
@@ -125,6 +126,14 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 				content="Logout";
+			}
+			if (temp[0].equals("User")){
+				try {
+					content="User "+SQLManager.QueryUser();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			new Thread(new SendToClient(content,IP)).start();
 	}

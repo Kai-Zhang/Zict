@@ -7,24 +7,24 @@ import java.awt.*;
 
 import javax.swing.JFrame;
 
+import data.UserInfo;
 import logic.ServiceProvider;
 
 @SuppressWarnings("serial")
 public class CheckOnlineList extends JFrame {
 	private JButton sendTo = new JButton("send");
-    String[] listData=new String[100];
+    private JList<String> listDescription = new JList<String>(UserInfo.getOnlineUsers());
     CheckBoxItem[] checkBoxItems;
     public CheckOnlineList(int rating) {
         super("Send");
         JFrame jFrame=new JFrame();
-        checkBoxItems = buildCheckBoxItems(listData.length);
+        checkBoxItems = buildCheckBoxItems(UserInfo.getOnlineUsers().length);
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             System.out.println("Unable to find System Look and Feel");
         }
-        final JList<CheckBoxItem> listCheckBox = new JList<CheckBoxItem>(checkBoxItems);
-        final JList<String> listDescription = new JList<String>(listData);
+        JList<CheckBoxItem> listCheckBox = new JList<CheckBoxItem>(checkBoxItems);
         listDescription.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listDescription.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
@@ -71,11 +71,12 @@ public class CheckOnlineList extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Get User List
-				for (int i = 0; i < listData.length; i ++) {
+				for (int i = 0; i < UserInfo.getOnlineUsers().length; i ++) {
 					if (checkBoxItems[i].isChecked()) {
-						ServiceProvider.shareWordCard(listData[i], rating);
+						ServiceProvider.shareWordCard(UserInfo.getOnlineUsers()[i], rating);
 					}
 				}
+				dispose();
 			}
 		});
 
@@ -127,5 +128,8 @@ public class CheckOnlineList extends JFrame {
             setSelected(((CheckBoxItem) obj).isChecked());
             return this;
         }
+    }
+    public void refreshList() {
+    	listDescription.setListData(UserInfo.getOnlineUsers());
     }
 }

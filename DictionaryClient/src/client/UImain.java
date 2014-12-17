@@ -108,6 +108,8 @@ public class UImain extends JFrame{
     private JButton share2=new JButton(shareIcon);
     private JButton share3=new JButton(shareIcon);
     
+    private CheckOnlineList shareList=null;
+    
     private JButton like1=new JButton(likelogoIcon);
     private JButton like2=new JButton(likelogoIcon);
     private JButton like3=new JButton(likelogoIcon);
@@ -304,8 +306,10 @@ public class UImain extends JFrame{
 		share1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				if (UserInfo.isLogged()) {
-					 new CheckOnlineList(0);
+					shareList = new CheckOnlineList(0);
+					ServiceProvider.getUserList();
 					}else {
 						JOptionPane.showMessageDialog(null, "请先登录");
 						}
@@ -316,7 +320,8 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (UserInfo.isLogged()) {
-					 new CheckOnlineList(1);
+					shareList = new CheckOnlineList(1);
+					ServiceProvider.getUserList();
 					}else {
 						JOptionPane.showMessageDialog(null, "请先登录");
 						}
@@ -327,7 +332,8 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (UserInfo.isLogged()) {
-					 new CheckOnlineList(2);
+					shareList = new CheckOnlineList(2);
+					ServiceProvider.getUserList();
 					}else {
 						JOptionPane.showMessageDialog(null, "请先登录");
 						}
@@ -414,6 +420,7 @@ public class UImain extends JFrame{
 		friend.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				Network.sendToServer("User");
 				userPage2();
 			}
 		});
@@ -954,6 +961,10 @@ public class UImain extends JFrame{
     		remove(register);
 		}
 		repaint();
+	}
+	
+	public void flushUserList() {
+		shareList.refreshList();
 	}
 
 	public static void main(String []args)throws Exception{

@@ -3,7 +3,12 @@ package com.example.dictionaryandroid;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Scanner;
 
 import logic.ServiceProvider;
@@ -18,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,8 +39,9 @@ public class MainActivity extends Activity {
 	ImageButton userButton1,userButton2,userButton3;
 	ImageButton zanButton1,zanButton2,zanButton3;
 	ImageButton homeButton1,homeButton2,homeButton3;
-	CheckBox checkBoxBaidu,checkBoxYoudao,checkBoxBing;
+	static CheckBox checkBoxBaidu,checkBoxYoudao,checkBoxBing;
 	static EditText editText1,editText2,editText3;
+	static Context context;
 	Button loginButton,registerButton;
 	EditText inputid,inputpasswd;
 	EditText inputText;
@@ -44,7 +51,16 @@ public class MainActivity extends Activity {
 	boolean zanfirst,userfirst;
 	public static MessageHandler msghandler=new MessageHandler();
 	public static Context getContext(){
-		return MainActivity.getContext();
+		return context;
+	}
+	public static CheckBox getCheckBoxBaidu() {
+		return checkBoxBaidu;
+	}
+	public static CheckBox getCheckBoxBing() {
+		return checkBoxBing;
+	}
+	public static CheckBox getCheckBoxYoudao() {
+		return checkBoxYoudao;
 	}
 	public static EditText getEditText1() {
 		return editText1;
@@ -138,19 +154,16 @@ public class MainActivity extends Activity {
 			});
 		}
 	}
-	void init(){
+	void init() throws UnknownHostException, IOException{
 		/*File configFile = new File("config.txt");
 		Scanner configScanner = new Scanner(configFile);
 		String serverIP = configScanner.nextLine();*/
-		String serverIP="127.0.0.1";
+		context=getBaseContext();
+		String serverIP="10.0.2.2";
 		System.out.println(serverIP);
-		Network.receiveFromServer();
-		try{
-			Network.connectToServer(serverIP);
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
+		System.out.println("Before Connect");
+		Network.connectToServer(serverIP);
+		System.out.println("Before receive");
 		LayoutInflater inflater=LayoutInflater.from(this);
 		home=inflater.inflate(R.layout.home, null);
 		user=inflater.inflate(R.layout.user, null);
@@ -175,50 +188,19 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				String currentWord =inputText.getText().toString();
 				ServiceProvider.getExplanation(currentWord);
-				if (WordEntry.getExplanation(0) == null) {
-					editText1.setText("");
-					editText2.setText("");
-					editText3.setText("");
-					return;
-				}
-				ArrayList<Explanation> outputList = new ArrayList<Explanation>();
-				for (int i = 0; i < 3; i ++) {
-					String source = WordEntry.getExplanation(i).getSource();
-					if (source.equals("baidu")) {
-						if (checkBoxBaidu.isSelected()) {
-							outputList.add(WordEntry.getExplanation(i));
-						}
-					}
-					else if (source.equals("bing")) {
-						if (checkBoxBing.isSelected()) {
-							outputList.add(WordEntry.getExplanation(i));
-						}
-					}
-					else {
-						if (checkBoxYoudao.isSelected()) {
-							outputList.add(WordEntry.getExplanation(i));
-						}
-					}
-				}
-				if (outputList.size() >= 1) {
-					editText1.setText(outputList.get(0).getExplanation());
-				}
-				else editText1.setText("");
-				if (outputList.size() >= 2) {
-					editText2.setText(outputList.get(1).getExplanation());
-				}
-				else editText2.setText("");
-				if (outputList.size() == 3) {
-					editText3.setText(outputList.get(2).getExplanation());
-				}
-				else editText3.setText("");
+				setContentView(zan);
 			}
 		});
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		init();
+		try {
+			init();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package logic;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import client.CheckOnlineList;
 import client.UImain;
 import data.UserInfo;
 
@@ -18,27 +19,26 @@ public class DealAnswer implements Runnable {
 		String[] context = messageReceive.split(" ");
 		if (context[0].equals("Register")){
 			if (context[1].equals("Success!")){
-				JOptionPane.showConfirmDialog(null, "Register Success!");
+				JOptionPane.showConfirmDialog(null, "注册成功!");
 				UserInfo.setLoginStatus(true);
 				UImain.mainFrame.flushUserState();
 			}
 			else{
-				JOptionPane.showConfirmDialog(null, "Register Failed!");
+				JOptionPane.showConfirmDialog(null, "该用户名已被占用");
 			}
 		}
 		else if (context[0].equals("Login")){
 			if (context[1].equals("Success!")){
-				JOptionPane.showConfirmDialog(null, "Login Success!");
+				JOptionPane.showConfirmDialog(null, "登陆成功!");
 				UserInfo.setLoginStatus(true);
 				UImain.mainFrame.flushUserState();
 			}
 			else{
-				JOptionPane.showConfirmDialog(null, "Login Failed!");
+				JOptionPane.showConfirmDialog(null, "用户名/密码错误!");
 				UImain.mainFrame.flushUserState();
 			}
 		}
 		else if (context[0].equals("Logout")) {
-			JOptionPane.showConfirmDialog(null, "Logout Success!");
 			UserInfo.setLoginStatus(false);
 		}
 		else if (context[0].equals("Like")){
@@ -65,8 +65,21 @@ public class DealAnswer implements Runnable {
 				ServiceProvider.explanation = messageReceive.substring(7);
 			}
 		}
+		else if (context[0].equals("User")) {
+			String[] userList = messageReceive.substring(5).split("###");
+			UserInfo.setOnlineUsers(userList[0].split(" "));
+			if (userList.length > 1) {
+				UserInfo.setOfflineUsers(userList[1].split(" "));
+			}
+			else {
+				UserInfo.setOfflineUsers(null);
+			}
+			UImain.mainFrame.flushUserList();
+		}
 		else if (context[0].equals("Share")) {
 			String[] cardParts = messageReceive.split("###");
+			System.out.println(cardParts[1]);
+			System.out.println(cardParts[2]);
 			// cardParts[1] --> Word
 			// cardParts[2] --> Explanation
 			// Draw Word Card
@@ -74,7 +87,7 @@ public class DealAnswer implements Runnable {
 			UImain.mainFrame.wordCard(cardParts);
 		}
 		else{
-			//Set Explaination
+			// Unknown Message
 		}
 	}
 
