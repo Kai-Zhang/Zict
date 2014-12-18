@@ -28,6 +28,7 @@ public class DealQuery implements Runnable{
 					System.out.println(state);
 					if (state){
 						content="Register Success!";
+						User.Login(user, passwd, IP);
 					}
 					else content="Register Failed";
 				} catch (SQLException e) {
@@ -63,7 +64,7 @@ public class DealQuery implements Runnable{
 						content="Answer ";
 						
 					for (Answer i:answers){
-						content=content+i.which+":"+i.explain+";likenumber:"+i.zan+"###";
+						content=content+i.which+":"+i.explain+";likenumber:"+i.zan+";liked:"+"###";
 					}
 					}
 				} catch (Exception e) {

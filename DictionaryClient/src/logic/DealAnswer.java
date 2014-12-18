@@ -2,12 +2,12 @@
 
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import client.CheckOnlineList;
 import client.UImain;
+import data.Explanation;
 import data.UserInfo;
+import data.WordEntry;
 
 public class DealAnswer implements Runnable {
 	String messageReceive = null;
@@ -22,8 +22,11 @@ public class DealAnswer implements Runnable {
 		if (context[0].equals("Register")){
 			if (context[1].equals("Success!")){
 				JOptionPane.showMessageDialog(null, "注册成功!");
-				//UserInfo.setLoginStatus(true);
-				//UImain.mainFrame.flushUserState();
+				UserInfo.setLoginStatus(true);
+				UImain.mainFrame.flushUserState();
+				if (!(WordEntry.getWord() == null)) {
+					ServiceProvider.getExplanation(WordEntry.getWord());
+				}
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "该用户名已被占用");
@@ -34,16 +37,19 @@ public class DealAnswer implements Runnable {
 				JOptionPane.showMessageDialog(null, "登陆成功!");
 				UserInfo.setLoginStatus(true);
 				UImain.mainFrame.flushUserState();
+				if (!(WordEntry.getWord() == null)) {
+					ServiceProvider.getExplanation(WordEntry.getWord());
+				}
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "用户名/密码错误!");
-				UImain.mainFrame.flushUserState();
 			}
 		}
 		else if (context[0].equals("Logout")) {
 			UserInfo.setLoginStatus(false);
 			JOptionPane.showMessageDialog(null,"注销成功!");
 			UImain.mainFrame.flushUserState();
+			UImain.mainFrame.flushLikeStatus();
 		}
 		else if (context[0].equals("Like")){
 			if (context[1].equals("Success!")){
@@ -51,6 +57,9 @@ public class DealAnswer implements Runnable {
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "您已经赞过了");
+				int newLikeNumber = WordEntry.getExplanation(2).getLikeNumber() - 1;
+				WordEntry.getExplanation(2).setLikeNumber(newLikeNumber);
+				UImain.mainFrame.flushLikeStatus();
 			}
 		}
 		else if (context[0].equals("Cancel")){
@@ -63,10 +72,50 @@ public class DealAnswer implements Runnable {
 		else if (context[0].equals("Answer")) {
 			if (context[1].equals("NoSuchWord")) {
 				//JOptionPane.showMessageDialog(null, "No such word!");
-				ServiceProvider.explanation = "Null";
+				WordEntry.setExplanation(0, null);
+				WordEntry.setExplanation(1, null);
+				WordEntry.setExplanation(2, null);
+				UImain.mainFrame.flushLikeStatus();
+				UImain.mainFrame.flushResultPage();
 			}
 			else {
-				ServiceProvider.explanation = messageReceive.substring(7);
+				String explanation = messageReceive.substring(7);
+				String[] result = explanation.split("###");
+				for (int i = 0; i < 3; i ++) {
+					if (result[i].startsWith("baidu")) {
+						String[] exp = result[i].substring(6).split(";likenumber:");
+						String[] like = exp[1].split(";liked:");
+						WordEntry.setExplanation(i, new Explanation("baidu", exp[0], Integer.parseInt(like[0])));
+						if (like[1].startsWith("true")) {
+							WordEntry.getExplanation(i).setLiked(true);
+						} else {
+							WordEntry.getExplanation(i).setLiked(false);
+						}
+					}
+					else if (result[i].startsWith("bing")) {
+						String[] exp = result[i].substring(5).split(";likenumber:");
+						String[] like = exp[1].split(";liked:");
+						WordEntry.setExplanation(i, new Explanation("bing", exp[0], Integer.parseInt(like[0])));
+						if (like[1].startsWith("true")) {
+							WordEntry.getExplanation(i).setLiked(true);
+						} else {
+							WordEntry.getExplanation(i).setLiked(false);
+						}
+					}
+					else {
+						String[] exp = result[i].substring(7).split(";likenumber:");
+						String[] like = exp[1].split(";liked:");
+						WordEntry.setExplanation(i, new Explanation("youdao", exp[0], Integer.parseInt(like[0])));
+						if (like[1].startsWith("true")) {
+							WordEntry.getExplanation(i).setLiked(true);
+						} else {
+							WordEntry.getExplanation(i).setLiked(false);
+						}
+					}
+				}
+				WordEntry.sortExplanation();
+				UImain.mainFrame.flushLikeStatus();
+				UImain.mainFrame.flushResultPage();
 			}
 		}
 		else if (context[0].equals("User")) {

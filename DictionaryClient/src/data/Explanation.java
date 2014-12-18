@@ -8,6 +8,7 @@ public class Explanation {
 	private String source = null;
 	private String explanation = null;
 	private int likeNumber = 0;
+	private boolean isLiked = false;
 	
 	public Explanation() { }
 
@@ -15,6 +16,7 @@ public class Explanation {
 		this.source = source;
 		this.explanation = explanation;
 		this.likeNumber = likeNumber;
+		this.isLiked = false;
 	}
 
 	public String getExplanation() {
@@ -39,5 +41,13 @@ public class Explanation {
 
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+	public boolean isLiked() {
+		return isLiked;
+	}
+
+	public void setLiked(boolean isLiked) {
+		this.isLiked = isLiked;
 	}
 }

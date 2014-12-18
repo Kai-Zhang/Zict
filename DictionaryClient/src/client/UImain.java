@@ -1,10 +1,4 @@
-﻿/*
- * TODO list:
- * + Click like counter or another visible sign  -->  UI design or another variable
- * + Register check  -->  use regex in register
- */
-
-package client;
+﻿package client;
 
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -226,6 +220,7 @@ public class UImain extends JFrame{
 					int newLikeNumber = WordEntry.getExplanation(0).getLikeNumber() + 1;
 					WordEntry.getExplanation(0).setLikeNumber(newLikeNumber);
 					likeNum1.setText(newLikeNumber + "");
+					WordEntry.getExplanation(0).setLiked(true);
 					like1();
 					repaint();
 				}
@@ -244,6 +239,7 @@ public class UImain extends JFrame{
 					int newLikeNumber = WordEntry.getExplanation(1).getLikeNumber() + 1;
 					WordEntry.getExplanation(1).setLikeNumber(newLikeNumber);
 					likeNum2.setText(newLikeNumber + "");
+					WordEntry.getExplanation(1).setLiked(true);
 					like2();
 					repaint();
 				}
@@ -262,6 +258,7 @@ public class UImain extends JFrame{
 					int newLikeNumber = WordEntry.getExplanation(2).getLikeNumber() + 1;
 					WordEntry.getExplanation(2).setLikeNumber(newLikeNumber);
 					likeNum3.setText(newLikeNumber + "");
+					WordEntry.getExplanation(2).setLiked(true);
 					like3();
 					repaint();
 				}
@@ -281,6 +278,7 @@ public class UImain extends JFrame{
 					int newLikeNumber = WordEntry.getExplanation(0).getLikeNumber() - 1;
 					WordEntry.getExplanation(0).setLikeNumber(newLikeNumber);
 					likeNum1.setText(newLikeNumber + "");
+					WordEntry.getExplanation(0).setLiked(false);
 					unlike1();
 					repaint();
 				}
@@ -299,6 +297,7 @@ public class UImain extends JFrame{
 					int newLikeNumber = WordEntry.getExplanation(1).getLikeNumber() - 1;
 					WordEntry.getExplanation(1).setLikeNumber(newLikeNumber);
 					likeNum2.setText(newLikeNumber + "");
+					WordEntry.getExplanation(1).setLiked(false);
 					unlike2();
 					repaint();
 				}
@@ -317,6 +316,7 @@ public class UImain extends JFrame{
 					int newLikeNumber = WordEntry.getExplanation(2).getLikeNumber() - 1;
 					WordEntry.getExplanation(2).setLikeNumber(newLikeNumber);
 					likeNum3.setText(newLikeNumber + "");
+					WordEntry.getExplanation(2).setLiked(false);
 					unlike3();
 					repaint();
 				}
@@ -377,8 +377,12 @@ public class UImain extends JFrame{
 					JOptionPane.showMessageDialog(null, "请输入合法的英文单词");
 					return;
 				}
+				txOut[0].setText("正在服务器上查找...");
+				txOut[1].setText("正在服务器上查找...");
+				txOut[2].setText("正在服务器上查找...");
 				homePage();
-				homeSearch();
+				ServiceProvider.getExplanation(currentWord);
+				flushResultPage();
 			}
 		});
 
@@ -386,7 +390,7 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				homePage();
-				homeSearch();
+				flushResultPage();
 			}
 		});
 
@@ -461,11 +465,11 @@ public class UImain extends JFrame{
 				Graphics2D  g2d = bi.createGraphics();
 				wordCardfFrame.paint(g2d);
 
-				//Date dt=new Date();
-			    //SimpleDateFormat matter1=new SimpleDateFormat("yyyyMMddHHmmss");
+				Date dt=new Date();
+			    SimpleDateFormat matter1=new SimpleDateFormat("yyyyMMddHHmmss");
 			    //System.out.println(matter1.format(dt));
-			    //String str=new String(dt.toString());
-			    String str =new String(Integer.toString((int)(Math.random()*100)));
+			    String str=matter1.format(dt).toString();
+			    //String str =new String(Integer.toString((int)(Math.random()*100)));
 				File pic=new File(str+".png");
 				
 				if (!pic.exists()) {
@@ -514,51 +518,7 @@ public class UImain extends JFrame{
 		wordCardfFrame.setVisible(true);
 		wordCardfFrame.repaint();
 		}
-	private void homeSearch(){
-		String currentWord = txInput.getText();
-		txOut[0].setText("正在服务器上查找...");
-		txOut[1].setText("正在服务器上查找...");
-		txOut[2].setText("正在服务器上查找...");
-		txOut[0].repaint();
-		txOut[1].repaint();
-		txOut[2].repaint();
-		ServiceProvider.getExplanation(currentWord);
-		if (WordEntry.getExplanation(0) == null) {
-			txOut[0].setText("");
-			txOut[1].setText("");
-			txOut[2].setText("");
-			return;
-		}
-		ArrayList<Explanation> outputList = new ArrayList<Explanation>();
-		for (int i = 0; i < 3; i ++) {
-			String source = WordEntry.getExplanation(i).getSource();
-			if (source.equals("baidu")) {
-				if (baidu.isSelected()) {
-					outputList.add(WordEntry.getExplanation(i));
-				}
-			}
-			else if (source.equals("bing")) {
-				if (bing.isSelected()) {
-					outputList.add(WordEntry.getExplanation(i));
-				}
-			}
-			else {
-				if (youdao.isSelected()) {
-					outputList.add(WordEntry.getExplanation(i));
-				}
-			}
-		}
-		for (int i = 0; i < outputList.size(); i ++) {
-			txOut[i].setText(outputList.get(i).getExplanation());
-			if (i==0) {
-				part1();
-			}else if (i==1) {
-				part2();
-			}else if (i==2) {
-				part3();
-			}else ;
-		}
-	}
+	
 	private class wordCardpanel extends JPanel{
 		public void paintComponent(Graphics g) {
 			Graphics2D g2 = (Graphics2D)g;
@@ -975,6 +935,45 @@ public class UImain extends JFrame{
 		add(likeMarkJLabel);
 		setVisible(true);
 	}
+	
+	public void flushResultPage(){
+		if (WordEntry.getExplanation(0) == null) {
+			txOut[0].setText("");
+			txOut[1].setText("");
+			txOut[2].setText("");
+			return;
+		}
+		ArrayList<Explanation> outputList = new ArrayList<Explanation>();
+		for (int i = 0; i < 3; i ++) {
+			String source = WordEntry.getExplanation(i).getSource();
+			if (source.equals("baidu")) {
+				if (baidu.isSelected()) {
+					outputList.add(WordEntry.getExplanation(i));
+				}
+			}
+			else if (source.equals("bing")) {
+				if (bing.isSelected()) {
+					outputList.add(WordEntry.getExplanation(i));
+				}
+			}
+			else {
+				if (youdao.isSelected()) {
+					outputList.add(WordEntry.getExplanation(i));
+				}
+			}
+		}
+		for (int i = 0; i < outputList.size(); i ++) {
+			txOut[i].setText(outputList.get(i).getExplanation());
+			if (i==0) {
+				part1();
+			}else if (i==1) {
+				part2();
+			}else if (i==2) {
+				part3();
+			}else ;
+		}
+		flushLikeStatus();
+	}
 
 	public void flushUserState() {
 		if (!UserInfo.isLogged()){
@@ -1010,6 +1009,47 @@ public class UImain extends JFrame{
 		offlineJList.setListData(UserInfo.getOfflineUsers());
 		if (shareList != null) {
 			shareList.refreshList();
+		}
+	}
+	
+	public void flushLikeStatus() {
+		if (UserInfo.isLogged()) {
+			if (WordEntry.getExplanation(0) != null) {
+				if (WordEntry.getExplanation(0).isLiked()) {
+					like1(); repaint();
+				}
+				else {
+					unlike1(); repaint();
+				}
+			}
+			else {
+				unlike1(); repaint();
+			}
+			if (WordEntry.getExplanation(1) != null) {
+				if (WordEntry.getExplanation(1).isLiked()) {
+					like2(); repaint();
+				}
+				else {
+					unlike2(); repaint();
+				}
+			}
+			else {
+				unlike2(); repaint();
+			}
+			if (WordEntry.getExplanation(2) != null) {
+				if (WordEntry.getExplanation(2).isLiked()) {
+					like3(); repaint();
+				}
+				else {
+					unlike3(); repaint();
+				}
+			}
+			else {
+				unlike3(); repaint();
+			}
+		}
+		else {
+			unlike1(); unlike2(); unlike3(); repaint();
 		}
 	}
 
