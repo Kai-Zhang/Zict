@@ -32,6 +32,11 @@ public class ServiceProvider {
 		Network.sendToServer("User");
 	}
 	
+	public static void getLikedList() {
+		String message = "Word" + " " + UserInfo.getName();
+		Network.sendToServer(message);
+	}
+	
 	public static void shareWordCard(String toUser,int rating){
 		String message = "Share" + " " + toUser + " ###" + WordEntry.getWord() + "###" + WordEntry.getExplanation(rating).getExplanation();
 		System.out.println(message);

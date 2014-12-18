@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -76,6 +78,24 @@ public class DealAnswer implements Runnable {
 			else {
 				UserInfo.setOfflineUsers(null);
 			}
+			UImain.mainFrame.flushUserList();
+		}
+		else if (context[0].equals("Word")) {
+			ArrayList<String> wordList = new ArrayList<String>();
+			ArrayList<String> sourceList = new ArrayList<String>();
+			for (int i = 1; i < context.length; i ++) {
+				String[] parts = context[i].split(":");
+				wordList.add(parts[0]);
+				sourceList.add(parts[1]);
+			}
+			String[] wordStringList = new String[wordList.size()];
+			String[] sourceStringList = new String[wordList.size()];
+			for (int i = 0; i < wordList.size(); i ++) {
+				wordStringList[i] = wordList.get(i);
+				sourceStringList[i] = sourceList.get(i);
+			}
+			UserInfo.setOnlineUsers(wordStringList);
+			UserInfo.setOfflineUsers(sourceStringList);
 			UImain.mainFrame.flushUserList();
 		}
 		else if (context[0].equals("Share")) {

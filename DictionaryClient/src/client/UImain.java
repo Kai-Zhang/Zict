@@ -372,10 +372,14 @@ public class UImain extends JFrame{
 		search.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				homePage();
 				txOut[0].setText("正在服务器上查找...");
 				txOut[1].setText("正在服务器上查找...");
 				txOut[2].setText("正在服务器上查找...");
-				homePage();
+				txOut[0].repaint();
+				txOut[1].repaint();
+				txOut[2].repaint();
 				String currentWord = txInput.getText();
 				ServiceProvider.getExplanation(currentWord);
 				if (WordEntry.getExplanation(0) == null) {
@@ -437,6 +441,7 @@ public class UImain extends JFrame{
 		likeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				ServiceProvider.getLikedList();
 				if(UserInfo.isLogged())
 					likePage();
 				else {
@@ -946,7 +951,13 @@ public class UImain extends JFrame{
 		userButton.setBounds(0,400,80,200);
 		//homeMarkJLabel.setBounds(0, 200, 80, 200);
 		likeMarkJLabel.setBounds(0, 0, 80, 200);
+		JScrollPane onl=new JScrollPane(onlineJList);
+		JScrollPane offl=new JScrollPane(offlineJList);
+		onl.setBounds(176,303,200,220);
+		offl.setBounds(476,303,200,220);
 		//add(likeButton);
+		add(onl);
+		add(offl);
 		add(homeButton);
 		add(userButton);
 		add(likeMarkJLabel);
