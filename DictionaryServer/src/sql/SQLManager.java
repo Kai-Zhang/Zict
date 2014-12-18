@@ -131,6 +131,15 @@ public class SQLManager {
 			statement.executeUpdate(update);
 		}
 	}
+	public static boolean QueryMyZan(String word,String user,String which) throws SQLException{
+		synchronized (statement) {
+			String query="select * from zanlist where ID='"+user+"' and word='"+word
+					+"' and which='"+which+"';";
+			ResultSet resultSet=statement.executeQuery(query);
+			if (resultSet.next()) return true;
+			else return false;
+		}
+	}
 	public static String QueryZanWord(String user) throws SQLException{
 		synchronized (statement) {
 			String query="select * from zanlist where ID='"+user+"';";
