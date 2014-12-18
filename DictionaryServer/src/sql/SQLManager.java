@@ -1,5 +1,6 @@
 package sql;
 import java.nio.channels.SelectableChannel;
+import java.security.interfaces.RSAKey;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -128,6 +129,17 @@ public class SQLManager {
 		synchronized (statement) {
 			String update="update users set IP=null where ID='"+user+"';";
 			statement.executeUpdate(update);
+		}
+	}
+	public static String QueryZanWord(String user) throws SQLException{
+		synchronized (statement) {
+			String query="select * from zanlist where ID='"+user+"';";
+			ResultSet resultSet=statement.executeQuery(query);
+			String ans="Word ";
+			while (resultSet.next()){
+				ans=ans+resultSet.getString("word")+":"+resultSet.getString("which")+" ";
+			}
+			return ans;
 		}
 	}
 	public static String QueryIP(String touser) throws SQLException {

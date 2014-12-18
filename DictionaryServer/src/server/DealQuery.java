@@ -135,6 +135,15 @@ public class DealQuery implements Runnable{
 					e.printStackTrace();
 				}
 			}
+			if (temp[0].equals("Word")){
+				String user=temp[1];
+				try {
+					content=SQLManager.QueryZanWord(user);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			new Thread(new SendToClient(content,IP)).start();
 	}
 	
