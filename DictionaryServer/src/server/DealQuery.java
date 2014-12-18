@@ -53,7 +53,8 @@ public class DealQuery implements Runnable{
 				
 			}
 			if (temp[0].equals("Query")){
-				String word=temp[1];
+				String user=temp[1];
+				String word=temp[2];
 				try {
 					Query query=new Query();
 					ArrayList<Answer> answers=query.getExplaination(word);
@@ -64,7 +65,8 @@ public class DealQuery implements Runnable{
 						content="Answer ";
 						
 					for (Answer i:answers){
-						content=content+i.which+":"+i.explain+";likenumber:"+i.zan+";liked:"+"###";
+						boolean iszan=SQLManager.QueryMyZan(word, user,i.which);
+						content=content+i.which+":"+i.explain+";likenumber:"+i.zan+";liked:"+iszan+"###";
 					}
 					}
 				} catch (Exception e) {
