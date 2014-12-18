@@ -31,8 +31,7 @@ public class SQLManager {
 		if (!resultSet.next()) return false;
 		String delete="delete from zanlist where ID='"+user+"' and word='"+word+"';";
 		statement.executeUpdate(delete);
-		String update="update zan set "+which+"="+which+"-1"+" where ID='"+user
-				+"' and word='"+word+"';";
+		String update="update zan set "+which+"="+which+"-1"+" where word='"+word+"';";
 		statement.execute(update);
 		return true;
 		}
@@ -105,8 +104,9 @@ public class SQLManager {
 		}
 		query="select * from users where IP is null";
 		resultSet=statement.executeQuery(query);
+		ans=ans+"###";
 		while (resultSet.next()){
-			ans=ans+"###"+resultSet.getString("ID");
+			ans=ans+resultSet.getString("ID")+" ";
 		}
 		return ans;
 		}
