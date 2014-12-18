@@ -42,19 +42,16 @@ public class UImain extends JFrame{
 	public static UImain mainFrame = null;
 	
 	private JTextArea usernameArea=new JTextArea();
-	//private boolean loginOrNot=true;//false未登录  user.iflog
-    private String[] online =new String[100];  //在线用户
-	private JList onlineJList = new JList(online);
-	private String[] offline =new String[100]; //不在线用户
-	private JList offlineJList=new JList(offline);
+	private JList<String> onlineJList = new JList<String>(UserInfo.getOnlineUsers());
+	private JList<String> offlineJList=new JList<String>(UserInfo.getOfflineUsers());
 	
 	private JTextArea[] txOut = {new JTextArea(5,50), new JTextArea(5,50), new JTextArea(5,50)};
 	private JTextField txInput = new JTextField("请输入英文", 42);
 	private JTextField idInput=new JTextField(16);
 	
-	private JTextArea zanNum1=new JTextArea();
-	private JTextArea zanNum2=new JTextArea();
-	private JTextArea zanNum3=new JTextArea();
+	private JTextArea likeNum1=new JTextArea();
+	private JTextArea likeNum2=new JTextArea();
+	private JTextArea likeNum3=new JTextArea();
 	
 	private JPasswordField keyInput=new JPasswordField(16);
 	private JTextField regIdInput=new JTextField(16);
@@ -160,9 +157,9 @@ public class UImain extends JFrame{
 				} else if (password.equals("")) {
 					JOptionPane.showMessageDialog(null, "密码不能为空!");
 				} else if (!userID.matches("\\w{1,16}")) {
-					JOptionPane.showMessageDialog(null, "用户名应为16位以下数字或字母");
+					JOptionPane.showMessageDialog(null, "该用户不存在");
 				} else if (!password.matches("\\w{6,}")) {
-					JOptionPane.showMessageDialog(null, "请输入6位以上的密码");
+					JOptionPane.showMessageDialog(null, "密码不正确");
 				} else {
 					UserInfo.login(userID, password);
 					loginFrame.dispose();
@@ -171,12 +168,9 @@ public class UImain extends JFrame{
 		});
 
 		unlogButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				UserInfo.logout();
-				JOptionPane.showMessageDialog(null,"注销成功");
 			}
 		});
 		register.addActionListener(new ActionListener() {
@@ -228,12 +222,16 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (UserInfo.isLogged()) {
-				ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(0).getSource());
-				like1();
-				repaint();
+					ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(0).getSource());
+					int newLikeNumber = WordEntry.getExplanation(0).getLikeNumber() + 1;
+					WordEntry.getExplanation(0).setLikeNumber(newLikeNumber);
+					likeNum1.setText(newLikeNumber + "");
+					like1();
+					repaint();
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "请先登录");
+					loginPageNew();
 				}
 			}
 		});
@@ -242,12 +240,17 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (UserInfo.isLogged()) {
-				ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(1).getSource());
-				like2();
-				repaint();
-				}else {
+					ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(1).getSource());
+					int newLikeNumber = WordEntry.getExplanation(1).getLikeNumber() + 1;
+					WordEntry.getExplanation(1).setLikeNumber(newLikeNumber);
+					likeNum2.setText(newLikeNumber + "");
+					like2();
+					repaint();
+				}
+				else {
 					JOptionPane.showMessageDialog(null, "请先登录");
-					}
+					loginPageNew();
+				}
 			}
 		});
 
@@ -255,12 +258,17 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (UserInfo.isLogged()) {
-				ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(2).getSource());
-				like3();
-				repaint();
-				}else {
+					ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(2).getSource());
+					int newLikeNumber = WordEntry.getExplanation(2).getLikeNumber() + 1;
+					WordEntry.getExplanation(2).setLikeNumber(newLikeNumber);
+					likeNum3.setText(newLikeNumber + "");
+					like3();
+					repaint();
+				}
+				else {
 					JOptionPane.showMessageDialog(null, "请先登录");
-					}
+					loginPageNew();
+				}
 			}
 		});
 		
@@ -268,37 +276,53 @@ public class UImain extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				if (UserInfo.isLogged()) {
-				ServiceProvider.cancelLike(WordEntry.getWord(), WordEntry.getExplanation(0).getSource());
-				unlike1();
-				repaint();
+					ServiceProvider.cancelLike(WordEntry.getWord(), WordEntry.getExplanation(0).getSource());
+					int newLikeNumber = WordEntry.getExplanation(0).getLikeNumber() - 1;
+					WordEntry.getExplanation(0).setLikeNumber(newLikeNumber);
+					likeNum1.setText(newLikeNumber + "");
+					unlike1();
+					repaint();
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "请先登录");
+					loginPageNew();
 				}
 			}
 		});
 		
 		unlike2.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				if (UserInfo.isLogged()) {
-				ServiceProvider.cancelLike(WordEntry.getWord(), WordEntry.getExplanation(1).getSource());
-				unlike2();
-				repaint();
+					ServiceProvider.cancelLike(WordEntry.getWord(), WordEntry.getExplanation(1).getSource());
+					int newLikeNumber = WordEntry.getExplanation(1).getLikeNumber() - 1;
+					WordEntry.getExplanation(1).setLikeNumber(newLikeNumber);
+					likeNum2.setText(newLikeNumber + "");
+					unlike2();
+					repaint();
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "请先登录");
+					loginPageNew();
 				}
 			}
 		});
 		
 		unlike3.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				if (UserInfo.isLogged()) {
-				ServiceProvider.cancelLike(WordEntry.getWord(), WordEntry.getExplanation(2).getSource());
-				unlike3();
-				repaint();
+					ServiceProvider.cancelLike(WordEntry.getWord(), WordEntry.getExplanation(2).getSource());
+					int newLikeNumber = WordEntry.getExplanation(2).getLikeNumber() - 1;
+					WordEntry.getExplanation(2).setLikeNumber(newLikeNumber);
+					likeNum3.setText(newLikeNumber + "");
+					unlike3();
+					repaint();
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "请先登录");
+					loginPageNew();
 				}
 			}
 		});
@@ -306,13 +330,14 @@ public class UImain extends JFrame{
 		share1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				if (UserInfo.isLogged()) {
 					shareList = new CheckOnlineList(0);
 					ServiceProvider.getUserList();
-					}else {
-						JOptionPane.showMessageDialog(null, "请先登录");
-						}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "请先登录");
+					loginPageNew();
+				}
 			}
 		});
 
@@ -322,9 +347,11 @@ public class UImain extends JFrame{
 				if (UserInfo.isLogged()) {
 					shareList = new CheckOnlineList(1);
 					ServiceProvider.getUserList();
-					}else {
-						JOptionPane.showMessageDialog(null, "请先登录");
-						}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "请先登录");
+					loginPageNew();
+				}
 			}
 		});
 
@@ -334,20 +361,21 @@ public class UImain extends JFrame{
 				if (UserInfo.isLogged()) {
 					shareList = new CheckOnlineList(2);
 					ServiceProvider.getUserList();
-					}else {
-						JOptionPane.showMessageDialog(null, "请先登录");
-						}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "请先登录");
+					loginPageNew();
+				}
 			}
 		});
 
 		search.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				homePage();
 				txOut[0].setText("正在服务器上查找...");
 				txOut[1].setText("正在服务器上查找...");
 				txOut[2].setText("正在服务器上查找...");
+				homePage();
 				String currentWord = txInput.getText();
 				ServiceProvider.getExplanation(currentWord);
 				if (WordEntry.getExplanation(0) == null) {
@@ -420,7 +448,7 @@ public class UImain extends JFrame{
 		friend.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Network.sendToServer("User");
+				ServiceProvider.getUserList();
 				userPage2();
 			}
 		});
@@ -452,10 +480,8 @@ public class UImain extends JFrame{
 		});
 		
 		wordCardIKnow.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				wordCardfFrame.dispose();
 			}
 		});
@@ -463,11 +489,9 @@ public class UImain extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				BufferedImage  bi = new BufferedImage(wordCardfFrame.getWidth(), wordCardfFrame.getHeight()-30, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D  g2d = bi.createGraphics();
 				wordCardfFrame.paint(g2d);
-				
 
 				//Date dt=new Date();
 			    //SimpleDateFormat matter1=new SimpleDateFormat("yyyyMMddHHmmss");
@@ -477,20 +501,18 @@ public class UImain extends JFrame{
 				File pic=new File(str+".png");
 				
 				if (!pic.exists()) {
-				
-				try {
-					ImageIO.write(bi, "PNG", new File(str+(int)(Math.random()*10)+".png"));
-					JOptionPane.showMessageDialog(null, "保存成功！");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					try {
+						ImageIO.write(bi, "PNG", new File(str+(int)(Math.random()*10)+".png"));
+						JOptionPane.showMessageDialog(null, "保存成功！");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
-				}else {
+				else {
 					try {
 						ImageIO.write(bi, "PNG", new File(str+".png"));
 						JOptionPane.showMessageDialog(null, "保存成功！");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -714,7 +736,7 @@ public class UImain extends JFrame{
 
 	private void homePage() {
 		setContentPane(new homePanel());
-		setTitle("字字字字典zzZict");
+		setTitle("字字字字典Zict");
 		setLayout(null);
 		setSize(800, 600);
 		setResizable(false);
@@ -732,9 +754,6 @@ public class UImain extends JFrame{
 		//homeButton.setBounds(0,200,80,200);
 		userButton.setBounds(0,400,80,200);
 		homeMarkJLabel.setBounds(0, 200, 80, 200);
-
-		//第一条第二条第三条，可以根据需要选择是否显示
-		// TODO Need Get Explanation is Done.
 
 		search.setMnemonic(KeyEvent.VK_ENTER);
 		
@@ -758,16 +777,16 @@ public class UImain extends JFrame{
         like1.setBounds(706, 262, 31, 28);
         share1.setBounds(706,299,61,28);
         
-        zanNum1.setBounds(738, 263, 28, 26);
-        zanNum1.setFont(new Font("微软雅黑",Font.PLAIN , 16));
-        zanNum1.setText(" "+WordEntry.getExplanation(0).getLikeNumber());
-        zanNum1.setForeground(Color.black);
-        zanNum1.setEditable(false);
+        likeNum1.setBounds(738, 263, 28, 26);
+        likeNum1.setFont(new Font("微软雅黑",Font.PLAIN , 16));
+        likeNum1.setText(" "+WordEntry.getExplanation(0).getLikeNumber());
+        likeNum1.setForeground(Color.black);
+        likeNum1.setEditable(false);
 		
         add(txOut[0]);
 		add(like1);
 		add(share1);
-		add(zanNum1);
+		add(likeNum1);
 	}
 
 	private void part2() {
@@ -777,17 +796,17 @@ public class UImain extends JFrame{
         like2.setBounds(706, 371, 31, 28);
         share2.setBounds(706,409,61,28);
 		
-        zanNum2.setBounds(738, 372, 28, 26);
+        likeNum2.setBounds(738, 372, 28, 26);
         //zanNum2.setOpaque(false);
-        zanNum2.setFont(new Font("微软雅黑",Font.PLAIN , 16));
-        zanNum2.setText(" "+WordEntry.getExplanation(1).getLikeNumber());
-        zanNum2.setForeground(Color.black );
-        zanNum2.setEditable(false);
+        likeNum2.setFont(new Font("微软雅黑",Font.PLAIN , 16));
+        likeNum2.setText(" "+WordEntry.getExplanation(1).getLikeNumber());
+        likeNum2.setForeground(Color.black );
+        likeNum2.setEditable(false);
         
 		add(txOut[1]);
 		add(like2);
         add(share2);
-        add(zanNum2);
+        add(likeNum2);
 	}
 
 	private void part3() {
@@ -797,17 +816,17 @@ public class UImain extends JFrame{
 		like3.setBounds(706, 480,31,28);
 		share3.setBounds(706,518,61,28);
 		
-        zanNum3.setBounds(738, 481, 28, 26);
+        likeNum3.setBounds(738, 481, 28, 26);
         //zanNum3.setOpaque(false);
-        zanNum3.setFont(new Font("微软雅黑",Font.PLAIN , 16));
-        zanNum3.setText(" "+WordEntry.getExplanation(2).getLikeNumber());
-        zanNum3.setForeground(Color.black);
-        zanNum3.setEditable(false);
+        likeNum3.setFont(new Font("微软雅黑",Font.PLAIN , 16));
+        likeNum3.setText(" "+WordEntry.getExplanation(2).getLikeNumber());
+        likeNum3.setForeground(Color.black);
+        likeNum3.setEditable(false);
 		
 		add(txOut[2]);
 		add(like3);
 		add(share3);
-		add(zanNum3);
+		add(likeNum3);
 	}
 
 	private void like1(){
@@ -937,12 +956,12 @@ public class UImain extends JFrame{
 	public void flushUserState() {
 		if (!UserInfo.isLogged()){
 			login.setBounds(618, 15, 64, 32);
-			register.setBounds(706,15,64,32);        
-			add(login);
-			add(register);
+			register.setBounds(706,15,64,32);     
 			remove(welcome);
 			remove(welcomeUser);
-			remove(unlogButton);
+			remove(unlogButton);   
+			add(login);
+			add(register);
 		}
 		else {
     		unlogButton.setBounds(730,15,50,32);
@@ -954,17 +973,21 @@ public class UImain extends JFrame{
     		welcomeUser.setText(UserInfo.getName());
     		welcomeUser.setForeground(Color.white);
     		welcomeUser.setEditable(false);
+    		remove(login);
+    		remove(register);
     		add(welcome);
     		add(welcomeUser);
     		add(unlogButton);
-    		remove(login);
-    		remove(register);
 		}
 		repaint();
 	}
 	
 	public void flushUserList() {
-		shareList.refreshList();
+		onlineJList.setListData(UserInfo.getOnlineUsers());
+		offlineJList.setListData(UserInfo.getOfflineUsers());
+		if (shareList != null) {
+			shareList.refreshList();
+		}
 	}
 
 	public static void main(String []args)throws Exception{
