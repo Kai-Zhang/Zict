@@ -378,48 +378,7 @@ public class UImain extends JFrame{
 					return;
 				}
 				homePage();
-				txOut[0].setText("正在服务器上查找...");
-				txOut[1].setText("正在服务器上查找...");
-				txOut[2].setText("正在服务器上查找...");
-				txOut[0].repaint();
-				txOut[1].repaint();
-				txOut[2].repaint();
-				ServiceProvider.getExplanation(currentWord);
-				if (WordEntry.getExplanation(0) == null) {
-					txOut[0].setText("");
-					txOut[1].setText("");
-					txOut[2].setText("");
-					return;
-				}
-				ArrayList<Explanation> outputList = new ArrayList<Explanation>();
-				for (int i = 0; i < 3; i ++) {
-					String source = WordEntry.getExplanation(i).getSource();
-					if (source.equals("baidu")) {
-						if (baidu.isSelected()) {
-							outputList.add(WordEntry.getExplanation(i));
-						}
-					}
-					else if (source.equals("bing")) {
-						if (bing.isSelected()) {
-							outputList.add(WordEntry.getExplanation(i));
-						}
-					}
-					else {
-						if (youdao.isSelected()) {
-							outputList.add(WordEntry.getExplanation(i));
-						}
-					}
-				}
-				for (int i = 0; i < outputList.size(); i ++) {
-					txOut[i].setText(outputList.get(i).getExplanation());
-					if (i==0) {
-						part1();
-					}else if (i==1) {
-						part2();
-					}else if (i==2) {
-						part3();
-					}else ;
-				}
+				homeSearch();
 			}
 		});
 
@@ -427,6 +386,7 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				homePage();
+				homeSearch();
 			}
 		});
 
@@ -554,6 +514,51 @@ public class UImain extends JFrame{
 		wordCardfFrame.setVisible(true);
 		wordCardfFrame.repaint();
 		}
+	private void homeSearch(){
+		String currentWord = txInput.getText();
+		txOut[0].setText("正在服务器上查找...");
+		txOut[1].setText("正在服务器上查找...");
+		txOut[2].setText("正在服务器上查找...");
+		txOut[0].repaint();
+		txOut[1].repaint();
+		txOut[2].repaint();
+		ServiceProvider.getExplanation(currentWord);
+		if (WordEntry.getExplanation(0) == null) {
+			txOut[0].setText("");
+			txOut[1].setText("");
+			txOut[2].setText("");
+			return;
+		}
+		ArrayList<Explanation> outputList = new ArrayList<Explanation>();
+		for (int i = 0; i < 3; i ++) {
+			String source = WordEntry.getExplanation(i).getSource();
+			if (source.equals("baidu")) {
+				if (baidu.isSelected()) {
+					outputList.add(WordEntry.getExplanation(i));
+				}
+			}
+			else if (source.equals("bing")) {
+				if (bing.isSelected()) {
+					outputList.add(WordEntry.getExplanation(i));
+				}
+			}
+			else {
+				if (youdao.isSelected()) {
+					outputList.add(WordEntry.getExplanation(i));
+				}
+			}
+		}
+		for (int i = 0; i < outputList.size(); i ++) {
+			txOut[i].setText(outputList.get(i).getExplanation());
+			if (i==0) {
+				part1();
+			}else if (i==1) {
+				part2();
+			}else if (i==2) {
+				part3();
+			}else ;
+		}
+	}
 	private class wordCardpanel extends JPanel{
 		public void paintComponent(Graphics g) {
 			Graphics2D g2 = (Graphics2D)g;
@@ -924,8 +929,10 @@ public class UImain extends JFrame{
 		userMarkJLabel.setBounds(0,400,80,200);
 		JScrollPane onl=new JScrollPane(onlineJList);
 		JScrollPane offl=new JScrollPane(offlineJList);
-		onl.setBounds(176,303,200,220);
-		offl.setBounds(476,303,200,220);
+		onl.setBounds(166,303,200,220);
+		offl.setBounds(466,303,200,220);
+		onl.setBorder(new EmptyBorder(0,0,0,0));
+		offl.setBorder(new EmptyBorder(0,0,0,0));
 		add(onl);
 		add(offl);
 		add(likeButton);
@@ -956,8 +963,10 @@ public class UImain extends JFrame{
 		likeMarkJLabel.setBounds(0, 0, 80, 200);
 		JScrollPane onl=new JScrollPane(onlineJList);
 		JScrollPane offl=new JScrollPane(offlineJList);
-		onl.setBounds(176,303,200,220);
-		offl.setBounds(476,303,200,220);
+		onl.setBounds(320,247,350,240);//解释
+		offl.setBounds(178,247,90,240);//网站
+		onl.setBorder(new EmptyBorder(0,0,0,0));
+		offl.setBorder(new EmptyBorder(0,0,0,0));
 		//add(likeButton);
 		add(onl);
 		add(offl);
@@ -985,7 +994,7 @@ public class UImain extends JFrame{
     		welcomeUser.setOpaque(false);
     		welcomeUser.setFont(new Font("微软雅黑",Font.BOLD , 16));
     		welcomeUser.setText(UserInfo.getName());
-    		welcomeUser.setForeground(Color.white);
+    		welcomeUser.setForeground(Color.black);
     		welcomeUser.setEditable(false);
     		remove(login);
     		remove(register);
