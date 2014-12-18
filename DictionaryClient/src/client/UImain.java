@@ -1,4 +1,4 @@
-/*
+﻿/*
  * TODO list:
  * + Click like counter or another visible sign  -->  UI design or another variable
  * + Register check  -->  use regex in register
@@ -372,7 +372,11 @@ public class UImain extends JFrame{
 		search.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				String currentWord = txInput.getText();
+				if (!currentWord.matches("[a-zA-Z]*")) {
+					JOptionPane.showMessageDialog(null, "请输入合法的英文单词");
+					return;
+				}
 				homePage();
 				txOut[0].setText("正在服务器上查找...");
 				txOut[1].setText("正在服务器上查找...");
@@ -380,7 +384,6 @@ public class UImain extends JFrame{
 				txOut[0].repaint();
 				txOut[1].repaint();
 				txOut[2].repaint();
-				String currentWord = txInput.getText();
 				ServiceProvider.getExplanation(currentWord);
 				if (WordEntry.getExplanation(0) == null) {
 					txOut[0].setText("");

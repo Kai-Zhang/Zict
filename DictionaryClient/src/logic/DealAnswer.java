@@ -1,4 +1,4 @@
-package logic;
+ï»¿package logic;
 
 import java.util.ArrayList;
 
@@ -21,28 +21,28 @@ public class DealAnswer implements Runnable {
 		String[] context = messageReceive.split(" ");
 		if (context[0].equals("Register")){
 			if (context[1].equals("Success!")){
-				JOptionPane.showMessageDialog(null, "×¢²á³É¹¦!");
-				UserInfo.setLoginStatus(true);
-				UImain.mainFrame.flushUserState();
+				JOptionPane.showMessageDialog(null, "æ³¨å†ŒæˆåŠŸ!");
+				//UserInfo.setLoginStatus(true);
+				//UImain.mainFrame.flushUserState();
 			}
 			else{
-				JOptionPane.showMessageDialog(null, "¸ÃÓÃ»§ÃûÒÑ±»Õ¼ÓÃ");
+				JOptionPane.showMessageDialog(null, "è¯¥ç”¨æˆ·åå·²è¢«å ç”¨");
 			}
 		}
 		else if (context[0].equals("Login")){
 			if (context[1].equals("Success!")){
-				JOptionPane.showMessageDialog(null, "µÇÂ½³É¹¦!");
+				JOptionPane.showMessageDialog(null, "ç™»é™†æˆåŠŸ!");
 				UserInfo.setLoginStatus(true);
 				UImain.mainFrame.flushUserState();
 			}
 			else{
-				JOptionPane.showMessageDialog(null, "ÓÃ»§Ãû/ÃÜÂë´íÎó!");
+				JOptionPane.showMessageDialog(null, "ç”¨æˆ·å/å¯†ç é”™è¯¯!");
 				UImain.mainFrame.flushUserState();
 			}
 		}
 		else if (context[0].equals("Logout")) {
 			UserInfo.setLoginStatus(false);
-			JOptionPane.showMessageDialog(null,"×¢Ïú³É¹¦!");
+			JOptionPane.showMessageDialog(null,"æ³¨é”€æˆåŠŸ!");
 			UImain.mainFrame.flushUserState();
 		}
 		else if (context[0].equals("Like")){
@@ -50,7 +50,7 @@ public class DealAnswer implements Runnable {
 				//JOptionPane.showMessageDialog(null, "Like Success!");
 			}
 			else{
-				JOptionPane.showMessageDialog(null, "ÄúÒÑ¾­ÔÞ¹ýÁË");
+				JOptionPane.showMessageDialog(null, "æ‚¨å·²ç»èµžè¿‡äº†");
 			}
 		}
 		else if (context[0].equals("Cancel")){
@@ -100,7 +100,7 @@ public class DealAnswer implements Runnable {
 		}
 		else if (context[0].equals("Share")) {
 			String[] cardParts = messageReceive.split("###");
-			JOptionPane.showMessageDialog(null, "ÓÐÈË¸øÄú·ÖÏíÁËµ¥´Ê¿¨£¡");
+			JOptionPane.showMessageDialog(null, "æœ‰äººç»™æ‚¨åˆ†äº«äº†å•è¯å¡ï¼");
 			//System.out.println(cardParts[1]);
 			//System.out.println(cardParts[2]);
 			// cardParts[1] --> Word
