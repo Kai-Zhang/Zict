@@ -7,7 +7,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import logic.DealAnswer;
+import com.example.dictionaryandroid.MainActivity;
+
+import android.os.Bundle;
+import android.os.Message;
+
 
 public class Network {
 	public static String SERVER_IP = null;
@@ -31,33 +35,20 @@ public class Network {
 		}
 	}
 	
-	
-	public Network() {}
-	
-	public static void connectToServer(String serverIP) throws UnknownHostException, IOException {
-		SERVER_IP = serverIP;
-		new Thread(new connect(serverIP)).start();		
-	}
-	static class connect implements Runnable{
-		String IP;
-		public connect() {
-			// TODO Auto-generated constructor stub
-		}
-		public connect(String serverIP){
-			IP=serverIP;
+	private static class ReceiveThread implements Runnable {
+		private String serverIP;
+		public ReceiveThread(String IP){
+			serverIP=IP;
 		}
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			try {
-				System.out.println("First");
-				transportSocket = new Socket(IP, 60000);
-				System.out.println("First Connect Success!");
-				socketWriter = new PrintWriter(transportSocket.getOutputStream());
-				System.out.println("Second Connect Success!");
-				socketReader = new BufferedReader(new InputStreamReader(transportSocket.getInputStream()));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			SERVER_IP = serverIP;
+			try{
+			transportSocket = new Socket(SERVER_IP, 60000);
+			socketWriter = new PrintWriter(transportSocket.getOutputStream());
+			socketReader = new BufferedReader(new InputStreamReader(transportSocket.getInputStream()));
+			}
+			catch (Exception e){
 				e.printStackTrace();
 			}
 			while (true){
@@ -65,17 +56,36 @@ public class Network {
 					String line = socketReader.readLine();
 					if (line != null){
 						System.out.println(line);
-						new Thread(new DealAnswer(line)).start();
+						Bundle bundle=new Bundle();
+						bundle.putString("data", line);
+						Message message=new Message();
+						message.setData(bundle);
+						MainActivity.msghandler.sendMessage(message);
 					}
-				} catch (Exception e) {
+				}
+					catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
 	}
+	
+	public Network() {}
+	
+	public static void connectToServer(String serverIP) throws UnknownHostException, IOException {
+		/*SERVER_IP = serverIP;
+		transportSocket = new Socket(serverIP, 60000);
+		socketWriter = new PrintWriter(transportSocket.getOutputStream());
+		socketReader = new BufferedReader(new InputStreamReader(transportSocket.getInputStream()));
+		*/
+		new Thread(new ReceiveThread(serverIP)).start();
+	}
+	
 	public static void sendToServer(String message) {
 		new Thread(new SendThread(message)).start();
 	}
 	
+	/*public static void receiveFromServer() {
+		new Thread(new ReceiveThread()).start();
+	}*/
 }

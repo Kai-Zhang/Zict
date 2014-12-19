@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -42,13 +43,14 @@ public class MainActivity extends Activity {
 	static CheckBox checkBoxBaidu,checkBoxYoudao,checkBoxBing;
 	static EditText editText1,editText2,editText3;
 	static Context context;
-	Button loginButton,registerButton;
+	Button loginButton,registerButton,returnButton,userlookButton;
+	ListView OnlineUser,OfflineUser;
 	EditText inputid,inputpasswd;
 	EditText inputText;
 	static String IP="";
 	Button searchButton;
-	private View home,user,zan;
-	boolean zanfirst,userfirst;
+	private View home,user,zan,userlist;
+	boolean zanfirst,userfirst,userlistfirst;
 	public static MessageHandler msghandler=new MessageHandler();
 	public static Context getContext(){
 		return context;
@@ -70,6 +72,12 @@ public class MainActivity extends Activity {
 	}
 	public static EditText getEditText3() {
 		return editText3;
+	}
+	public static void flushExplaination(){
+		
+	}
+	public static void flushZan(){
+		
 	}
 	class HomeClick implements OnClickListener{
 
@@ -115,6 +123,38 @@ public class MainActivity extends Activity {
 			editText1.setFocusable(false);
 			editText2.setFocusable(false);
 			editText3.setFocusable(false);
+			zanButton1.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			zanButton2.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			zanButton3.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+		}
+	}
+	void findUserList(){
+		if (!userlistfirst){
+			userlistfirst=true;
+			OnlineUser=(ListView) findViewById(R.id.OnlineUser);
+			OfflineUser=(ListView) findViewById(R.id.OfflineUser);
+			returnButton=(Button) findViewById(R.id.returnButton);
 		}
 	}
 	void findUser(){
@@ -152,6 +192,16 @@ public class MainActivity extends Activity {
 					}
 				}
 			});
+			userlookButton=(Button) findViewById(R.id.userlookbutton);
+			userlookButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					findUserList();
+					setContentView(userlist);
+				}
+			});
 		}
 	}
 	void init() throws UnknownHostException, IOException{
@@ -168,6 +218,7 @@ public class MainActivity extends Activity {
 		home=inflater.inflate(R.layout.home, null);
 		user=inflater.inflate(R.layout.user, null);
 		zan=inflater.inflate(R.layout.zan, null);
+		userlist=inflater.inflate(R.layout.userlist,null);
 		setContentView(home);
 		userButton1=(ImageButton) findViewById(R.id.user1);
 		zanButton1=(ImageButton) findViewById(R.id.zan1);

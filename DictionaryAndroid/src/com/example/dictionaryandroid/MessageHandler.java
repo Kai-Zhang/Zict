@@ -22,44 +22,47 @@ public class MessageHandler extends Handler {
 		String[] context = messageReceive.split(" ");
 		if (context[0].equals("Register")){
 			if (context[1].equals("Success!")){
-				Toast.makeText(MainActivity.getContext(), "Register Success!",
+				UserInfo.setLoginStatus(true);
+				if (!(WordEntry.getWord()==null)) 
+					ServiceProvider.getExplanation(WordEntry.getWord());
+				Toast.makeText(MainActivity.getContext(), "注册成功!",
 						Toast.LENGTH_LONG).show();
 			}
 			else{
-				Toast.makeText(MainActivity.getContext(), "Register Failed!",
+				Toast.makeText(MainActivity.getContext(), "该用户名已被占用!",
 						Toast.LENGTH_LONG).show();
 			}
 		}
 		else if (context[0].equals("Login")){
 			if (context[1].equals("Success!")){
 				UserInfo.setLoginStatus(true);
-				Toast.makeText(MainActivity.getContext(), "Login Success!",
+				Toast.makeText(MainActivity.getContext(), "登陆成功!",
 						Toast.LENGTH_LONG).show();
 			}
 			else{
 				UserInfo.setLoginStatus(false);
-				Toast.makeText(MainActivity.getContext(), "Login Failed!",
+				Toast.makeText(MainActivity.getContext(), "用户名/密码错误!",
 						Toast.LENGTH_LONG).show();
 			}
 		}
 		else if (context[0].equals("Logout")) {
 			UserInfo.setLoginStatus(false);
-			Toast.makeText(MainActivity.getContext(), "Logout Success!",
+			Toast.makeText(MainActivity.getContext(), "注销成功!",
 					Toast.LENGTH_LONG).show();
 		}
 		else if (context[0].equals("Like")){
 			if (context[1].equals("Success!")){
-				Toast.makeText(MainActivity.getContext(), "Like Success!",
+				Toast.makeText(MainActivity.getContext(), "点赞成功!",
 						Toast.LENGTH_LONG).show();
 			}
 			else{
-				Toast.makeText(MainActivity.getContext(), "Like Failed!",
+				Toast.makeText(MainActivity.getContext(), "您已经赞过了!",
 						Toast.LENGTH_LONG).show();
 			}
 		}
 		else if (context[0].equals("Cancel")){
 			if (context[1].equals("Success!")){
-				Toast.makeText(MainActivity.getContext(), "Cancel Success!",
+				Toast.makeText(MainActivity.getContext(), "取消赞成功!",
 						Toast.LENGTH_LONG).show();
 			}
 			else{
@@ -67,64 +70,80 @@ public class MessageHandler extends Handler {
 		}
 		else if (context[0].equals("Answer")) {
 			if (context[1].equals("NoSuchWord")) {
-				Toast.makeText(MainActivity.getContext(), "No such words!",
-						Toast.LENGTH_LONG).show();
-				MainActivity.getEditText1().setText("");
-				MainActivity.getEditText2().setText("");
-				MainActivity.getEditText3().setText("");
+				WordEntry.setExplanation(0, null);
+				WordEntry.setExplanation(1, null);
+				WordEntry.setExplanation(2, null);
+				MainActivity.flushExplaination();
+				MainActivity.flushZan();
 			}
 			else {
-				messageReceive=messageReceive.substring(7);
-				System.out.println(messageReceive);
-				String[] result = messageReceive.split("###");
-				ServiceProvider.setExplanation(messageReceive.substring(7));
+				String explanation = messageReceive.substring(7);
+				String[] result = explanation.split("###");
 				for (int i = 0; i < 3; i ++) {
 					if (result[i].startsWith("baidu")) {
 						String[] exp = result[i].substring(6).split(";likenumber:");
-						WordEntry.setExplanation(i, new Explanation("baidu", exp[0], Integer.parseInt(exp[1])));
+						String[] like = exp[1].split(";liked:");
+						WordEntry.setExplanation(i, new Explanation("baidu", exp[0], Integer.parseInt(like[0])));
+						if (like[1].startsWith("true")) {
+							WordEntry.getExplanation(i).setLiked(true);
+						} else {
+							WordEntry.getExplanation(i).setLiked(false);
+						}
 					}
 					else if (result[i].startsWith("bing")) {
 						String[] exp = result[i].substring(5).split(";likenumber:");
-						WordEntry.setExplanation(i, new Explanation("bing", exp[0], Integer.parseInt(exp[1])));
+						String[] like = exp[1].split(";liked:");
+						WordEntry.setExplanation(i, new Explanation("bing", exp[0], Integer.parseInt(like[0])));
+						if (like[1].startsWith("true")) {
+							WordEntry.getExplanation(i).setLiked(true);
+						} else {
+							WordEntry.getExplanation(i).setLiked(false);
+						}
 					}
 					else {
 						String[] exp = result[i].substring(7).split(";likenumber:");
-						WordEntry.setExplanation(i, new Explanation("youdao", exp[0], Integer.parseInt(exp[1])));
+						String[] like = exp[1].split(";liked:");
+						WordEntry.setExplanation(i, new Explanation("youdao", exp[0], Integer.parseInt(like[0])));
+						if (like[1].startsWith("true")) {
+							WordEntry.getExplanation(i).setLiked(true);
+						} else {
+							WordEntry.getExplanation(i).setLiked(false);
+						}
 					}
 				}
 				WordEntry.sortExplanation();
-				ArrayList<Explanation> outputList = new ArrayList<Explanation>();
-				for (int i = 0; i < 3; i ++) {
-					String source = WordEntry.getExplanation(i).getSource();
-					if (source.equals("baidu")) {
-						if (MainActivity.getCheckBoxBaidu().isSelected()) {
-							outputList.add(WordEntry.getExplanation(i));
-						}
-					}
-					else if (source.equals("bing")) {
-						if (MainActivity.getCheckBoxBing().isSelected()) {
-							outputList.add(WordEntry.getExplanation(i));
-						}
-					}
-					else {
-						if (MainActivity.getCheckBoxYoudao().isSelected()) {
-							outputList.add(WordEntry.getExplanation(i));
-						}
-					}
-				}
-				if (outputList.size() >= 1) {
-					MainActivity.getEditText1().setText(outputList.get(0).getExplanation());
-				}
-				if (outputList.size() >= 2) {
-					MainActivity.getEditText2().setText(outputList.get(1).getExplanation());
-				}
-				else MainActivity.getEditText2().setText("");
-				if (outputList.size() == 3) {
-					MainActivity.getEditText3().setText(outputList.get(2).getExplanation());
-				}
-				else MainActivity.getEditText3().setText("");
 			}
+		}
+		else if (context[0].equals("User")) {
+			String[] userList = messageReceive.substring(5).split("###");
+			UserInfo.setOnlineUsers(userList[0].split(" "));
+			if (userList.length > 1) {
+				UserInfo.setOfflineUsers(userList[1].split(" "));
 			}
+			else {
+				UserInfo.setOfflineUsers(null);
+			}
+			//flush User List
+		}
+		else if (context[0].equals("Word")) {
+			ArrayList<String> wordList = new ArrayList<String>();
+			ArrayList<String> sourceList = new ArrayList<String>();
+			for (int i = 1; i < context.length; i ++) {
+				String[] parts = context[i].split(":");
+				wordList.add(parts[0]);
+				sourceList.add(parts[1]);
+			}
+			String[] wordStringList = new String[wordList.size()];
+			String[] sourceStringList = new String[wordList.size()];
+			for (int i = 0; i < wordList.size(); i ++) {
+				wordStringList[i] = wordList.get(i);
+				sourceStringList[i] = sourceList.get(i);
+			}
+			UserInfo.setOnlineUsers(wordStringList);
+			UserInfo.setOfflineUsers(sourceStringList);
+			//Set Online Users and Offline Users
+			//UImain.mainFrame.flushUserList();
+		}
 		else if (context[0].equals("Share")) {
 			String[] cardParts = messageReceive.split("###");
 			// cardParts[1] --> Word
