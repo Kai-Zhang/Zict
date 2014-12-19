@@ -40,6 +40,8 @@ public class DealAnswer implements Runnable {
 				if (!(WordEntry.getWord() == null)) {
 					ServiceProvider.getExplanation(WordEntry.getWord());
 				}
+				UImain.mainFrame.flushHomePage();
+				UImain.mainFrame.loginFrameDispose();
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "用户名/密码错误!");
@@ -149,14 +151,16 @@ public class DealAnswer implements Runnable {
 		}
 		else if (context[0].equals("Share")) {
 			String[] cardParts = messageReceive.split("###");
-			JOptionPane.showMessageDialog(null, "有人给您分享了单词卡！");
 			//System.out.println(cardParts[1]);
 			//System.out.println(cardParts[2]);
 			// cardParts[1] --> Word
 			// cardParts[2] --> Explanation
 			// Draw Word Card
 			//System.out.print(cardParts[1]+"\n"+cardParts[2]);
-			UImain.mainFrame.wordCard(cardParts);
+			UImain.mainFrame.flushWordCardArea();
+			UImain.mainFrame.wordCardContent=cardParts;
+			//UImain.mainFrame.wordCard(cardParts);
+			JOptionPane.showMessageDialog(null, "有人给您分享了单词卡！");
 		}
 		else{
 			// Unknown Message
