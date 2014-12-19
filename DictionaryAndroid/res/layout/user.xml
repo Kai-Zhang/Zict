@@ -95,8 +95,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout2"
         android:layout_alignLeft="@+id/linearLayout2"
-        android:layout_marginBottom="38dp"
-        android:layout_marginLeft="62dp"
+        android:layout_marginBottom="37dp"
+        android:layout_marginLeft="37dp"
         android:text="登陆" />
 
     <Button
@@ -105,8 +105,17 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/loginbutton"
         android:layout_alignBottom="@+id/loginbutton"
-        android:layout_marginLeft="50dp"
-        android:layout_toRightOf="@+id/loginbutton"
+        android:layout_centerHorizontal="true"
         android:text="注册" />
+
+    <Button
+        android:id="@+id/userlookbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/registerbutton"
+        android:layout_alignBottom="@+id/registerbutton"
+        android:layout_alignRight="@+id/linearLayout2"
+        android:layout_marginRight="11dp"
+        android:text="查看用户" />
 
 </RelativeLayout>

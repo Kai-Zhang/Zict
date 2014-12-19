@@ -30,6 +30,14 @@ public class WordEntry {
 	}
 	
 	public static void sortExplanation() {
+		int tail = 2;
+		for (int i = 0; i < 3; i ++) {
+			if (explanations[i] == null) {
+				explanations[i] = explanations[tail];
+				explanations[tail] = null;
+				tail --;
+			}
+		}
 		for (int i = 0; i < 3; i ++) {
 			int popular = i;
 			for (int j = i + 1; j < 3; j ++) {
