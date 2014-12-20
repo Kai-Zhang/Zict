@@ -1,12 +1,15 @@
 package data;
 
+import java.util.ArrayList;
+
 import network.Network;
 
 public class UserInfo {
 	private static boolean isLogged = false;
 	private static String name = null;
-	private static String[] onlineUsers = new String[100];
-	private static String[] offlineUsers = new String[100];
+	private static String[] onlineUsers = null;
+	private static String[] offlineUsers = null;
+	private static ArrayList<WordCard> receivedWordCards = new ArrayList<>();
 	
 	public UserInfo() { }
 	
@@ -38,11 +41,16 @@ public class UserInfo {
 		UserInfo.offlineUsers = offlineUsers;
 	}
 	
+	public static ArrayList<WordCard> getReceivedCards() {
+		return receivedWordCards;
+	}
+	
 	public static void login(String name, String password) {
 		isLogged = false;
 		UserInfo.name = name;
 		String message = "Login" + " " + name + " " + password + '\n';
 		Network.sendToServer(message);
+		receivedWordCards.clear();
 	}
 	
 	public static void logout() {

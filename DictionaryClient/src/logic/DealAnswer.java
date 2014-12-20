@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import client.UImain;
 import data.Explanation;
 import data.UserInfo;
+import data.WordCard;
 import data.WordEntry;
 
 public class DealAnswer implements Runnable {
@@ -40,7 +41,7 @@ public class DealAnswer implements Runnable {
 				if (!(WordEntry.getWord() == null)) {
 					ServiceProvider.getExplanation(WordEntry.getWord());
 				}
-				UImain.mainFrame.flushHomePage();
+				ServiceProvider.getUserList();
 				UImain.mainFrame.loginFrameDispose();
 			}
 			else{
@@ -49,7 +50,7 @@ public class DealAnswer implements Runnable {
 		}
 		else if (context[0].equals("Logout")) {
 			UserInfo.setLoginStatus(false);
-			JOptionPane.showMessageDialog(null,"注销成功!");
+			//JOptionPane.showMessageDialog(null,"注销成功!");
 			UImain.mainFrame.flushUserState();
 			UImain.mainFrame.flushLikeStatus();
 		}
@@ -157,6 +158,7 @@ public class DealAnswer implements Runnable {
 			// cardParts[2] --> Explanation
 			// Draw Word Card
 			//System.out.print(cardParts[1]+"\n"+cardParts[2]);
+			UserInfo.getReceivedCards().add(new WordCard(cardParts[1], cardParts[2]));
 			UImain.mainFrame.flushWordCardArea();
 			UImain.mainFrame.wordCardContent=cardParts;
 			//UImain.mainFrame.wordCard(cardParts);

@@ -30,6 +30,26 @@ public class WordEntry {
 	}
 	
 	public static void sortExplanation() {
+		/*int nullNumber = 0;
+		int likedNubmer = 0;
+		for (int i = 0; i < 3; i ++) {
+			if (explanations[i] == null) {
+				if (i < 2 - nullNumber) {
+					explanations[i] = explanations[2 - nullNumber];
+					explanations[2 - nullNumber] = null;
+					++ nullNumber;
+				}
+			}
+			else if (explanations[i].isLiked()) {
+				if (i > likedNubmer) {
+					Explanation temp = explanations[i];
+					explanations[i] = explanations[likedNubmer];
+					explanations[likedNubmer] = temp;
+					++ likedNubmer;
+				}
+			}
+		}*/
+		// TODO
 		int tail = 2;
 		for (int i = 0; i < 3; i ++) {
 			if (explanations[i] == null) {

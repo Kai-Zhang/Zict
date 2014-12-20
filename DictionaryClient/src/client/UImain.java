@@ -9,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.Stack;
 
 import javax.imageio.ImageIO;
 import javax.swing.border.EmptyBorder;
@@ -28,6 +27,7 @@ import javax.swing.JTextField;
 
 import data.Explanation;
 import data.UserInfo;
+import data.WordCard;
 import data.WordEntry;
 import logic.ServiceProvider;
 import network.Network;
@@ -192,7 +192,6 @@ public class UImain extends JFrame{
 		unlogButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mainPage();
 				UserInfo.logout();
 			}
 		});
@@ -438,7 +437,6 @@ public class UImain extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				morePage();
 			}
 		});
@@ -447,7 +445,6 @@ public class UImain extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				morePage();
 			}
 		});
@@ -456,7 +453,6 @@ public class UImain extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				if(UserInfo.isLogged())
 					userPage1();
 				else {
@@ -469,7 +465,6 @@ public class UImain extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				if(UserInfo.isLogged()){
 					userPage1();
 					remove(wcInUserPageButton);
@@ -486,7 +481,6 @@ public class UImain extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				wordCard(wordCardContent);
 			}
 		});
@@ -578,7 +572,7 @@ public class UImain extends JFrame{
 		});
 	}
 	
- 	private void buttonArae(JButton button){
+ 	private void buttonArea(JButton button){
  		likeButton.setBounds(0, 0, 108, 150);
         homeButton.setBounds(0,150,108,150);
         userButton.setBounds(0,300,108,150);
@@ -833,7 +827,7 @@ public class UImain extends JFrame{
 		baidu.setBounds(398,208,15,15);
 		bing.setBounds(517,208,15,15);
 		
-		buttonArae(homeButton);
+		buttonArea(homeButton);
 		
 		add(txInput);
 		add(search);
@@ -961,7 +955,7 @@ public class UImain extends JFrame{
 		wcInUserPageButton.setBorder(new EmptyBorder(0,0,0,0));
 		wcInUserPageButton.setContentAreaFilled(false);
 		add(wcInUserPageButton);
-		buttonArae(userButton);
+		buttonArea(userButton);
 		flushUserState();
 		setVisible(true);
 	}
@@ -989,7 +983,7 @@ public class UImain extends JFrame{
 		add(onl);
 		add(offl);
 
-		buttonArae(userButton);
+		buttonArea(userButton);
 		flushUserState();
 		setVisible(true);
 	}
@@ -1018,7 +1012,7 @@ public class UImain extends JFrame{
 		add(onl);
 		add(offl);
 		
-		buttonArae(likeButton);
+		buttonArea(likeButton);
 		flushUserState();
 		setVisible(true);
 	}
@@ -1032,7 +1026,7 @@ public class UImain extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocale(getLocale());
 		
-		buttonArae(moreButton);
+		buttonArea(moreButton);
 		flushUserState();
 		setVisible(true);
 	}

@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 import network.Network;
 import data.Explanation;
 import data.UserInfo;
+import data.WordCard;
 import data.WordEntry;
 
 public class ServiceProvider {
@@ -35,7 +36,7 @@ public class ServiceProvider {
 		Network.sendToServer(message);
 	}
 	
-	public static void shareWordCard(String toUser,int rating){
+	public static void shareWordCard(String toUser, int rating){
 		String message = "Share" + " " + toUser + " ###" + WordEntry.getWord() + "###" + WordEntry.getExplanation(rating).getExplanation();
 		System.out.println(message);
 		Network.sendToServer(message);;

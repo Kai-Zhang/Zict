@@ -8,6 +8,7 @@ import java.awt.*;
 import javax.swing.JFrame;
 
 import data.UserInfo;
+import data.WordCard;
 import logic.ServiceProvider;
 
 @SuppressWarnings("serial")
@@ -70,7 +71,6 @@ public class CheckOnlineList extends JFrame {
 		sendTo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Get User List
 				for (int i = 0; i < UserInfo.getOnlineUsers().length; i ++) {
 					if (checkBoxItems[i].isChecked()) {
 						ServiceProvider.shareWordCard(UserInfo.getOnlineUsers()[i], rating);
