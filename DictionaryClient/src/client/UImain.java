@@ -38,8 +38,11 @@ public class UImain extends JFrame{
 	public String []wordCardContent=new String[2];
 	
 	private JTextArea usernameArea=new JTextArea();
-	private JList<String> onlineJList = new JList<String>(UserInfo.getOnlineUsers());
-	private JList<String> offlineJList=new JList<String>(UserInfo.getOfflineUsers());
+	private JList<String> onlineJList = new JList<String>();
+	private JList<String> offlineJList = new JList<String>();
+	
+	private JList<String> likedWordJList = new JList<String>();
+	private JList<String> likedSourceJList = new JList<String>();
 	
 	private JTextArea[] txOut = {new JTextArea(5,50), new JTextArea(5,50), new JTextArea(5,50)};
 	private JTextField txInput = new JTextField("请输入英文", 42);
@@ -185,6 +188,7 @@ public class UImain extends JFrame{
 					JOptionPane.showMessageDialog(null, "密码格式不正确");
 				} else {
 					UserInfo.login(userID, password);
+					ServiceProvider.getLikedList();
 	            }
 			}
 		});
@@ -991,15 +995,15 @@ public class UImain extends JFrame{
 		usernameArea.setText(UserInfo.getName());
 		add(usernameArea);
 
-		JScrollPane onl=new JScrollPane(onlineJList);
-		JScrollPane offl=new JScrollPane(offlineJList);
-		onl.setBounds(320,247,350,240);//解释
-		offl.setBounds(178,247,90,240);//网站
-		onl.setBorder(new EmptyBorder(0,0,0,0));
-		offl.setBorder(new EmptyBorder(0,0,0,0));
+		JScrollPane likedWord = new JScrollPane(likedWordJList);
+		JScrollPane likedSource = new JScrollPane(likedSourceJList);
+		likedWord.setBounds(320,247,350,240);//解释
+		likedSource.setBounds(178,247,90,240);//网站
+		likedWord.setBorder(new EmptyBorder(0,0,0,0));
+		likedSource.setBorder(new EmptyBorder(0,0,0,0));
 		//add(likeButton);
-		add(onl);
-		add(offl);
+		add(likedWord);
+		add(likedSource);
 		
 		buttonArea(likeButton);
 		flushUserState();
@@ -1095,6 +1099,11 @@ public class UImain extends JFrame{
 		if (shareList != null) {
 			shareList.refreshList();
 		}
+	}
+	
+	public void flushLikedList() {
+		likedWordJList.setListData(UserInfo.getLikedWords());
+		likedSourceJList.setListData(UserInfo.getLikedWordsSource());
 	}
 	
 	public void flushLikeStatus() {

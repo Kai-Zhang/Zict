@@ -146,9 +146,9 @@ public class DealAnswer implements Runnable {
 				wordStringList[i] = wordList.get(i);
 				sourceStringList[i] = sourceList.get(i);
 			}
-			UserInfo.setOnlineUsers(wordStringList);
-			UserInfo.setOfflineUsers(sourceStringList);
-			UImain.mainFrame.flushUserList();
+			UserInfo.setLikedWords(wordStringList);
+			UserInfo.setLikedWordsSource(sourceStringList);
+			UImain.mainFrame.flushLikedList();
 		}
 		else if (context[0].equals("Share")) {
 			String[] cardParts = messageReceive.split("###");

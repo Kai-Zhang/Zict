@@ -2,6 +2,7 @@ package data;
 
 import java.util.ArrayList;
 
+import logic.ServiceProvider;
 import network.Network;
 
 public class UserInfo {
@@ -9,6 +10,8 @@ public class UserInfo {
 	private static String name = null;
 	private static String[] onlineUsers = null;
 	private static String[] offlineUsers = null;
+	private static String[] likedWords = null;
+	private static String[] likedWordsSource = null;
 	private static ArrayList<WordCard> receivedWordCards = new ArrayList<>();
 	
 	public UserInfo() { }
@@ -43,6 +46,22 @@ public class UserInfo {
 	
 	public static ArrayList<WordCard> getReceivedCards() {
 		return receivedWordCards;
+	}
+
+	public static String[] getLikedWords() {
+		return likedWords;
+	}
+
+	public static void setLikedWords(String[] likedWords) {
+		UserInfo.likedWords = likedWords;
+	}
+
+	public static String[] getLikedWordsSource() {
+		return likedWordsSource;
+	}
+
+	public static void setLikedWordsSource(String[] likedWordsSource) {
+		UserInfo.likedWordsSource = likedWordsSource;
 	}
 	
 	public static void login(String name, String password) {
