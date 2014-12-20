@@ -20,8 +20,7 @@
         <TextView
             android:id="@+id/editText1"
             android:layout_width="200dp"
-            android:layout_height="78dp"
-        />
+            android:layout_height="78dp" />
 
         <TextView
             android:id="@+id/editText2"
@@ -71,29 +70,29 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/zanbaidu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/zanyoudao"
-        android:layout_centerVertical="true"
-        android:src="@drawable/like" />
-
-    <ImageButton
-        android:id="@+id/zanyoudao"
+        android:id="@+id/clickzan1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/linearLayout3"
         android:layout_alignTop="@+id/linearLayout1"
         android:layout_marginTop="19dp"
         android:src="@drawable/like" />
-
     <ImageButton
-        android:id="@+id/zanbing"
+        android:id="@+id/clickzan3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/linearLayout1"
-        android:layout_marginBottom="22dp"
-        android:layout_toRightOf="@+id/linearLayout1"
+        android:layout_above="@+id/linearLayout3"
+        android:layout_alignRight="@+id/linearLayout3"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/like" />
+
+    <ImageButton
+        android:id="@+id/clickzan2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/clickzan1"
+        android:layout_below="@+id/clickzan1"
+        android:layout_marginTop="47dp"
         android:src="@drawable/like" />
 
 </RelativeLayout>
