@@ -551,22 +551,11 @@ public class UImain extends JFrame{
 			    String str=matter1.format(dt).toString();
 			    //String str =new String(Integer.toString((int)(Math.random()*100)));
 				File pic=new File(str+".png");
-				
-				if (!pic.exists()) {
-					try {
-						ImageIO.write(bi, "PNG", new File(str+(int)(Math.random()*10)+".png"));
-						JOptionPane.showMessageDialog(null, "保存成功！");
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				else {
-					try {
-						ImageIO.write(bi, "PNG", new File(str+".png"));
-						JOptionPane.showMessageDialog(null, "保存成功！");
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+				try {
+					ImageIO.write(bi, "PNG", pic);
+					JOptionPane.showMessageDialog(null, "保存成功！");
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 		});
