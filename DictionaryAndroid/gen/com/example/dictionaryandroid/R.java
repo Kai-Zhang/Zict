@@ -38,6 +38,9 @@ public final class R {
         public static final int checkBoxbing=0x7f080007;
         public static final int checkBoxyoudao=0x7f080008;
         public static final int checkedTextView1=0x7f08000f;
+        public static final int clickzan1=0x7f080024;
+        public static final int clickzan2=0x7f080026;
+        public static final int clickzan3=0x7f080025;
         public static final int editText1=0x7f08001d;
         public static final int editText2=0x7f08001e;
         public static final int editText3=0x7f08001f;
@@ -67,9 +70,6 @@ public final class R {
         public static final int zan1=0x7f08000a;
         public static final int zan2=0x7f080014;
         public static final int zan3=0x7f080021;
-        public static final int zanbaidu=0x7f080024;
-        public static final int zanbing=0x7f080026;
-        public static final int zanyoudao=0x7f080025;
     }
     public static final class layout {
         public static final int home=0x7f030000;

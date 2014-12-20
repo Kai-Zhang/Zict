@@ -74,7 +74,6 @@ public class MessageHandler extends Handler {
 				WordEntry.setExplanation(1, null);
 				WordEntry.setExplanation(2, null);
 				MainActivity.flushExplaination();
-				MainActivity.flushZan();
 			}
 			else {
 				String explanation = messageReceive.substring(7);
@@ -124,7 +123,7 @@ public class MessageHandler extends Handler {
 			else {
 				UserInfo.setOfflineUsers(null);
 			}
-			//flush User List
+			MainActivity.flushUserList();
 		}
 		else if (context[0].equals("Word")) {
 			ArrayList<String> wordList = new ArrayList<String>();

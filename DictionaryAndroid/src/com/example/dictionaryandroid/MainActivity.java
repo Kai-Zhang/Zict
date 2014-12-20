@@ -16,19 +16,23 @@ import data.Explanation;
 import data.UserInfo;
 import data.WordEntry;
 import network.Network;
+import android.R.anim;
 import android.R.integer;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.SuperscriptSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -41,11 +45,12 @@ public class MainActivity extends Activity {
 	ImageButton userButton1,userButton2,userButton3;
 	ImageButton zanButton1,zanButton2,zanButton3;
 	ImageButton homeButton1,homeButton2,homeButton3;
+	ImageButton clickzan1,clickzan2,clickzan3;
 	CheckBox checkBoxBaidu,checkBoxYoudao,checkBoxBing;
 	static TextView editText1,editText2,editText3;
 	static Context context;
 	Button loginButton,registerButton,returnButton,userlookButton;
-	ListView OnlineUser,OfflineUser;
+	static ListView OnlineUser,OfflineUser;
 	EditText inputid,inputpasswd;
 	EditText inputText;
 	static String IP="";
@@ -85,19 +90,21 @@ public class MainActivity extends Activity {
 					}
 				}
 			}
-			if (outputList.size()==1){
+			if (outputList.size()>=1){
 				editText1.setText(outputList.get(0).getExplanation());
 			}
-			else if (outputList.size()==2){
+			if (outputList.size()>=2){
 				editText2.setText(outputList.get(1).getExplanation());
 			}
-			else if (outputList.size()==3){
-				editText3.setText(outputList.get(1).getExplanation());
+			if (outputList.size()>=3){
+				editText3.setText(outputList.get(2).getExplanation());
 			}
 		}
 	}
-	public static void flushZan(){
-		
+	public static void flushUserList() {
+		// TODO Auto-generated method stub
+		OnlineUser.setAdapter(new ArrayAdapter<String>(MainActivity.getContext(),android.R.layout.simple_list_item_1,UserInfo.getOnlineUsers()));
+		OfflineUser.setAdapter(new ArrayAdapter<String>(MainActivity.getContext(),android.R.layout.simple_list_item_1,UserInfo.getOfflineUsers()));
 	}
 	class HomeClick implements OnClickListener{
 
@@ -129,6 +136,7 @@ public class MainActivity extends Activity {
 		}
 		
 	}
+	@SuppressLint("ShowToast")
 	void findZan(){
 		if (!zanfirst){
 			zanfirst=true;
@@ -146,6 +154,44 @@ public class MainActivity extends Activity {
 			zanButton3.setClickable(false);
 			homeButton3.setOnClickListener(new HomeClick());
 			userButton3.setOnClickListener(new UserClick());
+			clickzan1=(ImageButton) findViewById(R.id.clickzan1);
+			clickzan1.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					if (UserInfo.isLogged())
+						ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(0).getSource());
+					else{
+						Toast.makeText(MainActivity.getContext(), "Please Login First", Toast.LENGTH_LONG);
+					}
+				}
+			});
+			clickzan2=(ImageButton) findViewById(R.id.clickzan2);
+			clickzan2.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					if (UserInfo.isLogged())
+						ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(1).getSource());
+					else{
+						Toast.makeText(MainActivity.getContext(), "Please Login First", Toast.LENGTH_LONG);
+					}
+				}
+			});
+			clickzan3=(ImageButton) findViewById(R.id.clickzan3);
+			clickzan3.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					if (UserInfo.isLogged())
+						ServiceProvider.clickLike(WordEntry.getWord(), WordEntry.getExplanation(2).getSource());
+					else{
+						Toast.makeText(MainActivity.getContext(), "Please Login First", Toast.LENGTH_LONG);
+					}
+				}
+			});
 		}
 	}
 	void findUserList(){
@@ -154,6 +200,15 @@ public class MainActivity extends Activity {
 			OnlineUser=(ListView) findViewById(R.id.OnlineUser);
 			OfflineUser=(ListView) findViewById(R.id.OfflineUser);
 			returnButton=(Button) findViewById(R.id.returnButton);
+			ServiceProvider.getUserList();
+			returnButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					setContentView(R.layout.user);
+				}
+			});
 		}
 	}
 	void findUser(){
@@ -280,4 +335,5 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 }
