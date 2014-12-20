@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
+import javax.sound.midi.Receiver;
 import javax.swing.border.EmptyBorder;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,7 +41,7 @@ public class UImain extends JFrame{
 	private JTextArea usernameArea=new JTextArea();
 	private JList<String> onlineJList = new JList<String>(UserInfo.getOnlineUsers());
 	private JList<String> offlineJList=new JList<String>(UserInfo.getOfflineUsers());
-	
+	private JList<WordCard> wordCardList = new JList<WordCard>();
 	private JTextArea[] txOut = {new JTextArea(5,50), new JTextArea(5,50), new JTextArea(5,50)};
 	private JTextField txInput = new JTextField("请输入英文", 42);
 	private JTextField idInput=new JTextField(16);
@@ -161,7 +162,12 @@ public class UImain extends JFrame{
     	search.setContentAreaFilled(false);
     	saveButton.setContentAreaFilled(false);
     	wordCardIKnow.setContentAreaFilled(false);
-    	
+    	wordCardList.setOpaque(false);
+    	wordCardList.setBackground(new Color(0,0,0,0));
+    	onlineJList.setOpaque(false);
+    	onlineJList.setBackground(new Color(0,0,0,0));
+    	offlineJList.setOpaque(false);
+    	offlineJList.setBackground(new Color(0,0,0,0));
     	
 		login.addActionListener(new ActionListener() {					
 			@Override
@@ -193,6 +199,7 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				UserInfo.logout();
+				flushMainPage();
 			}
 		});
 		register.addActionListener(new ActionListener() {
@@ -425,8 +432,10 @@ public class UImain extends JFrame{
         userButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(UserInfo.isLogged())
+				if(UserInfo.isLogged()){
+					userButton.setIcon(userIcon);
 					userPage1();
+					}
 				else {
 					loginPage();
 				}
@@ -453,35 +462,30 @@ public class UImain extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(UserInfo.isLogged())
+				if(UserInfo.isLogged()){
 					userPage1();
+					}
 				else {
 					loginPage();
 				}
 			}
 		});
         
-        userButtonMark.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(UserInfo.isLogged()){
-					userPage1();
-					remove(wcInUserPageButton);
-					wcInUserPagemarkButton.setBounds(323,387,203,71);
-					wcInUserPagemarkButton.setBorder(new EmptyBorder(0,0,0,0));
-					add(wcInUserPagemarkButton);
-				}
-				else {
-					loginPage();
-				}
-			}
-		});
+
         wcInUserPagemarkButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				wordCard(wordCardContent);
+				wclistPage();
+				//wordCard(wordCardContent);
+			}
+		});
+        wcInUserPageButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				wclistPage();
 			}
 		});
 
@@ -558,6 +562,13 @@ public class UImain extends JFrame{
 					e.printStackTrace();
 				}
 			}
+		});
+		wordCardList.addMouseListener(new MouseAdapter() {
+			 public void mouseClicked(MouseEvent evt) {
+		            if (evt.getClickCount() == 2) {          // Double-click
+		                
+		            } 
+		        }
 		});
 	}
 	
@@ -710,6 +721,40 @@ public class UImain extends JFrame{
 		}
 	}
 
+	private class wclistPanel extends JPanel {
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D)g;
+			super.paintComponent(g);
+			Image img = Toolkit.getDefaultToolkit().getImage("images/wclistbg.png");
+			g2.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+		}
+	}
+	
+	private void wclistPage() {
+		setContentPane(new wclistPanel());
+		setTitle("字字字字典Zict");
+		setLayout(null);
+		setSize(800, 600);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		setLocale(getLocale());
+		
+		wordCardList.setListData(UserInfo.getReceivedCards().toArray(new WordCard[UserInfo.getReceivedCards().size()]));
+		JScrollPane wclist=new JScrollPane(wordCardList);
+		wclist.setOpaque(false);
+		wclist.getViewport().setOpaque(false);
+		wclist.setBounds(230,303,420,220);
+		wclist.setBorder(new EmptyBorder(0,0,0,0));
+
+		add(wclist);
+
+		buttonArea(userButton);
+		flushWCList();
+		flushUserState();
+		setVisible(true);
+	}
+	
 	private void loginPage() {
 		loginFrame.setContentPane(new loginPanel());
 		loginFrame.setResizable(false);
@@ -965,10 +1010,14 @@ public class UImain extends JFrame{
 
 		JScrollPane onl=new JScrollPane(onlineJList);
 		JScrollPane offl=new JScrollPane(offlineJList);
-		onl.setBounds(166,303,200,220);
-		offl.setBounds(466,303,200,220);
+		onl.setBounds(236,303,100,220);
+		offl.setBounds(536,303,100,220);
 		onl.setBorder(new EmptyBorder(0,0,0,0));
 		offl.setBorder(new EmptyBorder(0,0,0,0));
+		onl.setOpaque(false);
+		onl.getViewport().setOpaque(false);
+		offl.setOpaque(false);
+		offl.getViewport().setOpaque(false);
 		add(onl);
 		add(offl);
 
@@ -991,15 +1040,21 @@ public class UImain extends JFrame{
 		usernameArea.setText(UserInfo.getName());
 		add(usernameArea);
 
-		JScrollPane onl=new JScrollPane(onlineJList);
-		JScrollPane offl=new JScrollPane(offlineJList);
-		onl.setBounds(320,247,350,240);//解释
-		offl.setBounds(178,247,90,240);//网站
-		onl.setBorder(new EmptyBorder(0,0,0,0));
-		offl.setBorder(new EmptyBorder(0,0,0,0));
-		//add(likeButton);
-		add(onl);
-		add(offl);
+		JScrollPane word=new JScrollPane(onlineJList);
+		JScrollPane site=new JScrollPane(offlineJList);
+		word.setBounds(450,247,90,240);//单词
+		site.setBounds(308,247,90,240);//网站
+		word.setOpaque(false);
+		word.getViewport().setOpaque(false);
+		site.setOpaque(false);
+		site.getViewport().setOpaque(false);
+		
+		word.setBorder(new EmptyBorder(0,0,0,0));
+		site.setBorder(new EmptyBorder(0,0,0,0));
+		
+
+		add(word);
+		add(site);
 		
 		buttonArea(likeButton);
 		flushUserState();
@@ -1097,6 +1152,12 @@ public class UImain extends JFrame{
 		}
 	}
 	
+	public void flushWCList(){
+		wordCardList.setListData(UserInfo.getReceivedCards().toArray(new WordCard[UserInfo.getReceivedCards().size()]));
+		repaint();
+				
+	}
+	
 	public void flushLikeStatus() {
 		if (UserInfo.isLogged()) {
 			if (WordEntry.getExplanation(0) != null) {
@@ -1139,13 +1200,19 @@ public class UImain extends JFrame{
 	}
 
 	public void flushWordCardArea(){
-		remove(userButton);
-		 userButtonMark.setBounds(0,300,108,150);
-		 userButtonMark.setBorder(new EmptyBorder(0,0,0,0));
-		 userButtonMark.setContentAreaFilled(false);
-		add(userButtonMark);
-		System.out.print("hahhah");
+		userButton.setIcon(userMarkIcon);
+		//remove(userButton);
+		//userButtonMark.setBounds(0,300,108,150);
+		//userButtonMark.setBorder(new EmptyBorder(0,0,0,0));
+		//userButtonMark.setContentAreaFilled(false);
+		//add(userButtonMark);
+		//System.out.print("hahhah");
 	}
+	
+	public void flushMainPage(){
+		mainPage();
+	}
+	
 	public void flushHomePage(){
 		homePage();
 	}
