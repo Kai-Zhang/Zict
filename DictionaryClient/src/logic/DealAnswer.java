@@ -152,13 +152,12 @@ public class DealAnswer implements Runnable {
 		}
 		else if (context[0].equals("Share")) {
 			String[] cardParts = messageReceive.split("###");
-			//System.out.println(cardParts[1]);
-			//System.out.println(cardParts[2]);
 			// cardParts[1] --> Word
-			// cardParts[2] --> Explanation
+			// cardParts[2] --> Source
+			// cardParts[3] --> Explanation
+			// cardParts[4] --> Sender
 			// Draw Word Card
-			//System.out.print(cardParts[1]+"\n"+cardParts[2]);
-			UserInfo.getReceivedCards().add(new WordCard(cardParts[1], cardParts[2]));
+			UserInfo.getReceivedCards().add(new WordCard(cardParts[1], cardParts[2], cardParts[3], cardParts[4]));
 			UImain.mainFrame.flushWordCardArea();
 			UImain.mainFrame.wordCardContent=cardParts;
 			//UImain.mainFrame.wordCard(cardParts);

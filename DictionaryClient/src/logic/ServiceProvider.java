@@ -37,7 +37,10 @@ public class ServiceProvider {
 	}
 	
 	public static void shareWordCard(String toUser, int rating){
-		String message = "Share" + " " + toUser + " ###" + WordEntry.getWord() + "###" + WordEntry.getExplanation(rating).getExplanation();
+		String message = "Share" + " " + toUser + " ###" + WordEntry.getWord()
+				+ "###" + WordEntry.getExplanation(rating).getSource()
+				+  "###" + WordEntry.getExplanation(rating).getExplanation()
+				+ "###" + UserInfo.getName();
 		System.out.println(message);
 		Network.sendToServer(message);;
 	}
