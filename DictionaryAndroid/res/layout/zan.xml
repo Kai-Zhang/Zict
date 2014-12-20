@@ -17,51 +17,25 @@
         android:layout_centerHorizontal="true"
         android:orientation="vertical" >
 
-        <EditText
+        <TextView
             android:id="@+id/editText1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textMultiLine" >
+            android:layout_width="200dp"
+            android:layout_height="78dp"
+        />
 
-            <requestFocus />
-        </EditText>
-		<ImageButton
-        android:id="@+id/zanyoudao"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/like" />
-        <EditText
+        <TextView
             android:id="@+id/editText2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="78dp"
             android:ems="10"
-            android:inputType="textMultiLine" >
+        />
 
-            <requestFocus />
-        </EditText>
-		<ImageButton
-        android:id="@+id/zanbaidu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/like" />
-        <EditText
+        <TextView
             android:id="@+id/editText3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="78dp"
             android:ems="10"
-            android:inputType="textMultiLine" >
-
-            <requestFocus />
-        </EditText>
-        <ImageButton
-        android:id="@+id/zanbing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/like" />
+       />
     </LinearLayout>
 
     <LinearLayout
@@ -96,6 +70,30 @@
             android:src="@drawable/bottom_03" />
     </LinearLayout>
 
-    
+    <ImageButton
+        android:id="@+id/zanbaidu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/zanyoudao"
+        android:layout_centerVertical="true"
+        android:src="@drawable/like" />
+
+    <ImageButton
+        android:id="@+id/zanyoudao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/linearLayout3"
+        android:layout_alignTop="@+id/linearLayout1"
+        android:layout_marginTop="19dp"
+        android:src="@drawable/like" />
+
+    <ImageButton
+        android:id="@+id/zanbing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/linearLayout1"
+        android:layout_marginBottom="22dp"
+        android:layout_toRightOf="@+id/linearLayout1"
+        android:src="@drawable/like" />
 
 </RelativeLayout>

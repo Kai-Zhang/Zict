@@ -39,17 +39,17 @@ public final class R {
         public static final int checkBoxyoudao=0x7f080008;
         public static final int checkedTextView1=0x7f08000f;
         public static final int editText1=0x7f08001d;
-        public static final int editText2=0x7f08001f;
-        public static final int editText3=0x7f080021;
+        public static final int editText2=0x7f08001e;
+        public static final int editText3=0x7f08001f;
         public static final int home1=0x7f08000b;
         public static final int home2=0x7f080015;
-        public static final int home3=0x7f080025;
+        public static final int home3=0x7f080022;
         public static final int inputText=0x7f080002;
         public static final int inputid=0x7f080010;
         public static final int inputpasswd=0x7f080013;
         public static final int linearLayout1=0x7f080009;
         public static final int linearLayout2=0x7f080005;
-        public static final int linearLayout3=0x7f080023;
+        public static final int linearLayout3=0x7f080020;
         public static final int loginbutton=0x7f080017;
         public static final int registerbutton=0x7f080018;
         public static final int returnButton=0x7f08001c;
@@ -62,14 +62,14 @@ public final class R {
         public static final int tableRow4=0x7f080011;
         public static final int user1=0x7f08000c;
         public static final int user2=0x7f080016;
-        public static final int user3=0x7f080026;
+        public static final int user3=0x7f080023;
         public static final int userlookbutton=0x7f080019;
         public static final int zan1=0x7f08000a;
         public static final int zan2=0x7f080014;
-        public static final int zan3=0x7f080024;
-        public static final int zanbaidu=0x7f080020;
-        public static final int zanbing=0x7f080022;
-        public static final int zanyoudao=0x7f08001e;
+        public static final int zan3=0x7f080021;
+        public static final int zanbaidu=0x7f080024;
+        public static final int zanbing=0x7f080026;
+        public static final int zanyoudao=0x7f080025;
     }
     public static final class layout {
         public static final int home=0x7f030000;

@@ -34,14 +34,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	ImageButton userButton1,userButton2,userButton3;
 	ImageButton zanButton1,zanButton2,zanButton3;
 	ImageButton homeButton1,homeButton2,homeButton3;
-	static CheckBox checkBoxBaidu,checkBoxYoudao,checkBoxBing;
-	static EditText editText1,editText2,editText3;
+	CheckBox checkBoxBaidu,checkBoxYoudao,checkBoxBing;
+	static TextView editText1,editText2,editText3;
 	static Context context;
 	Button loginButton,registerButton,returnButton,userlookButton;
 	ListView OnlineUser,OfflineUser;
@@ -51,30 +52,49 @@ public class MainActivity extends Activity {
 	Button searchButton;
 	private View home,user,zan,userlist;
 	boolean zanfirst,userfirst,userlistfirst;
+	static boolean baiduSelect,bingSelect,youdaoSelect;
 	public static MessageHandler msghandler=new MessageHandler();
 	public static Context getContext(){
 		return context;
 	}
-	public static CheckBox getCheckBoxBaidu() {
-		return checkBoxBaidu;
-	}
-	public static CheckBox getCheckBoxBing() {
-		return checkBoxBing;
-	}
-	public static CheckBox getCheckBoxYoudao() {
-		return checkBoxYoudao;
-	}
-	public static EditText getEditText1() {
-		return editText1;
-	}
-	public static EditText getEditText2() {
-		return editText2;
-	}
-	public static EditText getEditText3() {
-		return editText3;
-	}
 	public static void flushExplaination(){
-		
+		editText1.setText("");
+		editText2.setText("");
+		editText3.setText("");
+		if (WordEntry.getExplanation(0) == null) {
+			
+			return;
+		}
+		else{
+			ArrayList<Explanation> outputList = new ArrayList<Explanation>();
+			for (int i = 0; i < 3; i ++) {
+				String source = WordEntry.getExplanation(i).getSource();
+				if (source.equals("baidu")) {
+					if (baiduSelect) {
+						outputList.add(WordEntry.getExplanation(i));
+					}
+				}
+				else if (source.equals("bing")) {
+					if (bingSelect) {
+						outputList.add(WordEntry.getExplanation(i));
+					}
+				}
+				else {
+					if (youdaoSelect) {
+						outputList.add(WordEntry.getExplanation(i));
+					}
+				}
+			}
+			if (outputList.size()==1){
+				editText1.setText(outputList.get(0).getExplanation());
+			}
+			else if (outputList.size()==2){
+				editText2.setText(outputList.get(1).getExplanation());
+			}
+			else if (outputList.size()==3){
+				editText3.setText(outputList.get(1).getExplanation());
+			}
+		}
 	}
 	public static void flushZan(){
 		
@@ -117,36 +137,15 @@ public class MainActivity extends Activity {
 			homeButton3=(ImageButton) findViewById(R.id.home3);
 			userButton3.setOnClickListener(new UserClick());
 			homeButton3.setOnClickListener(new HomeClick());
-			editText1=(EditText) findViewById(R.id.editText1);
-			editText2=(EditText) findViewById(R.id.editText2);
-			editText3=(EditText) findViewById(R.id.editText3);
+			editText1=(TextView) findViewById(R.id.editText1);
+			editText2=(TextView) findViewById(R.id.editText2);
+			editText3=(TextView) findViewById(R.id.editText3);
 			editText1.setFocusable(false);
 			editText2.setFocusable(false);
 			editText3.setFocusable(false);
-			zanButton1.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
-			zanButton2.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
-			zanButton3.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
+			zanButton3.setClickable(false);
+			homeButton3.setOnClickListener(new HomeClick());
+			userButton3.setOnClickListener(new UserClick());
 		}
 	}
 	void findUserList(){
@@ -198,8 +197,9 @@ public class MainActivity extends Activity {
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
-					findUserList();
+					
 					setContentView(userlist);
+					findUserList();
 				}
 			});
 		}
@@ -237,9 +237,17 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				baiduSelect=checkBoxBaidu.isChecked();
+				bingSelect=checkBoxBing.isChecked();
+				youdaoSelect=checkBoxYoudao.isChecked();
+				System.out.println("baidu:"+baiduSelect);
+				System.out.println("bing:"+bingSelect);
+				System.out.println("youdao:"+youdaoSelect);
+				setContentView(zan);
+				findZan();
 				String currentWord =inputText.getText().toString();
 				ServiceProvider.getExplanation(currentWord);
-				setContentView(zan);
+				
 			}
 		});
 	}

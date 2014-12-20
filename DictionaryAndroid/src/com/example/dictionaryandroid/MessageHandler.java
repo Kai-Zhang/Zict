@@ -112,6 +112,7 @@ public class MessageHandler extends Handler {
 					}
 				}
 				WordEntry.sortExplanation();
+				MainActivity.flushExplaination();
 			}
 		}
 		else if (context[0].equals("User")) {
