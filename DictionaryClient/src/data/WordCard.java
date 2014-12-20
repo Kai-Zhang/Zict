@@ -39,6 +39,8 @@ public class WordCard {
 	
 	@Override
 	public String toString() {
-		return sender + "     " + word + "     ";
+		return "          "+sender + "                                            " 
+	+ word + "                                            "+
+				source;
 	}
 }

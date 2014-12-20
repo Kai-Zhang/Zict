@@ -146,9 +146,9 @@ public class DealAnswer implements Runnable {
 				wordStringList[i] = wordList.get(i);
 				sourceStringList[i] = sourceList.get(i);
 			}
-			UserInfo.setOnlineUsers(wordStringList);
-			UserInfo.setOfflineUsers(sourceStringList);
-			UImain.mainFrame.flushUserList();
+			UserInfo.setLikedWords(wordStringList);
+			UserInfo.setLikedWordsSource(sourceStringList);
+			UImain.mainFrame.flushLikedList();
 		}
 		else if (context[0].equals("Share")) {
 			String[] cardParts = messageReceive.split("###");
@@ -159,7 +159,6 @@ public class DealAnswer implements Runnable {
 			// Draw Word Card
 			UserInfo.getReceivedCards().add(new WordCard(cardParts[1], cardParts[2], cardParts[3], cardParts[4]));
 			UImain.mainFrame.flushWordCardArea();
-			UImain.mainFrame.wordCardContent=cardParts;
 			//UImain.mainFrame.wordCard(cardParts);
 			JOptionPane.showMessageDialog(null, "有人给您分享了单词卡！");
 		}

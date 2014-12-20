@@ -36,12 +36,15 @@ import network.Network;
 @SuppressWarnings("serial")
 public class UImain extends JFrame{
 	public static UImain mainFrame = null;
-	public String []wordCardContent=new String[2];
 	
 	private JTextArea usernameArea=new JTextArea();
 	private JList<String> onlineJList = new JList<String>(UserInfo.getOnlineUsers());
 	private JList<String> offlineJList=new JList<String>(UserInfo.getOfflineUsers());
 	private JList<WordCard> wordCardList = new JList<WordCard>();
+
+	private JList<String> likedWordJList = new JList<String>();
+	private JList<String> likedSourceJList = new JList<String>();
+	
 	private JTextArea[] txOut = {new JTextArea(5,50), new JTextArea(5,50), new JTextArea(5,50)};
 	private JTextField txInput = new JTextField("请输入英文", 42);
 	private JTextField idInput=new JTextField(16);
@@ -75,6 +78,13 @@ public class UImain extends JFrame{
 	private ImageIcon shareIcon=new ImageIcon("images/share.png");
 	private ImageIcon likeagreeIcon=new ImageIcon("images/likeagree.png");
 	private ImageIcon unlogIcon=new ImageIcon("images/unlog.png");
+	
+	private ImageIcon baiduIcon=new ImageIcon("images/baidulogo.png");
+	private ImageIcon youdaoIcon=new ImageIcon("images/youdaologo.png");
+	private ImageIcon bingIcon=new ImageIcon("images/binglogo.png");
+	private JLabel youdaoJLabel=new JLabel(youdaoIcon);
+	private JLabel baiduJLabel=new JLabel(baiduIcon);
+	private JLabel bingJLabel=new JLabel(bingIcon);
 	
 	private ImageIcon moreIconEmpty=new ImageIcon("images/button_04_empty.png");
 	private JButton moreButtonEmpty=new JButton(moreIconEmpty);
@@ -124,14 +134,12 @@ public class UImain extends JFrame{
     private ImageIcon moreIcon=new ImageIcon("images/button_04.png");
     private ImageIcon moreIconM=new ImageIcon("images/buttonmark_04.png");
     private ImageIcon userMarkIcon=new ImageIcon("images/button_03mark.png");
-    private JButton userButtonMark=new JButton(userMarkIcon);
     private JButton moreButton=new JButton(moreIcon);
     private JLabel moreMarkLabel=new JLabel(moreIconM);
     
     private ImageIcon wordcardIcon=new ImageIcon("images/wordcard.png");
     private ImageIcon wordcardmarkIcon=new ImageIcon("images/wordcardmark.png");
     private JButton wcInUserPageButton=new JButton(wordcardIcon);
-    private JButton wcInUserPagemarkButton=new JButton(wordcardmarkIcon);
     
  	public UImain() throws Exception {
 		mainPage();
@@ -168,6 +176,11 @@ public class UImain extends JFrame{
     	onlineJList.setBackground(new Color(0,0,0,0));
     	offlineJList.setOpaque(false);
     	offlineJList.setBackground(new Color(0,0,0,0));
+    	likedSourceJList.setOpaque(false);
+    	likedSourceJList.setBackground(new Color(0,0,0,0));
+    	likedWordJList.setOpaque(false);
+    	likedWordJList.setBackground(new Color(0,0,0,0));
+    	
     	
 		login.addActionListener(new ActionListener() {					
 			@Override
@@ -191,6 +204,7 @@ public class UImain extends JFrame{
 					JOptionPane.showMessageDialog(null, "密码格式不正确");
 				} else {
 					UserInfo.login(userID, password);
+					ServiceProvider.getLikedList();
 	            }
 			}
 		});
@@ -471,20 +485,12 @@ public class UImain extends JFrame{
 			}
 		});
         
-
-        wcInUserPagemarkButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				wclistPage();
-				//wordCard(wordCardContent);
-			}
-		});
         wcInUserPageButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
+				wcInUserPageButton.setIcon(wordcardIcon);
 				wclistPage();
 			}
 		});
@@ -566,7 +572,15 @@ public class UImain extends JFrame{
 		wordCardList.addMouseListener(new MouseAdapter() {
 			 public void mouseClicked(MouseEvent evt) {
 		            if (evt.getClickCount() == 2) {          // Double-click
-		                
+		               //JList<WordCard> j=new JList<WordCard>();
+		               //j=(JList<WordCard>) wordCardList.getSelectionModel();
+		               //String str[]=j.toString().split(" ");
+		               //wordCard(str[0], str[2]);
+		            	//实在不会写= = 不知道怎么把我上一个没有查看的单词取出来= =
+		            	//我就知道个getSelectedValues
+		            	//总之这里应该是点了之后就能出现单词卡，单词卡就是用wordCard(word, exp)
+		            	//有了这俩就能画出生成单词卡
+		            	//我想点赞页面跟这里功能应该一样，我同样也不会写嘤嘤嘤
 		            } 
 		        }
 		});
@@ -614,15 +628,15 @@ public class UImain extends JFrame{
         
    }
 
- 	public void wordCard(String [] str) {
+ 	public void wordCard(String wordpart,String exppart) {
 		wordCardfFrame.setContentPane(new wordCardpanel());
 		wordCardfFrame.setResizable(false);
 		Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frm = this.getSize();
 		wordCardfFrame.setLocation( (scr.width - frm.width) / 2,
 		            (scr.height - frm.height) / 2 - 18);
-		JLabel word=new JLabel(str[1]);
-		JTextArea exp=new JTextArea(str[2]);
+		JLabel word=new JLabel(wordpart);
+		JTextArea exp=new JTextArea(exppart);
 		exp.setOpaque(false);
 		exp.setFont(new Font("微软雅黑", Font.CENTER_BASELINE, 14));
 		word.setFont(new Font("微软雅黑", Font.CENTER_BASELINE, 14));
@@ -744,7 +758,7 @@ public class UImain extends JFrame{
 		JScrollPane wclist=new JScrollPane(wordCardList);
 		wclist.setOpaque(false);
 		wclist.getViewport().setOpaque(false);
-		wclist.setBounds(230,303,420,220);
+		wclist.setBounds(230,303,415,220);
 		wclist.setBorder(new EmptyBorder(0,0,0,0));
 
 		add(wclist);
@@ -1040,8 +1054,8 @@ public class UImain extends JFrame{
 		usernameArea.setText(UserInfo.getName());
 		add(usernameArea);
 
-		JScrollPane word=new JScrollPane(onlineJList);
-		JScrollPane site=new JScrollPane(offlineJList);
+		JScrollPane word=new JScrollPane(likedWordJList);
+		JScrollPane site=new JScrollPane(likedSourceJList);
 		word.setBounds(450,247,90,240);//单词
 		site.setBounds(308,247,90,240);//网站
 		word.setOpaque(false);
@@ -1051,11 +1065,8 @@ public class UImain extends JFrame{
 		
 		word.setBorder(new EmptyBorder(0,0,0,0));
 		site.setBorder(new EmptyBorder(0,0,0,0));
-		
-
 		add(word);
 		add(site);
-		
 		buttonArea(likeButton);
 		flushUserState();
 		setVisible(true);
@@ -1088,16 +1099,40 @@ public class UImain extends JFrame{
 			if (source.equals("baidu")) {
 				if (baidu.isSelected()) {
 					outputList.add(WordEntry.getExplanation(i));
+					if (i==0) {
+						baiduJLabel.setBounds(577,296,100,43);
+					}else if (i==1) {
+				        baiduJLabel.setBounds(577,403,100,43);
+					}else if (i==2) {
+						baiduJLabel.setBounds(577,517,100,43);
+					}
+					add(baiduJLabel);
 				}
 			}
 			else if (source.equals("bing")) {
 				if (bing.isSelected()) {
 					outputList.add(WordEntry.getExplanation(i));
+					if (i==0) {
+						bingJLabel.setBounds(577,296,100,43);
+					}else if (i==1) {
+				        bingJLabel.setBounds(577,403,100,43);
+					}else if (i==2) {
+						bingJLabel.setBounds(577,517,100,43);
+					}
+					add(bingJLabel);
 				}
 			}
 			else {
 				if (youdao.isSelected()) {
 					outputList.add(WordEntry.getExplanation(i));
+					if (i==0) {
+						youdaoJLabel.setBounds(577,296,100,43);
+					}else if (i==1) {
+				        youdaoJLabel.setBounds(577,403,100,43);
+					}else if (i==2) {
+						youdaoJLabel.setBounds(577,517,100,43);
+					}
+					add(youdaoJLabel);
 				}
 			}
 		}
@@ -1155,7 +1190,11 @@ public class UImain extends JFrame{
 	public void flushWCList(){
 		wordCardList.setListData(UserInfo.getReceivedCards().toArray(new WordCard[UserInfo.getReceivedCards().size()]));
 		repaint();
-				
+	}
+	
+	public void flushLikedList() {
+		likedWordJList.setListData(UserInfo.getLikedWords());
+		likedSourceJList.setListData(UserInfo.getLikedWordsSource());
 	}
 	
 	public void flushLikeStatus() {
@@ -1201,6 +1240,7 @@ public class UImain extends JFrame{
 
 	public void flushWordCardArea(){
 		userButton.setIcon(userMarkIcon);
+		wcInUserPageButton.setIcon(wordcardmarkIcon);
 		//remove(userButton);
 		//userButtonMark.setBounds(0,300,108,150);
 		//userButtonMark.setBorder(new EmptyBorder(0,0,0,0));
