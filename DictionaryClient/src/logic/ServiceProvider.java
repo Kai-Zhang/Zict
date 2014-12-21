@@ -3,11 +3,12 @@ package logic;
 import javax.swing.JOptionPane;
 
 import network.Network;
-import data.Explanation;
 import data.UserInfo;
-import data.WordCard;
 import data.WordEntry;
 
+/**
+ * ServiceProvider - provides network-relevant service
+ */
 public class ServiceProvider {
 	public static void clickLike(String word, String source) {
 		if (!UserInfo.isLogged()) {

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import sql.SQLManager;
 
+/**
+ * DealQuery - specify a request, deal with it and send response
+ */
 public class DealQuery implements Runnable{
 	String nowString;
 	String IP;

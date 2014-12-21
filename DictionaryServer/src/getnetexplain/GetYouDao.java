@@ -1,13 +1,10 @@
 package getnetexplain;
-import java.util.*;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
 import java.net.*;
-import java.security.*;
 
-import javax.net.ssl.*;
-import javax.net.*;
 public class GetYouDao {
 		public static String getYouDaoExplaination(String word) throws Exception{
 			URL url=new URL("http://dict.youdao.com/search?q="+word+"&keyfrom=dict.index");

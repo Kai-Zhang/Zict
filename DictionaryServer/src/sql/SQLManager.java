@@ -1,6 +1,5 @@
 package sql;
-import java.nio.channels.SelectableChannel;
-import java.security.interfaces.RSAKey;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -167,7 +166,6 @@ public class SQLManager {
 			statement=con.createStatement();
 			System.out.println("成功连接");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -1,17 +1,9 @@
 package getnetexplain;
-import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
 import java.net.*;
-import java.security.*;
 
-import javax.net.ssl.*;
-import javax.net.*;
-import javax.swing.InputMap;
-import javax.swing.text.AbstractDocument.BranchElement;
-
-import org.xml.sax.InputSource;
 public class GetBaidu {
 	public static String getBaiduExplaination(String word) throws Exception{
 		URL url=new URL("http://dict.baidu.com/s?wd="+word+"&tn=dict");

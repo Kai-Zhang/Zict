@@ -1,10 +1,9 @@
 package data;
 
+/**
+ * Explanation - encapsulation the explanation details
+ */
 public class Explanation {
-	public static int BAIDU = 4;
-	public static int BING = 2;
-	public static int YOUDAO = 1;
-	
 	private String source = null;
 	private String explanation = null;
 	private int likeNumber = 0;

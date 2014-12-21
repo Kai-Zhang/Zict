@@ -10,6 +10,9 @@ import data.UserInfo;
 import data.WordCard;
 import data.WordEntry;
 
+/**
+ * DealAnswer - deal with the response of the server
+ */
 public class DealAnswer implements Runnable {
 	String messageReceive = null;
 	
@@ -52,13 +55,12 @@ public class DealAnswer implements Runnable {
 		}
 		else if (context[0].equals("Logout")) {
 			UserInfo.setLoginStatus(false);
-			//JOptionPane.showMessageDialog(null,"注销成功!");
 			UImain.mainFrame.flushUserState();
 			UImain.mainFrame.flushLikeStatus();
 		}
 		else if (context[0].equals("Like")){
 			if (context[1].equals("Success!")){
-				//JOptionPane.showMessageDialog(null, "Like Success!");
+				// pass
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "您已经赞过了");
@@ -68,15 +70,10 @@ public class DealAnswer implements Runnable {
 			}
 		}
 		else if (context[0].equals("Cancel")){
-			if (context[1].equals("Success!")){
-				//JOptionPane.showMessageDialog(null, "Cancel Success!");
-			}
-			else{
-			}
+			// pass
 		}
 		else if (context[0].equals("Answer")) {
 			if (context[1].equals("NoSuchWord")) {
-				//JOptionPane.showMessageDialog(null, "No such word!");
 				WordEntry.setExplanation(0, null);
 				WordEntry.setExplanation(1, null);
 				WordEntry.setExplanation(2, null);
@@ -153,20 +150,15 @@ public class DealAnswer implements Runnable {
 			UImain.mainFrame.flushLikedList();
 		}
 		else if (context[0].equals("Share")) {
-			String[] cardParts = messageReceive.split("###");
 			// cardParts[1] --> Word
 			// cardParts[2] --> Source
 			// cardParts[3] --> Explanation
 			// cardParts[4] --> Sender
-			// Draw Word Card
+			String[] cardParts = messageReceive.split("###");
 			UserInfo.getReceivedCards().add(new WordCard(cardParts[1], cardParts[2], cardParts[3], cardParts[4]));
 			UImain.mainFrame.flushWordCardArea();
-			//UImain.mainFrame.wordCard(cardParts);
 			JOptionPane.showMessageDialog(null, "有人给您分享了单词卡！");
 		}
-		else{
-			// Unknown Message
-		}
+		// Unknown Message - ignore
 	}
-
 }

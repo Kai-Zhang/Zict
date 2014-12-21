@@ -1,5 +1,8 @@
 package data;
 
+/**
+ * WordCard - encapsulation the word card's detail
+ */
 public class WordCard {
 	private String word = null;
 	private String source = null;
@@ -39,8 +42,7 @@ public class WordCard {
 	
 	@Override
 	public String toString() {
-		return "          "+sender + "                                            " 
-	+ word + "                                            "+
-				source;
+		return "          " + sender + "                                            "
+				+ word + "                                            " + source;
 	}
 }

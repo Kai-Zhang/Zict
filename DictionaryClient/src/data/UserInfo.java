@@ -2,9 +2,11 @@ package data;
 
 import java.util.ArrayList;
 
-import logic.ServiceProvider;
 import network.Network;
 
+/**
+ * UserInfo - stores the current user's information
+ */
 public class UserInfo {
 	private static boolean isLogged = false;
 	private static String name = null;

@@ -9,7 +9,9 @@ import java.net.UnknownHostException;
 
 import logic.DealAnswer;
 
-
+/**
+ * Network - send/receive message to/from server
+ */
 public class Network {
 	public static String SERVER_IP = null;
 	private static Socket transportSocket = null;
