@@ -264,7 +264,7 @@ public class MainActivity extends Activity {
 		Scanner configScanner = new Scanner(configFile);
 		String serverIP = configScanner.nextLine();*/
 		context=getBaseContext();
-		String serverIP="10.0.2.2";
+		String serverIP="10.0.0.3";
 		System.out.println(serverIP);
 		System.out.println("Before Connect");
 		Network.connectToServer(serverIP);

@@ -2,10 +2,13 @@ package com.example.dictionaryandroid;
 
 import java.util.ArrayList;
 
+import org.apache.http.impl.entity.StrictContentLengthStrategy;
+
 import logic.ServiceProvider;
 import data.Explanation;
 import data.UserInfo;
 import data.WordEntry;
+import android.R.integer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -116,9 +119,17 @@ public class MessageHandler extends Handler {
 		}
 		else if (context[0].equals("User")) {
 			String[] userList = messageReceive.substring(5).split("###");
-			UserInfo.setOnlineUsers(userList[0].split(" "));
+			String []tempuser=userList[0].split(" ");
+			String []ans=new String[tempuser.length+1];
+			ans[0]="Online Users:";
+			for (int i=1;i<ans.length;i++) ans[i]=tempuser[i-1];
+			UserInfo.setOnlineUsers(ans);
 			if (userList.length > 1) {
-				UserInfo.setOfflineUsers(userList[1].split(" "));
+				tempuser=userList[1].split(" ");
+				ans=new String[tempuser.length+1];
+				ans[0]="Offline Users:";
+				for (int i=1;i<ans.length;i++) ans[i]=tempuser[i-1];
+				UserInfo.setOfflineUsers(ans);
 			}
 			else {
 				UserInfo.setOfflineUsers(null);

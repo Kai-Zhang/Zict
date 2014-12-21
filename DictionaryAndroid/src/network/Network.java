@@ -45,6 +45,7 @@ public class Network {
 			SERVER_IP = serverIP;
 			try{
 			transportSocket = new Socket(SERVER_IP, 60000);
+			System.out.println("Socket Success");
 			socketWriter = new PrintWriter(transportSocket.getOutputStream());
 			socketReader = new BufferedReader(new InputStreamReader(transportSocket.getInputStream()));
 			}
