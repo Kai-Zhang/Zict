@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
+import javax.management.Query;
 import javax.sound.midi.Receiver;
 import javax.swing.border.EmptyBorder;
 import javax.swing.ImageIcon;
@@ -93,9 +94,9 @@ public class UImain extends JFrame{
 	private ImageIcon saveIcon=new ImageIcon("images/save.png");
 	private JButton saveButton=new JButton(saveIcon);
 	
-	private JLabel homeMarkJLabel=new JLabel(homeIconM);
-	private JButton userMarkJButton=new JButton(userIconM);
-	private JLabel likeMarkJLabel=new JLabel(likeIconM);
+	//private JLabel homeMarkJLabel=new JLabel(homeIconM);
+	//private JButton userMarkJButton=new JButton(userIconM);
+	//private JLabel likeMarkJLabel=new JLabel(likeIconM);
 
 	private JButton friend= new JButton(friendIcon);
 	private JButton search = new JButton(searchIcon);
@@ -135,7 +136,7 @@ public class UImain extends JFrame{
     private ImageIcon moreIconM=new ImageIcon("images/buttonmark_04.png");
     private ImageIcon userMarkIcon=new ImageIcon("images/button_03mark.png");
     private JButton moreButton=new JButton(moreIcon);
-    private JLabel moreMarkLabel=new JLabel(moreIconM);
+    //private JLabel moreMarkLabel=new JLabel(moreIconM);
     
     private ImageIcon wordcardIcon=new ImageIcon("images/wordcard.png");
     private ImageIcon wordcardmarkIcon=new ImageIcon("images/wordcardmark.png");
@@ -180,7 +181,8 @@ public class UImain extends JFrame{
     	likedSourceJList.setBackground(new Color(0,0,0,0));
     	likedWordJList.setOpaque(false);
     	likedWordJList.setBackground(new Color(0,0,0,0));
-    	
+    	//likedJList.setOpaque(false);
+    	//likedJList.setBackground(new Color(0,0,0,0));
     	
 		login.addActionListener(new ActionListener() {					
 			@Override
@@ -438,6 +440,7 @@ public class UImain extends JFrame{
         homeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				homeButton.setIcon(homeIcon);
 				homePage();
 				flushResultPage();
 			}
@@ -460,6 +463,7 @@ public class UImain extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				moreButton.setIcon(moreIcon);
 				morePage();
 			}
 		});
@@ -471,7 +475,7 @@ public class UImain extends JFrame{
 				morePage();
 			}
 		});
-        
+        /*
         userMarkJButton.addActionListener(new ActionListener() {//在userPage当前页面 点击左边的user时
 			
 			@Override
@@ -484,7 +488,7 @@ public class UImain extends JFrame{
 				}
 			}
 		});
-        
+        */
         wcInUserPageButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -499,8 +503,10 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ServiceProvider.getLikedList();
-				if(UserInfo.isLogged())
+				if(UserInfo.isLogged()){
+					likeButton.setIcon(likeIcon);
 					likePage();
+					}
 				else {
 					loginPage();
 				}
@@ -563,7 +569,7 @@ public class UImain extends JFrame{
 				File pic=new File(str+".png");
 				try {
 					ImageIO.write(bi, "PNG", pic);
-					JOptionPane.showMessageDialog(null, "保存成功！");
+					JOptionPane.showMessageDialog(null, "保存成功!路径为"+pic.getAbsolutePath());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -572,20 +578,93 @@ public class UImain extends JFrame{
 		wordCardList.addMouseListener(new MouseAdapter() {
 			 public void mouseClicked(MouseEvent evt) {
 		            if (evt.getClickCount() == 2) {          // Double-click
-		               //JList<WordCard> j=new JList<WordCard>();
-		               //j=(JList<WordCard>) wordCardList.getSelectionModel();
-		               //String str[]=j.toString().split(" ");
-		               //wordCard(str[0], str[2]);
-		            	//实在不会写= = 不知道怎么把我上一个没有查看的单词取出来= =
-		            	//我就知道个getSelectedValues
-		            	//总之这里应该是点了之后就能出现单词卡，单词卡就是用wordCard(word, exp)
-		            	//有了这俩就能画出生成单词卡
-		            	//我想点赞页面跟这里功能应该一样，我同样也不会写嘤嘤嘤
+		              WordCard paintingCard=wordCardList.getSelectedValue();
+		              wordCard(paintingCard.getWord(), paintingCard.getExplanation());
 		            } 
 		        }
 		});
+		
+		likedWordJList.addMouseListener(new MouseAdapter() {
+			 public void mouseClicked(MouseEvent evt) {
+		            if (evt.getClickCount() == 2) {          // Double-click
+		            	flushHomePage();
+		            	txInput.setText(likedWordJList.getSelectedValue());
+		            	ServiceProvider.getExplanation(likedWordJList.getSelectedValue());
+		            } 
+		        }
+		});
+		
+		txInput.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				txInput.setText("");
+			}
+		});
+		
+		txInput.addKeyListener(new KeyAdapter(){ 
+		      public void keyPressed(KeyEvent e)    
+		      {    
+		        txInput.setText("");
+		        if (e.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+	    	          search.doClick(); }
+		      }
+		    });
+		idInput.addKeyListener(new KeyAdapter(){ 
+		      public void keyPressed(KeyEvent e)    
+		      {    
+		        if (e.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+	    	          login.doClick(); }
+		      }
+		    });
+		regIdInput.addKeyListener(new KeyAdapter(){ 
+		      public void keyPressed(KeyEvent e)    
+		      {    
+		        if (e.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+	    	          register.doClick(); }
+		      }
+		    });
+		keyInput.addKeyListener(new KeyAdapter(){ 
+		      public void keyPressed(KeyEvent e)    
+		      {    
+		        if (e.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+	    	          login.doClick(); }
+		      }
+		    });
+		regKeyInput2.addKeyListener(new KeyAdapter(){ 
+		      public void keyPressed(KeyEvent e)    
+		      {    
+		        if (e.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+	    	          register.doClick(); }
+		      }
+		    });
 	}
-	
+ 	
  	private void buttonArea(JButton button){
  		likeButton.setBounds(0, 0, 108, 150);
         homeButton.setBounds(0,150,108,150);
@@ -604,19 +683,23 @@ public class UImain extends JFrame{
         
         
         if (button==homeButton) {
-       	 homeMarkJLabel.setBounds(0, 150, 108, 150);
-       	 add(homeMarkJLabel);
+        	homeButton.setIcon(homeIconM);
+        	//homeMarkJLabel.setBounds(0, 150, 108, 150);
+        	//add(homeMarkJLabel);
         }else if (button==userButton) {
-       	 userMarkJButton.setBounds(0, 300, 108, 150);
-       	 userMarkJButton.setBorder(new EmptyBorder(0,0,0,0));
-         userMarkJButton.setContentAreaFilled(false);
-       	 add(userMarkJButton);
+        	userButton.setIcon(userIconM);
+        	//userMarkJButton.setBounds(0, 300, 108, 150);
+        	//userMarkJButton.setBorder(new EmptyBorder(0,0,0,0));
+        	//userMarkJButton.setContentAreaFilled(false);
+        	//add(userMarkJButton);
 		}else if (button==likeButton) {
-			likeMarkJLabel.setBounds(0, 0, 108, 150);
-	        add(likeMarkJLabel);
+			likeButton.setIcon(likeIconM);
+			//likeMarkJLabel.setBounds(0, 0, 108, 150);
+	        //add(likeMarkJLabel);
 		}else if (button==moreButton) {
-			moreMarkLabel.setBounds(0, 450, 108, 150);
-			add(moreMarkLabel);
+			moreButton.setIcon(moreIconM);
+			//moreMarkLabel.setBounds(0, 450, 108, 150);
+			//add(moreMarkLabel);
 		}
         
         add(likeButton);
@@ -624,7 +707,7 @@ public class UImain extends JFrame{
         add(homeButton);
         add(moreButton);
         //add(userButtonMark);
-        remove(button);
+        //remove(button);
         
    }
 
@@ -1003,6 +1086,9 @@ public class UImain extends JFrame{
 		wcInUserPageButton.setBorder(new EmptyBorder(0,0,0,0));
 		wcInUserPageButton.setContentAreaFilled(false);
 		add(wcInUserPageButton);
+		
+		
+		
 		buttonArea(userButton);
 		flushUserState();
 		setVisible(true);
@@ -1062,11 +1148,19 @@ public class UImain extends JFrame{
 		word.getViewport().setOpaque(false);
 		site.setOpaque(false);
 		site.getViewport().setOpaque(false);
-		
 		word.setBorder(new EmptyBorder(0,0,0,0));
 		site.setBorder(new EmptyBorder(0,0,0,0));
 		add(word);
 		add(site);
+	
+	/*	
+		JScrollPane likedlist=new JScrollPane(likedJList);
+		likedlist.setBounds(308,247,200,240);//总
+		likedlist.setOpaque(false);
+		likedlist.getViewport().setOpaque(false);
+		likedlist.setBorder(new EmptyBorder(0,0,0,0));
+		add(likedlist);
+		*/
 		buttonArea(likeButton);
 		flushUserState();
 		setVisible(true);
