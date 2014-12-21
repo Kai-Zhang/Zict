@@ -423,7 +423,11 @@ public class UImain extends JFrame{
 		search.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String currentWord = txInput.getText();
+				String currentWord = txInput.getText().trim();
+				if (currentWord.equals("")) {
+					JOptionPane.showMessageDialog(null, "请输入单词");
+					return;
+				}
 				if (!currentWord.matches("[a-zA-Z]*")) {
 					JOptionPane.showMessageDialog(null, "请输入合法的英文单词");
 					return;
@@ -440,9 +444,8 @@ public class UImain extends JFrame{
         homeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				homeButton.setIcon(homeIcon);
-				homePage();
 				flushResultPage();
+				homePage();
 			}
 		});
 
@@ -450,7 +453,6 @@ public class UImain extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(UserInfo.isLogged()){
-					userButton.setIcon(userIcon);
 					userPage1();
 					}
 				else {
@@ -460,10 +462,8 @@ public class UImain extends JFrame{
 		});
         
         moreButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				moreButton.setIcon(moreIcon);
 				morePage();
 			}
 		});
@@ -490,10 +490,9 @@ public class UImain extends JFrame{
 		});
         */
         wcInUserPageButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				//wcInUserPageButton.setIcon(wordcardIcon);
 				wcInUserPageButton.setIcon(wordcardIcon);
 				wclistPage();
 			}
@@ -504,7 +503,6 @@ public class UImain extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				ServiceProvider.getLikedList();
 				if(UserInfo.isLogged()){
-					likeButton.setIcon(likeIcon);
 					likePage();
 					}
 				else {
@@ -595,34 +593,20 @@ public class UImain extends JFrame{
 		});
 		
 		txInput.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) { }
 			
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mousePressed(MouseEvent arg0) { }
 			
 			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent arg0) { }
 			
 			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent arg0) { }
 			
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
 				txInput.setText("");
 			}
 		});
@@ -630,37 +614,43 @@ public class UImain extends JFrame{
 		txInput.addKeyListener(new KeyAdapter(){ 
 		      public void keyPressed(KeyEvent e)    
 		      {    
-		        txInput.setText("");
-		        if (e.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+		        if (KeyEvent.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
 	    	          search.doClick(); }
 		      }
 		    });
 		idInput.addKeyListener(new KeyAdapter(){ 
 		      public void keyPressed(KeyEvent e)    
 		      {    
-		        if (e.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
-	    	          login.doClick(); }
-		      }
-		    });
-		regIdInput.addKeyListener(new KeyAdapter(){ 
-		      public void keyPressed(KeyEvent e)    
-		      {    
-		        if (e.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
-	    	          register.doClick(); }
+		        if (KeyEvent.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+	    	          loginPageLoginOk.doClick(); }
 		      }
 		    });
 		keyInput.addKeyListener(new KeyAdapter(){ 
 		      public void keyPressed(KeyEvent e)    
 		      {    
-		        if (e.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
-	    	          login.doClick(); }
+		        if (KeyEvent.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+	    	          loginPageLoginOk.doClick(); }
+		      }
+		    });
+		regIdInput.addKeyListener(new KeyAdapter(){ 
+		      public void keyPressed(KeyEvent e)    
+		      {    
+		        if (KeyEvent.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+	    	          regPageRegOk.doClick(); }
+		      }
+		    });
+		regKeyInput1.addKeyListener(new KeyAdapter(){ 
+		      public void keyPressed(KeyEvent e)    
+		      {    
+		        if (KeyEvent.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+	    	          regPageRegOk.doClick(); }
 		      }
 		    });
 		regKeyInput2.addKeyListener(new KeyAdapter(){ 
 		      public void keyPressed(KeyEvent e)    
 		      {    
-		        if (e.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
-	    	          register.doClick(); }
+		        if (KeyEvent.getKeyText(e.getKeyCode()).compareToIgnoreCase("Enter")==0){ 
+	    	          regPageRegOk.doClick(); }
 		      }
 		    });
 	}
@@ -684,20 +674,32 @@ public class UImain extends JFrame{
         
         if (button==homeButton) {
         	homeButton.setIcon(homeIconM);
+			likeButton.setIcon(likeIcon);
+			userButton.setIcon(userIcon);
+			moreButton.setIcon(moreIcon);
         	//homeMarkJLabel.setBounds(0, 150, 108, 150);
         	//add(homeMarkJLabel);
         }else if (button==userButton) {
         	userButton.setIcon(userIconM);
+			likeButton.setIcon(likeIcon);
+			homeButton.setIcon(homeIcon);
+			moreButton.setIcon(moreIcon);
         	//userMarkJButton.setBounds(0, 300, 108, 150);
         	//userMarkJButton.setBorder(new EmptyBorder(0,0,0,0));
         	//userMarkJButton.setContentAreaFilled(false);
         	//add(userMarkJButton);
 		}else if (button==likeButton) {
 			likeButton.setIcon(likeIconM);
+			homeButton.setIcon(homeIcon);
+			userButton.setIcon(userIcon);
+			moreButton.setIcon(moreIcon);
 			//likeMarkJLabel.setBounds(0, 0, 108, 150);
 	        //add(likeMarkJLabel);
 		}else if (button==moreButton) {
 			moreButton.setIcon(moreIconM);
+			likeButton.setIcon(likeIcon);
+			homeButton.setIcon(homeIcon);
+			userButton.setIcon(userIcon);
 			//moreMarkLabel.setBounds(0, 450, 108, 150);
 			//add(moreMarkLabel);
 		}
@@ -958,6 +960,10 @@ public class UImain extends JFrame{
 		baidu.setBounds(398,208,15,15);
 		bing.setBounds(517,208,15,15);
 		
+		homeButton.setIcon(homeIconM);
+		likeButton.setIcon(likeIcon);
+		userButton.setIcon(userIcon);
+		moreButton.setIcon(moreIcon);
 		buttonArea(homeButton);
 		
 		add(txInput);
@@ -1188,45 +1194,49 @@ public class UImain extends JFrame{
 			return;
 		}
 		ArrayList<Explanation> outputList = new ArrayList<Explanation>();
+		int resultAmount = 0;
 		for (int i = 0; i < 3; i ++) {
 			String source = WordEntry.getExplanation(i).getSource();
 			if (source.equals("baidu")) {
 				if (baidu.isSelected()) {
 					outputList.add(WordEntry.getExplanation(i));
-					if (i==0) {
+					if (resultAmount==0) {
 						baiduJLabel.setBounds(577,296,100,43);
-					}else if (i==1) {
+					}else if (resultAmount==1) {
 				        baiduJLabel.setBounds(577,403,100,43);
-					}else if (i==2) {
+					}else if (resultAmount==2) {
 						baiduJLabel.setBounds(577,517,100,43);
 					}
 					add(baiduJLabel);
+					resultAmount ++;
 				}
 			}
 			else if (source.equals("bing")) {
 				if (bing.isSelected()) {
 					outputList.add(WordEntry.getExplanation(i));
-					if (i==0) {
+					if (resultAmount==0) {
 						bingJLabel.setBounds(577,296,100,43);
-					}else if (i==1) {
+					}else if (resultAmount==1) {
 				        bingJLabel.setBounds(577,403,100,43);
-					}else if (i==2) {
+					}else if (resultAmount==2) {
 						bingJLabel.setBounds(577,517,100,43);
 					}
 					add(bingJLabel);
+					resultAmount ++;
 				}
 			}
 			else {
 				if (youdao.isSelected()) {
 					outputList.add(WordEntry.getExplanation(i));
-					if (i==0) {
+					if (resultAmount==0) {
 						youdaoJLabel.setBounds(577,296,100,43);
-					}else if (i==1) {
+					}else if (resultAmount==1) {
 				        youdaoJLabel.setBounds(577,403,100,43);
-					}else if (i==2) {
+					}else if (resultAmount==2) {
 						youdaoJLabel.setBounds(577,517,100,43);
 					}
 					add(youdaoJLabel);
+					resultAmount ++;
 				}
 			}
 		}

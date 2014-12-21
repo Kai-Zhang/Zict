@@ -25,9 +25,10 @@ public class DealAnswer implements Runnable {
 				JOptionPane.showMessageDialog(null, "注册成功!");
 				UserInfo.setLoginStatus(true);
 				UImain.mainFrame.flushUserState();
-				if (!(WordEntry.getWord() == null)) {
+				if (WordEntry.getWord() != null) {
 					ServiceProvider.getExplanation(WordEntry.getWord());
 				}
+				UImain.mainFrame.flushHomePage();
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "该用户名已被占用");
@@ -38,10 +39,11 @@ public class DealAnswer implements Runnable {
 				JOptionPane.showMessageDialog(null, "登陆成功!");
 				UserInfo.setLoginStatus(true);
 				UImain.mainFrame.flushUserState();
-				if (!(WordEntry.getWord() == null)) {
+				if (WordEntry.getWord() != null) {
 					ServiceProvider.getExplanation(WordEntry.getWord());
 				}
 				ServiceProvider.getUserList();
+				UImain.mainFrame.flushHomePage();
 				UImain.mainFrame.loginFrameDispose();
 			}
 			else{
