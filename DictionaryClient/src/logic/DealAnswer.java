@@ -115,8 +115,6 @@ public class DealAnswer implements Runnable {
 						}
 					}
 				}
-				WordEntry.sortExplanation();
-				UImain.mainFrame.flushLikeStatus();
 				UImain.mainFrame.flushResultPage();
 			}
 		}

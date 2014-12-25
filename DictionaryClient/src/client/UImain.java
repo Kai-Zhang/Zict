@@ -6,7 +6,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -25,7 +24,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import data.Explanation;
 import data.UserInfo;
 import data.WordCard;
 import data.WordEntry;
@@ -430,6 +428,7 @@ public class UImain extends JFrame{
 				txOut[1].setText("正在服务器上查找...");
 				txOut[2].setText("正在服务器上查找...");
 				ServiceProvider.getExplanation(currentWord);
+				WordEntry.clearExplanation();
 				flushResultPage();
 			}
 		});
@@ -1148,13 +1147,31 @@ public class UImain extends JFrame{
 			txOut[2].setText("");
 			return;
 		}
-		ArrayList<Explanation> outputList = new ArrayList<Explanation>();
+		for (int i = 0; i < WordEntry.getExplanationSize(); i ++) {
+			String source = WordEntry.getExplanation(i).getSource();
+			if (source.equals("baidu")) {
+				if (!baidu.isSelected()) {
+					WordEntry.getExplanation(i).setSelected(false);
+				}
+			}
+			else if (source.equals("youdao")) {
+				if (!youdao.isSelected()) {
+					WordEntry.getExplanation(i).setSelected(false);
+				}
+			}
+			else {
+				if (!bing.isSelected()) {
+					WordEntry.getExplanation(i).setSelected(false);
+				}
+			}
+		}
+		WordEntry.filterExplanations();
+		WordEntry.sortExplanation();
 		int resultAmount = 0;
-		for (int i = 0; i < 3; i ++) {
+		for (int i = 0; i < WordEntry.getExplanationSize(); i ++) {
 			String source = WordEntry.getExplanation(i).getSource();
 			if (source.equals("baidu")) {
 				if (baidu.isSelected()) {
-					outputList.add(WordEntry.getExplanation(i));
 					if (resultAmount==0) {
 						baiduJLabel.setBounds(577,296,100,43);
 					} else if (resultAmount==1) {
@@ -1168,7 +1185,6 @@ public class UImain extends JFrame{
 			}
 			else if (source.equals("bing")) {
 				if (bing.isSelected()) {
-					outputList.add(WordEntry.getExplanation(i));
 					if (resultAmount==0) {
 						bingJLabel.setBounds(577,296,100,43);
 					} else if (resultAmount==1) {
@@ -1182,7 +1198,6 @@ public class UImain extends JFrame{
 			}
 			else {
 				if (youdao.isSelected()) {
-					outputList.add(WordEntry.getExplanation(i));
 					if (resultAmount==0) {
 						youdaoJLabel.setBounds(577,296,100,43);
 					} else if (resultAmount==1) {
@@ -1195,8 +1210,8 @@ public class UImain extends JFrame{
 				}
 			}
 		}
-		for (int i = 0; i < outputList.size(); i ++) {
-			txOut[i].setText(outputList.get(i).getExplanation());
+		for (int i = 0; i < WordEntry.getExplanationSize(); i ++) {
+			txOut[i].setText(WordEntry.getExplanation(i).getExplanation());
 			if (i==0) {
 				part1();
 			} else if (i==1) {
@@ -1206,6 +1221,7 @@ public class UImain extends JFrame{
 			}
 		}
 		repaint();
+		// TODO Change the Like Status flush
 		flushLikeStatus();
 	}
 

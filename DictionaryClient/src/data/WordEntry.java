@@ -1,11 +1,13 @@
 package data;
 
+import java.util.ArrayList;
+
 /**
  * WordEntry - stores the current word's information
  */
 public class WordEntry {
 	private static String word = null;
-	private static Explanation[] explanations = new Explanation[3];
+	private static ArrayList<Explanation> explanations = new ArrayList<>();
 	
 	public WordEntry() {}
 	
@@ -21,35 +23,56 @@ public class WordEntry {
 		if (rating < 0 || rating >= 3) {
 			return;
 		}
-		explanations[rating] = explanation;
+		for (int i = explanations.size(); i <= rating; i ++) {
+			explanations.add(null);
+		}
+		explanations.set(rating, explanation);
 	}
 	
 	public static Explanation getExplanation(int rating) {
-		if (rating < 0 || rating >= 3) {
+		if (rating < 0 || rating >= explanations.size()) {
 			return null;
 		}
-		return explanations[rating];
+		return explanations.get(rating);
+	}
+	
+	public static int getExplanationSize() {
+		return explanations.size();
+	}
+	
+	public static void filterExplanations() {
+		for (int i = 0; i < explanations.size(); i ++) {
+			if (!explanations.get(i).isSelected()) {
+				explanations.remove(i);
+				i --;
+			}
+		}
+	}
+	
+	public static void clearExplanation() {
+		explanations.clear();
 	}
 	
 	public static void sortExplanation() {
-		int tail = 2;
-		for (int i = 0; i < 3; i ++) {
-			if (explanations[i] == null) {
-				explanations[i] = explanations[tail];
-				explanations[tail] = null;
+		int resultSize = explanations.size();
+		int tail = resultSize - 1;
+		for (int i = 0; i < resultSize; i ++) {
+			if (explanations.get(i) == null) {
+				explanations.set(i, explanations.get(tail));
+				explanations.set(tail, null);
 				tail --;
 			}
 		}
-		for (int i = 0; i < 3; i ++) {
+		for (int i = 0; i < resultSize; i ++) {
 			int popular = i;
-			for (int j = i + 1; j < 3; j ++) {
-				if (explanations[j].getLikeNumber() > explanations[popular].getLikeNumber()) {
+			for (int j = i + 1; j < resultSize; j ++) {
+				if (explanations.get(j).getLikeNumber() > explanations.get(popular).getLikeNumber()) {
 					popular = j;
 				}
 			}
-			Explanation temp = explanations[i];
-			explanations[i] = explanations[popular];
-			explanations[popular] = temp;
+			Explanation temp = explanations.get(i);
+			explanations.set(i, explanations.get(popular));
+			explanations.set(popular, temp);
 		}
 	}
 }
