@@ -4,6 +4,7 @@ package data;
  * Explanation - encapsulation the explanation details
  */
 public class Explanation {
+	private boolean isSelected = true;
 	private String source = null;
 	private String explanation = null;
 	private int likeNumber = 0;
@@ -48,5 +49,13 @@ public class Explanation {
 
 	public void setLiked(boolean isLiked) {
 		this.isLiked = isLiked;
+	}
+
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
 	}
 }

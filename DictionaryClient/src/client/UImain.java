@@ -24,6 +24,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.xml.transform.Source;
 
 import data.Explanation;
 import data.UserInfo;
@@ -984,7 +985,7 @@ public class UImain extends JFrame{
 		add(likeNum2);
 	}
 
-	private void part3() {
+	private void part3( ) {
 		txOut[2].setBounds(140,460,540,100);
 		txOut[2].setLineWrap(true);
 		txOut[2].setWrapStyleWord(true);
@@ -1147,6 +1148,24 @@ public class UImain extends JFrame{
 			txOut[1].setText("");
 			txOut[2].setText("");
 			return;
+		}
+		for (int i = 0; i < 3; i ++) {
+			String source = WordEntry.getExplanation(i).getSource();
+			if (source.equals("baidu")) {
+				if (!baidu.isSelected()) {
+					WordEntry.getExplanation(i).setSelected(false);
+				}
+			}
+			else if (source.equals("youdao")) {
+				if (!youdao.isSelected()) {
+					WordEntry.getExplanation(i).setSelected(false);
+				}
+			}
+			else {
+				if (!bing.isSelected()) {
+					WordEntry.getExplanation(i).setSelected(false);
+				}
+			}
 		}
 		ArrayList<Explanation> outputList = new ArrayList<Explanation>();
 		int resultAmount = 0;
