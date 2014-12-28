@@ -2,9 +2,9 @@
 ====
 
  * Team work: building an interactive online dictionary
- * PC and Android
+ * Platform: PC and Android
 
-##Functions
+###Functions
 ========
 1. Search words and get explanations from baidu, bing and youdao.
 2. Click "like" and cancel it.
@@ -13,6 +13,6 @@
 5. Share a wordcard to your friends.
 6. Save the wordcard to local or leave it alone.
 
-##Notice for use
+###Notice for use
 ========
-Server's ip address is in ../DictionaryClient/config.txt  
+Server's ip address is in ./DictionaryClient/config.txt  
