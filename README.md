@@ -15,4 +15,4 @@
 
 ##Notice for use
 ========
-Server ip address in ../DictionaryClient/confit.txt  
+Server's ip address is in ../DictionaryClient/config.txt  
