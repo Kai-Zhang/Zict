@@ -1,0 +1,122 @@
+body, * {
+    font-family: "Century Gothic", "Microsoft Yahei", Roboto, Arial, sans-serif;
+}
+
+header {
+    text-align: center;
+}
+
+header img {
+    transition: all 0.3s;
+    width: 50% !important;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+div.result {
+    text-align: center;
+}
+
+div.result img {
+    width: 30% !important;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.whole-bg {
+    background: url("/static/images/sheep.jpg");
+    background-size: cover;
+    min-height: 635px;
+    background-position-y: -45px;
+}
+
+.whole-bg input.search {
+    width: 40%;
+}
+
+.whole-bg button {
+    height: 2.3125rem;
+    line-height: 7px;
+}
+
+.exp {
+    width: 80%;
+    margin-top: 20px;
+}
+
+.exp .exp-data {
+    min-height: 120px;
+    padding: 20px;
+    background-color: #ffffff;
+    opacity: 0.5;
+    margin: 0 140px;
+}
+
+.exp .exp-zan {
+    width: 5%;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    float: right;
+    text-align: center;
+    display: inline-block;
+    background-color: #ffffff;
+    opacity: 0.5;
+    margin-top: 5px;
+    margin-right: 140px;
+}
+
+.exp .exp-zan span {
+    font-size: 17px;
+    margin-right: 5px;
+}
+
+.top-bar-section ul li > a:hover {
+    background-color: #dddddd;
+}
+
+.top-bar-section a {
+    font-family: "Century Gothic", "Microsoft Yahei", Roboto, Arial, sans-serif !important;
+}
+
+.top-bar-section a:hover {
+    background-color: #999 !important;
+}
+
+.login {
+    width: auto;
+    margin: 0 auto 30px;
+    padding-top: 100px;
+    position: relative;
+    font-family: 'Raleway', 'Lato', Arial, sans-serif;
+    color: white;
+    text-shadow: 0 2px 1px rgba(0, 0, 0, 0.3);
+}
+
+form button, input {
+    font-family: "Century Gothic", "Microsoft Yahei", Roboto, Arial, sans-serif !important;
+}
+
+
+label {
+    color: #ffffff;
+}
+
+.login-continue {
+    margin-top: 15px;
+}
+
+.login-error {
+    text-align: center;
+    font-weight: bold;
+    color: rgb(250, 118, 92);
+}
+.register-success {
+    text-align: center;
+    font-weight: bold;
+    color: rgb(81, 250, 243);
+}
+
+a>i:hover {
+    color:orangered;
+    background: none;
+}

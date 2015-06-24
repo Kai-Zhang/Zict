@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block mainbody %}
+
+    <form class="login row" action="/user_register/" method="post">{% csrf_token %}
+
+        <p class="columns medium-4 medium-centered">
+            <label for="username">Username</label>
+            <input type="text" name="username" placeholder="Username" required="">
+        </p>
+
+        <p class="columns medium-4 medium-centered">
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="Password" required="">
+        </p>
+
+        <p class="columns medium-4 medium-centered">
+            <label for="password-again">Password Again</label>
+            <input type="password" name="password-again" placeholder="Password Again" required="">
+        </p>
+        {% if register_error %}
+            <p class="login-error"><i class="fa fa-exclamation-circle fa-2x"></i> 用户名已被注册</p>
+        {% elif register_success %}
+            <p class="register-success"><i class="fa fa-exclamation-circle fa-2x"></i> 注册成功请登陆</p>
+        {% endif %}
+        <p class="columns medium-4 medium-centered">
+            <button class="expand login-continue" type="submit" name="submit">Continue</button>
+        </p>
+
+    </form>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block mainbody %}
+    <header class="row">
+        <img  class="columns medium-12 medium-centered" src="/static/images/logo.png" alt="logo"/>
+    </header>
+    {#    将表单内的数据发送到/search/#}
+    <form id="post_answer_form" action="/search/" method="get" class="row">
+        <input class=" column medium-11 medium-offset-3 search" type="text" name="word">
+        <button class="column medium-1 left" type="submit" >search</button>
+    </form>
+{% endblock %}

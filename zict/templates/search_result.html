@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block mainbody %}
+    <div class="row result">
+        <img class="columns medium-12 medium-centered" src="/static/images/logo.png" alt="logo"/>
+    </div>
+    {#    将表单内的数据发送到/search/#}
+    <form id="post_answer_form" action="/search/" method="get" class="row">
+        <input class=" column medium-11 medium-offset-3 search" type="text" name="word" placeholder="{{ word }}">
+        <button class="column medium-1 left" type="submit">Search</button>
+    </form>
+    <div class="exp row">
+        <div class="exp-data">
+            <p>{{ baidu_data }}</p>
+            <img class="right" src="/static/images/baidu.png" alt=""/>
+        </div>
+        <div class="exp-zan"><span>{{ baidu_zan }}</span><a id="baidu_zan" data-ajax data-behavior="click.zan"
+                                                            href="/baidu_zan"><i class="fa fa-thumbs-o-up fa-lg"></i></a></div>
+    </div>
+    <div class="exp row">
+        <div class="exp-data">
+            <p>{{ youdao_data }}</p>
+            <img class="right" src="/static/images/youdao.png" alt=""/>
+        </div>
+
+        <div class="exp-zan"><a id="youdao_zan" data-ajax data-behavior="click.zan"
+                                href=""><span>{{ youdao_zan }}</span><i class="fa fa-thumbs-o-up fa-lg"></i></a></div>
+    </div>
+    <div class="exp row">
+        <div class="exp-data">
+            <p>{{ bing_data }}</p>
+            <img class="right" src="/static/images/bing.png" alt=""/>
+        </div>
+
+        <div class="exp-zan"><a id="bing_zan" data-ajax data-behavior="click.zan" href=""><span>{{ bing_zan }}</span><i
+                class="fa fa-thumbs-o-up fa-lg"></i></a></div>
+    </div>
+    <script>
+        $(document).foundation();
+
+        click = {
+            zan: function (that, response) {
+                if (tempLogin == False)
+                    alert("please login first")
+                else {
+                    $(that).find('i').css("color", "orange")
+
+                }
+            }
+        }
+
+
+
+    </script>
+
+{% endblock %}
